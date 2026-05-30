@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amit Kumar Shaw — UX Strategist</title>
+<meta name="description" content="Ten years making complex enterprise software easier to use — and harder to ignore. UX Strategist working across EY, ADP, Salesforce and B2B SaaS.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:        #1A2E4A;
+  --ink-light:  #3D5168;
+  --paper:      #F8F5EE;
+  --white:      #FFFFFF;
+  --accent:     #1A5FAA;
+  --accent-mid: #4A8FD4;
+  --muted:      #8A9AAC;
+  --rule:       rgba(26,46,74,0.09);
+  --dark:       #0D1B2A;
+  --dark-mid:   #152338;
+  --sand:       #EDE9DF;
+  --serif:      'Cormorant Garamond', Georgia, serif;
+  --sans:       'DM Sans', system-ui, sans-serif;
+  --mono:       'DM Mono', 'Courier New', monospace;
+  --max:        1200px;
+  --gap:        clamp(2rem, 5vw, 4rem);
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── UTILITIES ──────────────────────────────────── */
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 3rem); }
+.label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* ── NAV ───────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(248,245,238,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule);
+  transition: box-shadow 0.3s;
+}
+nav.scrolled { box-shadow: 0 2px 20px rgba(26,46,74,0.08); }
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem);
+}
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--ink-light);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--accent); }
+.nav-cta {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  text-decoration: none;
+  border: 1px solid currentColor;
+  padding: 0.45rem 1.1rem;
+  border-radius: 2px;
+  transition: background 0.2s, color 0.2s;
+}
+.nav-cta:hover { background: var(--accent); color: var(--white); }
+
+/* ── HERO ──────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 4rem;
+  padding-top: 80px;
+}
+.hero-content { padding: clamp(2rem, 6vw, 5rem) 0 clamp(2rem,6vw,5rem) clamp(1.25rem,4vw,3rem); }
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+.hero-eyebrow .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #3CB878;
+  flex-shrink: 0;
+}
+.hero-h1 {
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 4.5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.18;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.01em;
+}
+.hero-h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.hero-body {
+  font-size: 1.05rem;
+  color: var(--ink-light);
+  line-height: 1.75;
+  max-width: 520px;
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+}
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+.btn-primary {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--white);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.8rem;
+  border-radius: 2px;
+  transition: background 0.2s, transform 0.2s;
+}
+.btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-light);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+}
+.btn-ghost:hover { color: var(--accent); }
+.btn-ghost::after { content: '→'; transition: transform 0.2s; }
+.btn-ghost:hover::after { transform: translateX(3px); }
+
+.hero-right {
+  position: relative;
+  height: 100%;
+  min-height: 500px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem clamp(1.25rem, 4vw, 3rem) 2rem 0;
+}
+.hero-photo-wrap {
+  position: relative;
+  width: 400px;
+  max-width: 100%;
+}
+.hero-photo-bg {
+  position: absolute;
+  inset: -16px -16px -24px 16px;
+  background: var(--sand);
+  border-radius: 4px;
+  z-index: 0;
+}
+.hero-photo {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  border-radius: 4px;
+  display: block;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  object-position: center top;
+}
+.hero-tag {
+  position: absolute;
+  bottom: -16px;
+  left: -20px;
+  z-index: 2;
+  background: var(--dark);
+  color: var(--white);
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  min-width: 200px;
+}
+.hero-tag .tag-role {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+.hero-tag .tag-exp {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── METRICS STRIP ─────────────────────────────── */
+.metrics {
+  background: var(--ink);
+  padding: 3rem 0;
+}
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+.metric-item {
+  padding: 0 2rem;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+.metric-item:last-child { border-right: none; }
+.metric-num {
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 3.5vw, 3rem);
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.02em;
+}
+.metric-num span { color: var(--accent-mid); }
+.metric-desc {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+
+/* ── SECTION HEADERS ───────────────────────────── */
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--rule);
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.section-link {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+}
+.section-link:hover { opacity: 0.7; }
+
+/* ── WORK SECTION ──────────────────────────────── */
+#work { padding: var(--gap) 0 calc(var(--gap) * 1.5); }
+
+/* Featured card — large horizontal */
+.card-featured {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--white);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--rule);
+  transition: box-shadow 0.3s, transform 0.3s;
+  text-decoration: none;
+  color: inherit;
+}
+.card-featured:hover {
+  box-shadow: 0 12px 40px rgba(26,46,74,0.1);
+  transform: translateY(-3px);
+}
+.card-featured-img {
+  position: relative;
+  overflow: hidden;
+  background: var(--dark);
+  min-height: 380px;
+}
+.card-featured-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+  opacity: 0.85;
+}
+.card-featured:hover .card-featured-img img { transform: scale(1.03); }
+.card-featured-body {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.card-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(26,95,170,0.08);
+  padding: 0.3rem 0.7rem;
+  border-radius: 2px;
+  margin-bottom: 1.25rem;
+}
+.card-title {
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 400;
+  line-height: 1.25;
+  margin-bottom: 0.9rem;
+  color: var(--ink);
+}
+.card-problem {
+  font-size: 0.88rem;
+  color: var(--ink-light);
+  line-height: 1.75;
+  margin-bottom: 1.5rem;
+  font-weight: 300;
+}
+.card-meta { margin-bottom: 1.75rem; }
+.card-meta-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  align-items: baseline;
+}
+.card-meta-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  min-width: 56px;
+}
+.card-meta-val {
+  font-size: 0.82rem;
+  color: var(--ink-light);
+  font-weight: 400;
+}
+.card-outcome {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+}
+.outcome-badge {
+  background: var(--ink);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  border-radius: 3px;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+.card-cta {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: gap 0.2s;
+}
+.card-cta:hover { gap: 0.7rem; }
+
+/* Card grid — 2 smaller cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.card-small {
+  background: var(--white);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.card-small:hover {
+  box-shadow: 0 8px 32px rgba(26,46,74,0.08);
+  transform: translateY(-3px);
+}
+.card-small-thumb {
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+}
+.thumb-ds {
+  background: linear-gradient(135deg, #0D1B2A 0%, #1A3A5C 50%, #0A2640 100%);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.thumb-ds svg { opacity: 0.6; }
+.thumb-ujm {
+  background: linear-gradient(135deg, #1A3A5C 0%, #2A5F8F 100%);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.card-small-body { padding: 1.75rem; flex: 1; display: flex; flex-direction: column; }
+.card-small-body .card-title { font-size: 1.2rem; margin-bottom: 0.7rem; }
+.card-small-body .card-problem { font-size: 0.83rem; flex: 1; margin-bottom: 1.25rem; }
+.card-small-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+/* ── PROCESS SECTION ───────────────────────────── */
+#process {
+  background: var(--dark);
+  padding: var(--gap) 0;
+  color: var(--white);
+}
+#process .section-title { color: var(--white); }
+#process .section-head { border-bottom-color: rgba(255,255,255,0.08); }
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-top: 3rem;
+}
+.process-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 2rem 1.75rem;
+  transition: background 0.3s;
+}
+.process-card:hover { background: rgba(255,255,255,0.06); }
+.process-num {
+  font-family: var(--serif);
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.1);
+  line-height: 1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+.process-card-title {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 0.8rem;
+  line-height: 1.3;
+}
+.process-card-body {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+/* ── ABOUT SECTION ─────────────────────────────── */
+#about { padding: var(--gap) 0; }
+.about-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+.about-left { position: sticky; top: 80px; }
+.about-photo-wrap { position: relative; margin-bottom: 2rem; }
+.about-photo-accent {
+  position: absolute;
+  top: 16px; left: -16px;
+  width: 60%;
+  height: 60%;
+  border: 1.5px solid var(--rule);
+  border-radius: 4px;
+  z-index: 0;
+}
+.about-photo {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  border-radius: 4px;
+  display: block;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  object-position: center top;
+}
+.about-photo-placeholder {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 4px;
+  background: var(--sand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.about-placeholder-text {
+  font-family: var(--serif);
+  font-size: 4rem;
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+.about-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.about-tag {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  padding: 0.3rem 0.6rem;
+  border-radius: 2px;
+}
+.about-right {}
+.about-heading {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.01em;
+}
+.about-body {
+  font-size: 0.95rem;
+  color: var(--ink-light);
+  line-height: 1.85;
+  font-weight: 300;
+  margin-bottom: 1rem;
+  max-width: 620px;
+}
+.about-divider { height: 1px; background: var(--rule); margin: 2rem 0; }
+
+/* Timeline */
+.timeline-title {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+.timeline { position: relative; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px; bottom: 6px;
+  width: 1px;
+  background: var(--rule);
+}
+.tl-item {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 1.25rem;
+  padding: 0 0 1.5rem 1.5rem;
+  position: relative;
+}
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: 6px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--rule);
+  border: 1.5px solid var(--muted);
+}
+.tl-item.current::before { background: var(--accent); border-color: var(--accent); }
+.tl-date {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  padding-top: 2px;
+  line-height: 1.4;
+}
+.tl-role {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 0.1rem;
+}
+.tl-company {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+}
+
+/* ── TESTIMONIAL ───────────────────────────────── */
+#testimonial {
+  background: var(--dark-mid);
+  padding: var(--gap) 0;
+}
+.testimonial-inner {
+  max-width: 820px;
+  margin: 0 auto;
+  text-align: center;
+}
+.quote-mark {
+  font-family: var(--serif);
+  font-size: 5rem;
+  color: rgba(255,255,255,0.08);
+  line-height: 0.7;
+  margin-bottom: 1rem;
+  display: block;
+}
+.testimonial-text {
+  font-family: var(--serif);
+  font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+.testimonial-text strong { font-style: normal; font-weight: 400; color: var(--white); }
+.testimonial-attr {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+.testimonial-attr strong { color: rgba(255,255,255,0.65); font-weight: 400; }
+
+/* ── CONTACT ───────────────────────────────────── */
+#contact { padding: var(--gap) 0; }
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+.contact-heading {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+.contact-body {
+  font-size: 0.92rem;
+  color: var(--ink-light);
+  line-height: 1.8;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  max-width: 480px;
+}
+.contact-links { display: flex; flex-direction: column; gap: 0.7rem; }
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  text-decoration: none;
+  color: var(--ink-light);
+  font-size: 0.88rem;
+  transition: color 0.2s;
+}
+.contact-link:hover { color: var(--accent); }
+.contact-link-icon {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  min-width: 52px;
+}
+.form-group { margin-bottom: 1.25rem; }
+.form-group label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 0.75rem 1rem;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+  resize: none;
+  -webkit-appearance: none;
+}
+.form-group input:focus,
+.form-group textarea:focus { border-color: var(--accent); }
+.form-group textarea { min-height: 100px; }
+.form-submit {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.9rem 2rem;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+.form-submit:hover { background: var(--accent); }
+
+/* ── FOOTER ────────────────────────────────────── */
+footer {
+  background: var(--dark);
+  color: rgba(255,255,255,0.35);
+  padding: 2.5rem 0;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-logo {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+}
+.footer-copy { font-size: 0.75rem; letter-spacing: 0.04em; }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+/* ── RESPONSIVE ────────────────────────────────── */
+@media (max-width: 960px) {
+  .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 80px; }
+  .hero-right { display: none; }
+  .hero-content { padding: 4rem clamp(1.25rem,4vw,3rem); }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .metric-item { padding: 1.5rem; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .card-featured { grid-template-columns: 1fr; }
+  .card-featured-img { min-height: 240px; }
+  .process-grid { grid-template-columns: 1fr 1fr; }
+  .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .about-left { position: static; display: grid; grid-template-columns: 200px 1fr; gap: 2rem; align-items: start; }
+  .about-photo-wrap { margin-bottom: 0; }
+  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+}
+@media (max-width: 600px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .process-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .metrics-grid { grid-template-columns: 1fr 1fr; }
+  .about-left { grid-template-columns: 1fr; }
+  .footer-inner { flex-direction: column; text-align: center; }
+  .section-head { flex-direction: column; align-items: flex-start; }
+}
+
+/* ── DESIGN SYSTEM THUMB ───────────────────────── */
+.ds-pattern {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0D1B2A;
+  overflow: hidden;
+  position: relative;
+}
+.ujm-pattern {
+  width: 100%; height: 100%;
+  background: #122038;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ───────────────────────────────────────────── -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Amit Shaw</a>
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#process">Process</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a href="mailto:amit.uxdoffice@gmail.com" class="nav-cta">Get in touch</a>
+  </div>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────────────── -->
+<section class="hero wrap">
+  <div class="hero-content reveal">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      <span class="label">UX Strategist &nbsp;·&nbsp; Hyderabad &nbsp;·&nbsp; Open to opportunities</span>
+    </div>
+    <h1 class="hero-h1">
+      Ten years making<br>
+      complex enterprise<br>
+      software <em>easier to use</em><br>
+      — and harder to ignore.
+    </h1>
+    <p class="hero-body">
+      I lead UX for platforms where the stakes are high: audit portals, payroll systems, B2B SaaS on Salesforce. My work starts with the real problem and ships measurable outcomes — not just screens.
+    </p>
+    <div class="hero-actions">
+      <a href="#work" class="btn-primary">View case studies</a>
+      <a href="#about" class="btn-ghost">About me</a>
+    </div>
+  </div>
+
+  <div class="hero-right reveal" style="transition-delay:0.15s">
+    <div class="hero-photo-wrap">
+      <div class="hero-photo-bg"></div>
+      <img
+        src="https://cdn.prod.website-files.com/67f679f602e6247ed7e0b4be/67fad129f4590010d54ed49f_Amit-Pic.jpeg"
+        alt="Amit Kumar Shaw — UX Strategist"
+        class="hero-photo"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+      >
+      <div class="about-photo-placeholder" style="display:none">
+        <span class="about-placeholder-text">AKS</span>
+      </div>
+      <div class="hero-tag">
+        <span class="tag-role">UX Strategist</span>
+        <span class="tag-exp">10 years · Enterprise · B2B SaaS</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── METRICS STRIP ─────────────────────────────────────────── -->
+<div class="metrics">
+  <div class="wrap">
+    <div class="metrics-grid">
+      <div class="metric-item reveal">
+        <div class="metric-num"><span>45</span>%</div>
+        <div class="metric-desc">BUX uplift<br>EY Audit Portal</div>
+      </div>
+      <div class="metric-item reveal" style="transition-delay:0.1s">
+        <div class="metric-num"><span>40</span>%</div>
+        <div class="metric-desc">Reduction in<br>user friction</div>
+      </div>
+      <div class="metric-item reveal" style="transition-delay:0.2s">
+        <div class="metric-num"><span>10</span> wks</div>
+        <div class="metric-desc">Concept to production<br>ADP Tax Flow</div>
+      </div>
+      <div class="metric-item reveal" style="transition-delay:0.3s">
+        <div class="metric-num"><span>30</span>%</div>
+        <div class="metric-desc">Faster stakeholder<br>buy-in</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── WORK ──────────────────────────────────────────────────── -->
+<section id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2 class="section-title">Selected work</h2>
+      <span class="label">3 case studies · 2019 – 2026</span>
+    </div>
+
+    <!-- Featured card -->
+    <a href="https://as-xd.webflow.io/work/client-portal" target="_blank" class="card-featured reveal">
+      <div class="card-featured-img">
+        <img
+          src="https://cdn.prod.website-files.com/67f679f602e6247ed7e0b4be/67f68a04f9659231a472185a_db8c84dbde5065e293e2af1bae45fd98_CX-case-study%20%281%29.jpg"
+          alt="EY Audit Client Portal redesign"
+          onerror="this.style.background='#0D1B2A'"
+        >
+      </div>
+      <div class="card-featured-body">
+        <div>
+          <span class="card-tag">Enterprise UX · EY</span>
+          <h3 class="card-title">Audit Client Portal — Customer Experience Redesign</h3>
+          <p class="card-problem">
+            A legacy portal was eroding trust between auditors and their clients. Neither side had visibility into the audit process — the brief was to fix navigation and a broken issue tracker. The actual problem ran much deeper.
+          </p>
+          <div class="card-meta">
+            <div class="card-meta-row">
+              <span class="card-meta-label">Role</span>
+              <span class="card-meta-val">Lead UX Strategist — discovery, research, prototyping, delivery</span>
+            </div>
+            <div class="card-meta-row">
+              <span class="card-meta-label">Methods</span>
+              <span class="card-meta-val">User interviews, usability testing, rapid prototype iteration, design system</span>
+            </div>
+            <div class="card-meta-row">
+              <span class="card-meta-label">Stack</span>
+              <span class="card-meta-val">Figma · Salesforce · SLDS · Maze</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-outcome">
+          <div>
+            <div class="outcome-badge">+45% BUX score · +50% usability</div>
+          </div>
+          <span class="card-cta label">View case study →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 2-column grid -->
+    <div class="card-grid">
+      <a href="https://as-xd.webflow.io/work/issue-tracker" target="_blank" class="card-small reveal">
+        <div class="card-small-thumb">
+          <div class="ds-pattern">
+            <svg width="200" height="120" viewBox="0 0 200 120">
+              <rect x="10" y="12" width="120" height="10" rx="2" fill="rgba(74,143,212,0.25)"/>
+              <rect x="10" y="30" width="80" height="8" rx="2" fill="rgba(74,143,212,0.15)"/>
+              <rect x="10" y="52" width="180" height="1" fill="rgba(255,255,255,0.06)"/>
+              <rect x="10" y="62" width="100" height="9" rx="2" fill="rgba(74,143,212,0.2)"/>
+              <rect x="10" y="78" width="65" height="8" rx="2" fill="rgba(74,143,212,0.12)"/>
+              <rect x="140" y="56" width="50" height="20" rx="3" fill="none" stroke="rgba(74,143,212,0.35)" stroke-width="1"/>
+              <rect x="140" y="84" width="50" height="20" rx="3" fill="none" stroke="rgba(74,143,212,0.25)" stroke-width="1"/>
+              <circle cx="168" cy="26" r="18" fill="none" stroke="rgba(74,143,212,0.3)" stroke-width="1"/>
+              <circle cx="168" cy="26" r="8" fill="none" stroke="rgba(74,143,212,0.5)" stroke-width="1.5"/>
+              <circle cx="168" cy="26" r="2.5" fill="rgba(74,143,212,0.8)"/>
+            </svg>
+          </div>
+        </div>
+        <div class="card-small-body">
+          <span class="card-tag">Audit UX · EY</span>
+          <h3 class="card-title">Audit Issue Tracker Redesign</h3>
+          <p class="card-problem">Auditors were tracking hundreds of live issues through a cumbersome legacy table. Status was invisible, priority was guesswork, and coordination between teams was failing.</p>
+          <div class="card-small-bottom">
+            <span class="card-meta-val" style="font-size:0.78rem;">Risk radar · Advanced analytics</span>
+            <span class="card-cta label">View →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="https://as-xd.webflow.io/work/powerbi-design-system" target="_blank" class="card-small reveal" style="transition-delay:0.1s">
+        <div class="card-small-thumb">
+          <div class="ujm-pattern">
+            <svg width="200" height="120" viewBox="0 0 200 120">
+              <!-- Bar chart visual -->
+              <rect x="16" y="72" width="18" height="36" rx="2" fill="rgba(26,95,170,0.5)"/>
+              <rect x="40" y="50" width="18" height="58" rx="2" fill="rgba(26,95,170,0.7)"/>
+              <rect x="64" y="32" width="18" height="76" rx="2" fill="rgba(74,143,212,0.85)"/>
+              <rect x="88" y="44" width="18" height="64" rx="2" fill="rgba(26,95,170,0.6)"/>
+              <rect x="112" y="60" width="18" height="48" rx="2" fill="rgba(26,95,170,0.4)"/>
+              <!-- Line chart -->
+              <polyline points="148,88 160,62 172,70 184,40" fill="none" stroke="rgba(74,143,212,0.7)" stroke-width="1.5"/>
+              <circle cx="184" cy="40" r="3" fill="rgba(74,143,212,0.9)"/>
+              <!-- Grid lines -->
+              <line x1="10" y1="108" x2="190" y2="108" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+              <line x1="10" y1="80" x2="190" y2="80" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+              <line x1="10" y1="52" x2="130" y2="52" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+              <!-- Labels -->
+              <rect x="140" y="12" width="48" height="14" rx="3" fill="none" stroke="rgba(74,143,212,0.3)" stroke-width="0.8"/>
+              <rect x="140" y="30" width="36" height="10" rx="2" fill="rgba(74,143,212,0.15)"/>
+            </svg>
+          </div>
+        </div>
+        <div class="card-small-body">
+          <span class="card-tag">Design System · Data Viz</span>
+          <h3 class="card-title">Power BI Design System</h3>
+          <p class="card-problem">Inconsistent data visualisation across enterprise dashboards was creating confusion at executive level. Charts told different stories about the same data depending on who built them.</p>
+          <div class="card-small-bottom">
+            <span class="card-meta-val" style="font-size:0.78rem;">20% reduction in design debt</span>
+            <span class="card-cta label">View →</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── HOW I WORK ─────────────────────────────────────────────── -->
+<section id="process">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2 class="section-title" style="color:white">How I work</h2>
+    </div>
+    <div class="process-grid">
+      <div class="process-card reveal">
+        <div class="process-num">01</div>
+        <h4 class="process-card-title">First principles over templates</h4>
+        <p class="process-card-body">I ask why before I ask how. Every design decision starts from the real problem — not a pattern library or a previous project. Constraints are inputs, not excuses.</p>
+      </div>
+      <div class="process-card reveal" style="transition-delay:0.1s">
+        <div class="process-num">02</div>
+        <h4 class="process-card-title">Research before pixels</h4>
+        <p class="process-card-body">Discovery through user interviews, usability testing, and stakeholder mapping before Figma is opened. The brief is rarely the real brief — I find that out early.</p>
+      </div>
+      <div class="process-card reveal" style="transition-delay:0.2s">
+        <div class="process-num">03</div>
+        <h4 class="process-card-title">Ship with engineers, not at them</h4>
+        <p class="process-card-body">Front-end literacy in HTML, CSS, and JavaScript means I can have an honest conversation about what a design will actually cost to build — and design accordingly.</p>
+      </div>
+      <div class="process-card reveal" style="transition-delay:0.3s">
+        <div class="process-num">04</div>
+        <h4 class="process-card-title">AI as accelerant, not author</h4>
+        <p class="process-card-body">I use AI tools to move faster through ideation cycles, research synthesis, and early validation. The judgement — what to build and why — stays with the team.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ──────────────────────────────────────────────────── -->
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-left reveal">
+        <div class="about-photo-wrap">
+          <div class="about-photo-accent"></div>
+          <img
+            src="https://cdn.prod.website-files.com/67f679f602e6247ed7e0b4be/67fad129f4590010d54ed49f_Amit-Pic.jpeg"
+            alt="Amit Kumar Shaw"
+            class="about-photo"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+          >
+          <div class="about-photo-placeholder" style="display:none">
+            <span class="about-placeholder-text">AKS</span>
+          </div>
+        </div>
+        <div class="about-tags">
+          <span class="about-tag">UX Strategy</span>
+          <span class="about-tag">Salesforce · SLDS</span>
+          <span class="about-tag">Figma</span>
+          <span class="about-tag">B2B SaaS</span>
+          <span class="about-tag">Design Systems</span>
+          <span class="about-tag">WCAG 2.1</span>
+          <span class="about-tag">Agile · Lean UX</span>
+          <span class="about-tag">AI-Assisted Design</span>
+          <span class="about-tag">HTML · CSS · JS</span>
+        </div>
+      </div>
+
+      <div class="about-right reveal" style="transition-delay:0.1s">
+        <span class="label" style="display:block;margin-bottom:1.25rem;">About</span>
+        <h2 class="about-heading">I am Amit Kumar Shaw — UX Strategist based in Hyderabad.</h2>
+
+        <p class="about-body">
+          I spent ten years inside the complexity that makes enterprise software hard: audit workflows at EY, payroll systems at ADP, B2B platforms built on Salesforce. My job has always been to find the real problem — which is rarely the stated one — and design a path through it that earns trust from users and stakeholders in equal measure.
+        </p>
+        <p class="about-body">
+          Before working inside large organisations, I co-founded three ventures: a paperwork-automation SaaS, an EdTech platform built to equip engineering students with career-ready skills, and a UX agency. Owning product, design, and early commercial decisions simultaneously taught me to prioritise without sentimentality and communicate with people who do not share my design vocabulary.
+        </p>
+        <p class="about-body">
+          I hold a B.Sc. in Multimedia and Animation, am certified in UX Strategy through Nielsen Norman Group, and hold additional certifications in AI for Designers and AR UX Design through the Interaction Design Foundation.
+        </p>
+
+        <div class="about-divider"></div>
+
+        <p class="timeline-title">Career</p>
+        <div class="timeline">
+          <div class="tl-item current">
+            <div class="tl-date">Oct 2025<br>Present</div>
+            <div>
+              <div class="tl-role">Technical Manager — UX</div>
+              <div class="tl-company">ESoft Labs · Client: ADP</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-date">Sep 2019<br>Jun 2025</div>
+            <div>
+              <div class="tl-role">Supervising Associate 2 — Enterprise Architecture</div>
+              <div class="tl-company">Ernst & Young</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-date">2017<br>2019</div>
+            <div>
+              <div class="tl-role">Founder · UX Lead</div>
+              <div class="tl-company">PapWork · Talent Infosys · WOP.Company</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-date">2015<br>2017</div>
+            <div>
+              <div class="tl-role">UX Designer</div>
+              <div class="tl-company">Gaian Solutions — GAIA TV</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-date">2013<br>2015</div>
+            <div>
+              <div class="tl-role">Software Engineer · Visual Designer</div>
+              <div class="tl-company">HCL Technologies · Magna Infotech</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIAL ────────────────────────────────────────────── -->
+<section id="testimonial">
+  <div class="wrap">
+    <div class="testimonial-inner reveal">
+      <span class="quote-mark">"</span>
+      <p class="testimonial-text">
+        Amit has demonstrated his ability to <strong>uncover the unquoted contextual aspects of the business</strong> by challenging the status quo, evaluate the emotional aspects of the design, and build products that are aligned with human behaviour. Amit knows how to <strong>boost product adoption</strong> with his heuristic designs.
+      </p>
+      <p class="testimonial-attr">
+        <strong>Bharath Machavarapu</strong> &nbsp;·&nbsp; Strategic Product Leader, Accenture
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ────────────────────────────────────────────────── -->
+<section id="contact">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2 class="section-title">Let's work together</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="reveal">
+        <p class="contact-body">
+          I do my best work on products where design decisions have visible business consequences — platforms used daily by people who cannot afford them to be confusing. If that describes what you are building, get in touch.
+        </p>
+        <p class="contact-body">
+          Open to senior UX and design leadership roles in enterprise, B2B SaaS, and fintech. Available for remote and hybrid engagements.
+        </p>
+        <div class="contact-links">
+          <a href="mailto:amit.uxdoffice@gmail.com" class="contact-link">
+            <span class="contact-link-icon">Email</span>
+            amit.uxdoffice@gmail.com
+          </a>
+          <a href="tel:+917032925106" class="contact-link">
+            <span class="contact-link-icon">Phone</span>
+            +91 70329 25106
+          </a>
+          <a href="https://www.linkedin.com/in/amit-shaw-design-thinker/" target="_blank" class="contact-link">
+            <span class="contact-link-icon">LinkedIn</span>
+            amit-shaw-design-thinker
+          </a>
+          <a href="https://www.behance.net/amit-shaw" target="_blank" class="contact-link">
+            <span class="contact-link-icon">Behance</span>
+            behance.net/amit-shaw
+          </a>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay:0.1s">
+        <div class="form-group">
+          <label for="f-name">Name</label>
+          <input type="text" id="f-name" placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label for="f-email">Email</label>
+          <input type="email" id="f-email" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label for="f-msg">Message</label>
+          <textarea id="f-msg" placeholder="Tell me about your project or role"></textarea>
+        </div>
+        <button class="form-submit" onclick="handleSubmit()">Send message</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────── -->
+<footer>
+  <div class="wrap footer-inner">
+    <a href="#" class="footer-logo">Amit Kumar Shaw</a>
+    <span class="footer-copy">UX Strategist · Hyderabad · 2026</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/amit-shaw-design-thinker/" target="_blank">LinkedIn</a>
+      <a href="https://www.behance.net/amit-shaw" target="_blank">Behance</a>
+      <a href="https://dribbble.com/amitshaw" target="_blank">Dribbble</a>
+      <a href="mailto:amit.uxdoffice@gmail.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Nav shadow on scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
+});
+
+// Scroll reveal using Intersection Observer
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(el => {
+    if (el.isIntersecting) {
+      el.target.classList.add('in');
+      observer.unobserve(el.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Stagger children inside grids
+document.querySelectorAll('.card-grid, .process-grid, .metrics-grid').forEach(grid => {
+  [...grid.children].forEach((child, i) => {
+    if (!child.style.transitionDelay) {
+      child.style.transitionDelay = (i * 0.08) + 's';
+    }
+  });
+});
+
+function handleSubmit() {
+  const name = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const msg = document.getElementById('f-msg').value.trim();
+  if (!name || !email || !msg) { alert('Please fill in all fields.'); return; }
+  window.location.href = `mailto:amit.uxdoffice@gmail.com?subject=Portfolio enquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(msg + '\n\nFrom: ' + email)}`;
+}
+</script>
+</body>
+</html>
