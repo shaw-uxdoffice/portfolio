@@ -1231,7 +1231,7 @@ footer {
           </a>
         </div>
       </div>
-      <div class="reveal" style="transition-delay:0.1s">
+      <form class="reveal" style="transition-delay:0.1s" netlify>
         <div class="form-group">
           <label for="f-name">Name</label>
           <input type="text" id="f-name" placeholder="Your name">
@@ -1244,8 +1244,8 @@ footer {
           <label for="f-msg">Message</label>
           <textarea id="f-msg" placeholder="Tell me about your project or role"></textarea>
         </div>
-        <button class="form-submit" onclick="handleSubmit()">Send message</button>
-      </div>
+        <button class="form-submit" type="submit" onclick="handleSubmit()">Send message</button>
+      </form>
     </div>
   </div>
 </section>
