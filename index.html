@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="assets/favicon.png">
 <title>Amit Kumar Shaw — UX Strategist</title>
 <meta name="description" content="Ten years making complex enterprise software easier to use — and harder to ignore. UX Strategist working across EY, ADP, Salesforce and B2B SaaS.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -211,7 +212,7 @@ nav.scrolled { box-shadow: 0 2px 20px rgba(26,46,74,0.08); }
   border-radius: 4px;
   display: block;
   aspect-ratio: 3/4;
-  object-fit: cover;
+  object-fit: none;
   object-position: center top;
 }
 .hero-tag {
@@ -895,7 +896,7 @@ footer {
       — and harder to ignore.
     </h1>
     <p class="hero-body">
-      I lead UX for platforms where the stakes are high: audit portals, payroll systems, B2B SaaS on Salesforce. My work starts with the real problem and ships measurable outcomes — not just screens.
+      I lead UX for platforms where the stakes are high: audit portals, payroll systems, B2B SaaS & Salesforce. My work starts with the real problem and ships measurable outcomes — not just screens.
     </p>
     <div class="hero-actions">
       <a href="#work" class="btn-primary">View case studies</a>
@@ -907,7 +908,7 @@ footer {
     <div class="hero-photo-wrap">
       <div class="hero-photo-bg"></div>
       <img
-        src="https://cdn.prod.website-files.com/67f679f602e6247ed7e0b4be/67fad129f4590010d54ed49f_Amit-Pic.jpeg"
+        src="assets/amit.png"
         alt="Amit Kumar Shaw — UX Strategist"
         class="hero-photo"
         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
@@ -956,10 +957,10 @@ footer {
     </div>
 
     <!-- Featured card -->
-    <a href="https://as-xd.webflow.io/work/client-portal" target="_blank" class="card-featured reveal">
+    <a href="client-portal.html" target="_blank" class="card-featured reveal">
       <div class="card-featured-img">
         <img
-          src="https://cdn.prod.website-files.com/67f679f602e6247ed7e0b4be/67f68a04f9659231a472185a_db8c84dbde5065e293e2af1bae45fd98_CX-case-study%20%281%29.jpg"
+          src="assets/cover.jpg"
           alt="EY Audit Client Portal redesign"
           onerror="this.style.background='#0D1B2A'"
         >
@@ -974,16 +975,16 @@ footer {
           <div class="card-meta">
             <div class="card-meta-row">
               <span class="card-meta-label">Role</span>
-              <span class="card-meta-val">Lead UX Strategist — discovery, research, prototyping, delivery</span>
+              <span class="card-meta-val">Experience Design Lead — discovery, research, prototyping, delivery</span>
             </div>
-            <div class="card-meta-row">
+          <!--  <div class="card-meta-row">
               <span class="card-meta-label">Methods</span>
               <span class="card-meta-val">User interviews, usability testing, rapid prototype iteration, design system</span>
             </div>
             <div class="card-meta-row">
               <span class="card-meta-label">Stack</span>
-              <span class="card-meta-val">Figma · Salesforce · SLDS · Maze</span>
-            </div>
+              <span class="card-meta-val">Figma · Motif Design System · SLDS · Maze</span>
+            </div> -->
           </div>
         </div>
         <div class="card-outcome">
@@ -1102,7 +1103,7 @@ footer {
         <div class="about-photo-wrap">
           <div class="about-photo-accent"></div>
           <img
-            src="https://cdn.prod.website-files.com/67f679f602e6247ed7e0b4be/67fad129f4590010d54ed49f_Amit-Pic.jpeg"
+            src="assets/amitshaw.png"
             alt="Amit Kumar Shaw"
             class="about-photo"
             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
@@ -1207,7 +1208,7 @@ footer {
     <div class="contact-grid">
       <div class="reveal">
         <p class="contact-body">
-          I do my best work on products where design decisions have visible business consequences — platforms used daily by people who cannot afford them to be confusing. If that describes what you are building, get in touch.
+          The products that excite me most sit at the intersection of business strategy, user needs, and operational impact. If you're solving complex problems at scale, I'd be interested in learning more.
         </p>
         <p class="contact-body">
           Open to senior UX and design leadership roles in enterprise, B2B SaaS, and fintech. Available for remote and hybrid engagements.
@@ -1231,7 +1232,7 @@ footer {
           </a>
         </div>
       </div>
-      <form class="reveal" style="transition-delay:0.1s" netlify>
+      <div class="reveal" style="transition-delay:0.1s">
         <div class="form-group">
           <label for="f-name">Name</label>
           <input type="text" id="f-name" placeholder="Your name">
@@ -1244,8 +1245,8 @@ footer {
           <label for="f-msg">Message</label>
           <textarea id="f-msg" placeholder="Tell me about your project or role"></textarea>
         </div>
-        <button class="form-submit" type="submit" onclick="handleSubmit()">Send message</button>
-      </form>
+        <button class="form-submit" onclick="handleSubmit()">Send message</button>
+      </div>
     </div>
   </div>
 </section>

@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paystub Download & Quick Totals · Case Study · Amit Shaw</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* =============================================
+       LIGHT THEME VARIABLES
+    ============================================= */
+    :root {
+      --bg:         #F6F5F1;
+      --bg2:        #EDEBE6;
+      --card:       #FFFFFF;
+      --card-h:     #F9F8F5;
+      --blue:       #2A5BAC;
+      --blue-dim:   rgba(42,91,172,0.08);
+      --blue-br:    rgba(42,91,172,0.22);
+      --blue-deep:  #1E3F7A;
+      --amber:      #C47800;
+      --amber-dim:  rgba(196,120,0,0.08);
+      --amber-br:   rgba(196,120,0,0.25);
+      --green:      #16A34A;
+      --green-dim:  rgba(22,163,74,0.08);
+      --red:        #DC2626;
+      --red-dim:    rgba(220,38,38,0.08);
+      --red-br:     rgba(220,38,38,0.2);
+      --text:       #1C1916;
+      --text2:      #6B6560;
+      --textM:      #A8A3A0;
+      --br:         rgba(0,0,0,0.08);
+      --brH:        rgba(0,0,0,0.15);
+      --sh-sm:      0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      --sh-md:      0 4px 14px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+      --f-disp:     'DM Serif Display', Georgia, serif;
+      --f-body:     'Sora', system-ui, sans-serif;
+      --f-mono:     'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--f-body); line-height: 1.65; overflow-x: hidden; }
+
+    /* =============================================
+       NAV — stays dark, same as portfolio
+    ============================================= */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; justify-content: space-between; align-items: center; padding: 18px 64px; background: rgba(8,8,18,0.92); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .nav-logo { font-family: var(--f-disp); font-size: 1.3rem; color: #E8A832; text-decoration: none; }
+    .nav-label { font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+    .nav-cta { font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.4); text-decoration: none; border: 1px solid rgba(255,255,255,0.1); padding: 7px 16px; border-radius: 2px; transition: color .2s, border-color .2s; }
+    .nav-cta:hover { color: #E8A832; border-color: rgba(232,168,50,0.4); }
+
+    /* =============================================
+       SCROLL REVEAL
+    ============================================= */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* =============================================
+       LAYOUT
+    ============================================= */
+    .wrap { max-width: 1160px; margin: 0 auto; padding: 0 64px; position: relative; z-index: 1; }
+    .divider { height: 1px; background: var(--br); }
+    .eyebrow { font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--blue); margin-bottom: 14px; display: flex; align-items: center; gap: 12px; }
+    .eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--blue); opacity: 0.5; }
+    h2.sec-title { font-family: var(--f-disp); font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 400; line-height: 1.12; color: var(--text); margin-bottom: 20px; }
+    h2.sec-title em { font-style: italic; color: var(--blue); }
+    p.lead { font-size: 1rem; color: var(--text2); line-height: 1.82; max-width: 600px; }
+    p.body-t { font-size: 0.82rem; color: var(--text2); line-height: 1.78; }
+    .tag { display: inline-block; font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 12px; border: 1px solid var(--br); border-radius: 2px; color: var(--text2); }
+    .tag.accent { border-color: var(--blue-br); color: var(--blue); background: var(--blue-dim); }
+
+    /* =============================================
+       ARTIFACT FRAMES
+    ============================================= */
+    .artifact-wrap { margin-top: 48px; }
+    .artifact-eyebrow { font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--textM); margin-bottom: 10px; }
+    .artifact-frame { border: 1px solid var(--blue-br); border-radius: 4px; overflow: hidden; background: #EEF2FA; }
+    .artifact-cap { font-family: var(--f-mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--text2); padding: 9px 16px; border-top: 1px solid var(--blue-br); background: #E5EAF4; display: flex; justify-content: space-between; }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; position: relative; overflow: hidden; background: var(--bg); }
+    .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px); background-size: 48px 48px; }
+    .hero-glow { position: absolute; top: 15%; left: 50%; width: 640px; height: 640px; background: radial-gradient(ellipse, rgba(42,91,172,0.07) 0%, transparent 68%); pointer-events: none; }
+    .hero-content { position: relative; z-index: 2; padding: 148px 64px 72px; max-width: 1160px; margin: 0 auto; width: 100%; }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
+    .hero-h1 { font-family: var(--f-disp); font-size: clamp(3.2rem, 7vw, 6.2rem); font-weight: 400; line-height: 1.0; letter-spacing: -0.025em; margin-bottom: 28px; color: var(--text); }
+    .hero-h1 em { font-style: italic; color: var(--blue); }
+    .hero-sub { font-size: 1rem; color: var(--text2); max-width: 540px; line-height: 1.78; margin-bottom: 72px; }
+    .hero-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--br); border-top: 1px solid var(--br); }
+    .meta-item { background: var(--bg); padding: 24px 28px; }
+    .meta-lbl { font-family: var(--f-mono); font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--textM); margin-bottom: 6px; }
+    .meta-val { font-family: var(--f-disp); font-size: 1.15rem; color: var(--text); }
+    .meta-val.big { font-size: 2.4rem; color: var(--blue); font-style: italic; line-height: 1; }
+
+    /* =============================================
+       CONTEXT SECTION
+    ============================================= */
+    .context-sec { padding: 100px 0; }
+    .context-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 60px; align-items: start; }
+    .context-table { border: 1px solid var(--br); border-radius: 3px; overflow: hidden; box-shadow: var(--sh-sm); }
+    .ctx-row { display: grid; grid-template-columns: 1fr 1.5fr; border-bottom: 1px solid var(--br); }
+    .ctx-row:last-child { border-bottom: none; }
+    .ctx-row.header { background: var(--bg2); }
+    .ctx-cell { padding: 13px 18px; font-size: 0.78rem; color: var(--text2); border-right: 1px solid var(--br); line-height: 1.5; }
+    .ctx-cell:last-child { border-right: none; }
+    .ctx-row.header .ctx-cell { font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--textM); background: var(--bg2); }
+    .ctx-cell strong { color: var(--text); font-weight: 500; display: block; margin-bottom: 1px; }
+
+    /* =============================================
+       PROBLEM SECTION
+    ============================================= */
+    .problem-sec { padding: 100px 0; background: var(--bg2); }
+    .problem-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-bottom: 60px; align-items: start; }
+    .problem-stmt { background: var(--card); border: 1px solid var(--br); border-radius: 3px; border-left: 3px solid var(--red); padding: 32px; box-shadow: var(--sh-sm); }
+    .problem-stmt blockquote { font-family: var(--f-disp); font-size: 1.1rem; font-weight: 400; line-height: 1.65; color: var(--text2); font-style: italic; }
+    .pain-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .pain-card { background: var(--card); border: 1px solid var(--br); border-radius: 3px; border-top: 2px solid var(--red); padding: 24px 20px; box-shadow: var(--sh-sm); transition: box-shadow .25s; }
+    .pain-card:hover { box-shadow: var(--sh-md); }
+    .pain-num { font-family: var(--f-mono); font-size: 0.58rem; letter-spacing: 0.15em; color: var(--red); opacity: 0.6; margin-bottom: 12px; }
+    .pain-title { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .pain-body { font-size: 0.75rem; color: var(--text2); line-height: 1.65; margin-bottom: 12px; }
+    .pain-tag { font-family: var(--f-mono); font-size: 0.54rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); background: var(--red-dim); border: 1px solid var(--red-br); padding: 3px 8px; border-radius: 2px; display: inline-block; }
+
+    /* =============================================
+       ROLE SECTION
+    ============================================= */
+    .role-sec { padding: 100px 0; }
+    .role-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 80px; margin-top: 60px; align-items: start; }
+    .role-badge { display: inline-flex; align-items: center; gap: 10px; background: var(--blue-dim); border: 1px solid var(--blue-br); padding: 10px 18px; border-radius: 3px; margin-bottom: 32px; }
+    .role-badge span { font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); }
+    .collab-card { background: var(--card); border: 1px solid var(--br); border-radius: 3px; overflow: hidden; box-shadow: var(--sh-sm); }
+    .collab-header { padding: 14px 22px; border-bottom: 1px solid var(--br); background: var(--bg2); font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--textM); }
+    .collab-item { display: flex; gap: 14px; padding: 16px 22px; border-bottom: 1px solid var(--br); align-items: flex-start; }
+    .collab-item:last-child { border-bottom: none; }
+    .collab-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); margin-top: 5px; flex-shrink: 0; }
+    .collab-dot.amber { background: var(--amber); }
+    .collab-name { font-size: 0.8rem; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .collab-role { font-size: 0.73rem; color: var(--text2); line-height: 1.5; }
+
+    /* =============================================
+       DISCOVERY SECTION
+    ============================================= */
+    .discovery-sec { padding: 100px 0; background: var(--bg2); }
+    .disc-two { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .insight-card { background: var(--card); border: 1px solid var(--br); border-radius: 3px; padding: 28px 24px; box-shadow: var(--sh-sm); margin-bottom: 16px; border-left: 3px solid var(--blue); }
+    .insight-label { font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+    .insight-text { font-size: 0.8rem; color: var(--text2); line-height: 1.65; }
+    .insight-text strong { color: var(--text); }
+    .quote-block { background: var(--card); border: 1px solid var(--br); border-radius: 3px; padding: 28px 24px; box-shadow: var(--sh-sm); border-left: 3px solid var(--amber); margin-bottom: 16px; }
+    .quote-text { font-family: var(--f-disp); font-size: 0.9rem; font-style: italic; color: var(--text2); line-height: 1.65; margin-bottom: 10px; }
+    .quote-attr { font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--textM); }
+
+    /* =============================================
+       CONCEPTS SECTION
+    ============================================= */
+    .concepts-sec { padding: 100px 0; }
+    .concepts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 60px; }
+    .concept-card { background: var(--card); border: 1px solid var(--br); border-radius: 3px; overflow: hidden; box-shadow: var(--sh-sm); }
+    .concept-header { padding: 20px 22px; border-bottom: 1px solid var(--br); }
+    .concept-num { font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--textM); margin-bottom: 6px; }
+    .concept-title { font-family: var(--f-disp); font-size: 1.1rem; color: var(--text); margin-bottom: 10px; }
+    .concept-status { display: inline-block; font-family: var(--f-mono); font-size: 0.54rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 10px; border-radius: 2px; }
+    .status-disc { color: var(--red); background: var(--red-dim); border: 1px solid var(--red-br); }
+    .status-cons { color: var(--amber); background: var(--amber-dim); border: 1px solid var(--amber-br); }
+    .status-pref { color: var(--blue); background: var(--blue-dim); border: 1px solid var(--blue-br); }
+    .concept-body { padding: 20px 22px; }
+    .concept-why { font-size: 0.75rem; color: var(--text2); line-height: 1.65; margin-bottom: 14px; }
+    .concept-reason { font-family: var(--f-mono); font-size: 0.62rem; color: var(--text); background: var(--bg2); padding: 8px 12px; border-radius: 2px; line-height: 1.5; }
+
+    /* =============================================
+       SOLUTION SECTION
+    ============================================= */
+    .solution-sec { padding: 100px 0; background: var(--bg2); }
+    .sol-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-bottom: 60px; }
+    .ia-box { background: var(--card); border: 1px solid var(--br); border-radius: 3px; padding: 28px 24px; box-shadow: var(--sh-sm); font-family: var(--f-mono); font-size: 0.68rem; color: var(--text2); line-height: 2; margin-bottom: 24px; border-top: 2px solid var(--blue); }
+    .ia-box .ia-title { font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
+    .sol-features { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 48px; }
+    .sol-feature { background: var(--card); border: 1px solid var(--br); border-radius: 3px; padding: 24px 22px; box-shadow: var(--sh-sm); transition: box-shadow .25s, border-color .25s; }
+    .sol-feature:hover { box-shadow: var(--sh-md); border-color: var(--blue-br); }
+    .sf-num { font-family: var(--f-disp); font-size: 2rem; font-style: italic; color: var(--blue); opacity: 0.2; line-height: 1; margin-bottom: 12px; }
+    .sf-title { font-size: 0.84rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .sf-body { font-size: 0.75rem; color: var(--text2); line-height: 1.65; }
+
+    /* =============================================
+       CHALLENGES SECTION
+    ============================================= */
+    .challenges-sec { padding: 100px 0; }
+    .chal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; margin-top: 60px; }
+    .chal-item { padding: 36px 0; border-top: 1px solid var(--br); }
+    .chal-status { font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+    .cs-disc { color: var(--red); }
+    .cs-deferred { color: var(--amber); }
+    .cs-constraint { color: var(--textM); }
+    .chal-title { font-family: var(--f-disp); font-size: 1.12rem; font-weight: 400; color: var(--text); margin-bottom: 10px; }
+
+    /* =============================================
+       IMPACT SECTION
+    ============================================= */
+    .impact-sec { padding: 100px 0; background: var(--bg2); }
+    .impact-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-bottom: 60px; }
+    .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--br); border: 1px solid var(--br); border-radius: 3px; overflow: hidden; box-shadow: var(--sh-sm); margin-bottom: 32px; }
+    .metric-item { background: var(--card); padding: 32px 24px; }
+    .metric-n { font-family: var(--f-disp); font-size: 2.4rem; font-style: italic; color: var(--blue); line-height: 1; margin-bottom: 8px; }
+    .metric-l { font-family: var(--f-mono); font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text2); line-height: 1.5; }
+    .impact-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .impact-card { background: var(--card); border: 1px solid var(--br); border-radius: 3px; padding: 28px 24px; box-shadow: var(--sh-sm); border-top: 2px solid var(--blue); }
+    .ic-label { font-family: var(--f-mono); font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 16px; }
+    .ic-list { display: flex; flex-direction: column; gap: 8px; }
+    .ic-item { display: flex; gap: 10px; font-size: 0.76rem; color: var(--text2); line-height: 1.55; }
+    .ic-item::before { content: '✓'; color: var(--green); flex-shrink: 0; font-size: 0.7rem; padding-top: 1px; }
+
+    /* =============================================
+       LEARNINGS SECTION
+    ============================================= */
+    .learnings-sec { padding: 100px 0; }
+    .learn-list { display: flex; flex-direction: column; margin-top: 60px; }
+    .learn-item { display: grid; grid-template-columns: 64px 1fr; gap: 40px; padding: 44px 0; border-bottom: 1px solid var(--br); }
+    .learn-item:first-child { border-top: 1px solid var(--br); }
+    .learn-n { font-family: var(--f-disp); font-size: 2.4rem; font-style: italic; color: var(--blue); opacity: 0.25; line-height: 1; padding-top: 4px; }
+    .learn-content h3 { font-family: var(--f-disp); font-size: 1.35rem; font-weight: 400; color: var(--text); margin-bottom: 12px; }
+
+    /* =============================================
+       FOOTER — stays dark, same as portfolio
+    ============================================= */
+    footer { padding: 80px 0 60px; background: #07071199; background: #080812; border-top: 1px solid rgba(255,255,255,0.06); }
+    .footer-row { display: flex; justify-content: space-between; align-items: flex-end; }
+    .footer-name { font-family: var(--f-disp); font-size: 2rem; color: #EDE9E3; margin-bottom: 6px; }
+    .footer-role { font-family: var(--f-mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+    .footer-links { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .f-link { font-family: var(--f-mono); font-size: 0.66rem; color: rgba(255,255,255,0.3); text-decoration: none; transition: color .2s; }
+    .f-link:hover { color: #E8A832; }
+    .footer-bot { display: flex; justify-content: space-between; margin-top: 48px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .footer-copy { font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.1em; color: rgba(255,255,255,0.15); }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 920px) {
+      nav { padding: 16px 24px; }
+      .nav-label { display: none; }
+      .wrap { padding: 0 24px; }
+      .hero-content { padding: 120px 24px 56px; }
+      .hero-meta { grid-template-columns: repeat(2, 1fr); }
+      .context-grid, .problem-intro, .role-grid, .disc-two, .sol-intro, .impact-intro { grid-template-columns: 1fr; gap: 40px; }
+      .pain-row, .concepts-grid, .sol-features, .impact-cards { grid-template-columns: 1fr; }
+      .metrics-row { grid-template-columns: repeat(2, 1fr); }
+      .chal-grid { grid-template-columns: 1fr; }
+      .learn-item { grid-template-columns: 1fr; gap: 12px; }
+      .learn-n { font-size: 1.8rem; }
+      .footer-row { flex-direction: column; gap: 32px; align-items: flex-start; }
+      .footer-links { align-items: flex-start; }
+      .footer-bot { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">AS</a>
+  <span class="nav-label">Paystub Download &nbsp;·&nbsp; Case Study</span>
+  <a href="mailto:amit.uxdoffice@gmail.com" class="nav-cta">Get in touch</a>
+</nav>
+
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-tags">
+      <span class="tag accent">Enterprise Payroll</span>
+      <span class="tag">Lyric · ADP</span>
+      <span class="tag">Product Design</span>
+      <span class="tag">Compliance-Critical</span>
+    </div>
+    <h1 class="hero-h1">
+      Paystub Download<br>&amp; <em>Quick Totals</em>
+    </h1>
+    <p class="hero-sub">
+      Downloading 50 pay stubs took 12 minutes. A legal audit took a week. The question wasn't whether to fix it — it was which fix would survive contact with users, compliance constraints, and an API that wasn't built for bulk.
+    </p>
+  </div>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <div class="meta-lbl">Platform</div>
+      <div class="meta-val">Lyric · ADP Enterprise</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-lbl">My Role</div>
+      <div class="meta-val">Product Designer</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-lbl">Download Time Reduced</div>
+      <div class="meta-val big">87.5%</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-lbl">Support Ticket Reduction</div>
+      <div class="meta-val big">64%</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CONTEXT -->
+<section class="context-sec reveal" id="context">
+  <div class="wrap">
+    <p class="eyebrow">01 — Context & Background</p>
+    <div class="context-grid">
+      <div>
+        <h2 class="sec-title">A compliance-critical<br>gap in <em>enterprise payroll</em></h2>
+        <p class="lead">Lyric is ADP's enterprise payroll platform. Two types of practitioners rely on it daily — COS teams managing payroll on behalf of clients, and non-COS HR administrators running their own. When either group needs pay stubs for legal, audit, or offboarding purposes, the stakes are immediate and the margin for error is zero.</p>
+        <br>
+        <p class="body-t">The feature needed to achieve parity with Vantage and Enterprise products, which already supported bulk download. The gap wasn't just a UX inconvenience — it was leaving COS teams exposed to weeks of manual labor for every legal or DOL audit request.</p>
+      </div>
+      <div>
+        <div class="context-table">
+          <div class="ctx-row header">
+            <div class="ctx-cell">Dimension</div>
+            <div class="ctx-cell">Context</div>
+          </div>
+          <div class="ctx-row">
+            <div class="ctx-cell"><strong>Platform</strong></div>
+            <div class="ctx-cell" style="color:var(--text2);">Lyric — ADP enterprise payroll web app</div>
+          </div>
+          <div class="ctx-row">
+            <div class="ctx-cell"><strong>Primary Users</strong></div>
+            <div class="ctx-cell" style="color:var(--text2);">COS payroll practitioners + non-COS HR administrators</div>
+          </div>
+          <div class="ctx-row">
+            <div class="ctx-cell"><strong>Use Cases</strong></div>
+            <div class="ctx-cell" style="color:var(--text2);">Employee lawsuits, DOL audits, state compliance, client terminations</div>
+          </div>
+          <div class="ctx-row">
+            <div class="ctx-cell"><strong>Current Reality</strong></div>
+            <div class="ctx-cell" style="color:var(--text2);">One-by-one manual extraction — up to one week per request</div>
+          </div>
+          <div class="ctx-row">
+            <div class="ctx-cell"><strong>Target State</strong></div>
+            <div class="ctx-cell" style="color:var(--text2);">Bulk download with smart filtering — 15 to 20 minutes per request</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- PROBLEM -->
+<section class="problem-sec reveal" id="problem">
+  <div class="wrap">
+    <p class="eyebrow">02 — The Problem to Solve</p>
+    <div class="problem-intro">
+      <div>
+        <h2 class="sec-title">One by one, <em>all week long</em></h2>
+        <p class="lead">When a client received a DOL audit notice or an employee filed a lawsuit, a COS practitioner would open iReports, search through a PDF that could contain 25,000 employees, extract individual pages, and repeat — for every pay period across years of history. Lyric improved the interface but not the loop.</p>
+        <br>
+        <p class="body-t">And the compliance pressure was real. Incorrect pay statements don't just create operational delays — in states like New York, they create legal exposure. A wrong statement can end in a lawsuit. That's the environment in which this feature needed to work flawlessly.</p>
+      </div>
+      <div>
+        <div class="problem-stmt">
+          <div class="eyebrow" style="color:var(--red); margin-bottom:16px;">The Core Problem</div>
+          <blockquote>"It used to take a week at least when data was older. Imagine if they asked for a longer period — then data's not in iReports, you have to extract it from archives, and then again you go through one file at a time, look into all the pages."</blockquote>
+          <div style="margin-top:16px; font-family:var(--f-mono); font-size:0.6rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--textM);">— Nitin Sharma, Manager CSMPS, COS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARTIFACT 01: Before State Loop -->
+    <div class="artifact-wrap reveal">
+      <div class="artifact-eyebrow">Artifact 01 — Current State: The One-By-One Download Loop</div>
+      <div class="artifact-frame">
+        <svg viewBox="0 0 900 300" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+          <defs>
+            <marker id="arr-dk" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <path d="M0,0 L7,3.5 L0,7 Z" fill="rgba(28,25,22,0.35)"/>
+            </marker>
+            <marker id="arr-red" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <path d="M0,0 L7,3.5 L0,7 Z" fill="rgba(220,38,38,0.6)"/>
+            </marker>
+            <marker id="arr-loop" markerWidth="7" markerHeight="7" refX="1" refY="3.5" orient="auto-start-reverse">
+              <path d="M7,0 L0,3.5 L7,7 Z" fill="rgba(220,38,38,0.6)"/>
+            </marker>
+          </defs>
+          <rect width="900" height="300" fill="#EEF2FA"/>
+          <text x="32" y="30" font-family="JetBrains Mono,monospace" font-size="8.5" fill="rgba(28,25,22,0.3)" letter-spacing="2">BEFORE STATE — MANUAL ONE-BY-ONE EXTRACTION PROCESS</text>
+
+          <!-- Step boxes: 6 steps across, y=70, h=64 -->
+          <!-- Step 1 -->
+          <rect x="28" y="70" width="110" height="64" rx="3" fill="white" stroke="rgba(28,25,22,0.15)" stroke-width="1.2"/>
+          <text x="83" y="96" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(28,25,22,0.5)" letter-spacing="0.5">RECEIVE</text>
+          <text x="83" y="108" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(28,25,22,0.5)" letter-spacing="0.5">REQUEST</text>
+          <text x="83" y="124" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(28,25,22,0.3)">Audit / Legal</text>
+          <line x1="138" y1="102" x2="154" y2="102" stroke="rgba(28,25,22,0.25)" stroke-width="1" marker-end="url(#arr-dk)"/>
+
+          <!-- Step 2 -->
+          <rect x="154" y="70" width="110" height="64" rx="3" fill="white" stroke="rgba(28,25,22,0.15)" stroke-width="1.2"/>
+          <text x="209" y="96" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(28,25,22,0.5)" letter-spacing="0.5">OPEN</text>
+          <text x="209" y="108" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(28,25,22,0.5)" letter-spacing="0.5">iREPORTS</text>
+          <text x="209" y="124" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(28,25,22,0.3)">Legacy system</text>
+          <line x1="264" y1="102" x2="280" y2="102" stroke="rgba(28,25,22,0.25)" stroke-width="1" marker-end="url(#arr-dk)"/>
+
+          <!-- Step 3 -->
+          <rect x="280" y="70" width="110" height="64" rx="3" fill="white" stroke="rgba(220,38,38,0.25)" stroke-width="1.2"/>
+          <text x="335" y="90" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(220,38,38,0.55)" letter-spacing="0.5">SEARCH</text>
+          <text x="335" y="102" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(220,38,38,0.55)" letter-spacing="0.5">EMPLOYEE</text>
+          <text x="335" y="116" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(220,38,38,0.4)">in 25,000-person</text>
+          <text x="335" y="127" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(220,38,38,0.4)">PDF per pay group</text>
+          <line x1="390" y1="102" x2="406" y2="102" stroke="rgba(220,38,38,0.4)" stroke-width="1" marker-end="url(#arr-red)"/>
+
+          <!-- Step 4 -->
+          <rect x="406" y="70" width="110" height="64" rx="3" fill="white" stroke="rgba(220,38,38,0.25)" stroke-width="1.2"/>
+          <text x="461" y="96" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(220,38,38,0.55)" letter-spacing="0.5">EXTRACT</text>
+          <text x="461" y="108" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(220,38,38,0.55)" letter-spacing="0.5">PAGE(S)</text>
+          <text x="461" y="124" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(220,38,38,0.4)">PDF viewer trick</text>
+          <line x1="516" y1="102" x2="532" y2="102" stroke="rgba(220,38,38,0.4)" stroke-width="1" marker-end="url(#arr-red)"/>
+
+          <!-- Step 5 -->
+          <rect x="532" y="70" width="110" height="64" rx="3" fill="white" stroke="rgba(220,38,38,0.25)" stroke-width="1.2"/>
+          <text x="587" y="96" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(220,38,38,0.55)" letter-spacing="0.5">SAVE FILE</text>
+          <text x="587" y="112" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(220,38,38,0.4)">1 pay period</text>
+          <text x="587" y="124" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(220,38,38,0.4)">at a time</text>
+
+          <!-- Step 6 — Decision: more periods? -->
+          <rect x="680" y="58" width="130" height="88" rx="3" fill="rgba(220,38,38,0.06)" stroke="rgba(220,38,38,0.4)" stroke-width="1.5"/>
+          <text x="745" y="84" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(220,38,38,0.7)" letter-spacing="0.5">MORE</text>
+          <text x="745" y="96" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(220,38,38,0.7)" letter-spacing="0.5">PERIODS?</text>
+          <text x="745" y="114" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="22" fill="rgba(220,38,38,0.7)" font-family="Georgia,serif" font-style="italic">×52</text>
+          <text x="745" y="134" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(220,38,38,0.5)">weekly payroll/year</text>
+          <!-- Arrow from step 5 to step 6 -->
+          <line x1="642" y1="102" x2="680" y2="102" stroke="rgba(220,38,38,0.4)" stroke-width="1" marker-end="url(#arr-red)"/>
+
+          <!-- LOOP ARROW: from step 6 back to step 3 -->
+          <path d="M 745,146 L 745,172 L 335,172 L 335,134" stroke="rgba(220,38,38,0.45)" stroke-width="1.5" fill="none" stroke-dasharray="5 4" marker-end="url(#arr-red)"/>
+          <text x="540" y="190" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(220,38,38,0.5)" letter-spacing="1">REPEAT FOR EACH PAY PERIOD</text>
+
+          <!-- Final delivery box -->
+          <rect x="820" y="68" width="62" height="72" rx="3" fill="rgba(220,38,38,0.10)" stroke="rgba(220,38,38,0.45)" stroke-width="1.5"/>
+          <text x="851" y="92" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(220,38,38,0.7)">DELIVER</text>
+          <text x="851" y="106" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(220,38,38,0.7)">via AGS</text>
+          <text x="851" y="124" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="16" fill="rgba(220,38,38,0.8)" font-style="italic" font-family="Georgia,serif">1wk</text>
+          <line x1="810" y1="102" x2="820" y2="102" stroke="rgba(220,38,38,0.4)" stroke-width="1" marker-end="url(#arr-red)"/>
+
+          <!-- Pain point annotations -->
+          <text x="209" y="52" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(196,120,0,0.6)">⚠ Outdated tool, no batch support</text>
+          <line x1="209" y1="56" x2="209" y2="70" stroke="rgba(196,120,0,0.2)" stroke-width="1" stroke-dasharray="2 2"/>
+          <text x="461" y="52" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(196,120,0,0.6)">⚠ Manual page extraction per period</text>
+          <line x1="461" y1="56" x2="461" y2="70" stroke="rgba(196,120,0,0.2)" stroke-width="1" stroke-dasharray="2 2"/>
+
+          <!-- Archive note -->
+          <rect x="28" y="212" width="280" height="32" rx="2" fill="rgba(220,38,38,0.06)" stroke="rgba(220,38,38,0.2)" stroke-width="1"/>
+          <text x="44" y="230" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(220,38,38,0.6)">+ If data &gt;3 years: manual archive retrieval required — additional delays</text>
+
+          <!-- Bottom note -->
+          <text x="32" y="278" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.25)" letter-spacing="1">LYRIC REMOVED THE IREPORTS DEPENDENCY BUT THE ONE-BY-ONE LOOP REMAINED · 12 MIN FOR 50 STUBS · 1 WEEK FOR HISTORICAL REQUESTS</text>
+        </svg>
+        <div class="artifact-cap">
+          <span>Fig 01 — Current state: no batch selection, manual per-period extraction, 52 repetitions per employee per year</span>
+          <span>Discovery Phase · Workshop Analysis</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pain Cards -->
+    <div class="pain-row reveal" style="margin-top:40px;">
+      <div class="pain-card">
+        <div class="pain-num">01</div>
+        <div class="pain-title">Manual Loop, No Batch Mode</div>
+        <div class="pain-body">One download per pay period. No multi-select. No date range download. For a single employee with three years of weekly payroll history — that's 156 individual downloads.</div>
+        <span class="pain-tag">Operational Burden</span>
+      </div>
+      <div class="pain-card">
+        <div class="pain-num">02</div>
+        <div class="pain-title">Compliance Stakes Are Extreme</div>
+        <div class="pain-body">Pay statements are legally binding. States like New York audit payroll formatting. An incorrect or incomplete statement in a lawsuit or DOL audit creates direct financial and legal exposure for the employer.</div>
+        <span class="pain-tag">Compliance Risk</span>
+      </div>
+      <div class="pain-card">
+        <div class="pain-num">03</div>
+        <div class="pain-title">Two Tabs, One Workflow, Zero Sense</div>
+        <div class="pain-body">Payroll Results (internal use) and Pay Statements (external, compliance use) lived in separate tabs for technical reasons. Practitioners had to switch context for actions that felt identical from the outside.</div>
+        <span class="pain-tag">UX Friction</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ROLE -->
+<section class="role-sec reveal" id="role">
+  <div class="wrap">
+    <p class="eyebrow">03 — My Role & Collaboration</p>
+    <div class="role-grid">
+      <div>
+        <h2 class="sec-title">From workshop to <em>working solution</em></h2>
+        <div class="role-badge"><span>Product Designer · Lyric Platform</span></div>
+        <p class="lead">I led end-to-end UX design for this feature — from facilitation of the Design Thinking workshop through research synthesis, concept exploration, and final UI. The hardest design work wasn't the screens. It was navigating the tension between what practitioners needed, what compliance required, and what the iPay API could actually do.</p>
+        <br>
+        <p class="body-t" style="max-width:500px;">My responsibilities spanned: mapping and critiquing the current-state workflow, leading empathy exercises with COS practitioners, creating three design concepts for critique, user testing, and synthesising findings into a simplified final direction that diverged from my initial hypothesis.</p>
+        <br>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; margin-top:4px;">
+          <li style="display:flex;gap:12px;align-items:flex-start;"><span style="color:var(--blue);font-family:var(--f-mono);font-size:0.7rem;padding-top:1px;">→</span><span class="body-t">Facilitated Design Thinking workshop: empathy mapping, define, ideate phases</span></li>
+          <li style="display:flex;gap:12px;align-items:flex-start;"><span style="color:var(--blue);font-family:var(--f-mono);font-size:0.7rem;padding-top:1px;">→</span><span class="body-t">Produced three design concepts; led collaborative critique to surface trade-offs</span></li>
+          <li style="display:flex;gap:12px;align-items:flex-start;"><span style="color:var(--blue);font-family:var(--f-mono);font-size:0.7rem;padding-top:1px;">→</span><span class="body-t">Tested with 5 HR administrators; pivoted direction based on findings</span></li>
+          <li style="display:flex;gap:12px;align-items:flex-start;"><span style="color:var(--blue);font-family:var(--f-mono);font-size:0.7rem;padding-top:1px;">→</span><span class="body-t">Collaborated with engineering on iPay API constraints and PDF generation performance</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="collab-card">
+          <div class="collab-header">Collaboration Ecosystem</div>
+          <div class="collab-item">
+            <div class="collab-dot amber"></div>
+            <div>
+              <div class="collab-name">Eshwari Banduvula — PM, Compliance</div>
+              <div class="collab-role">Deep compliance expertise. Defined the legal boundary between Payroll Results (internal) and Pay Statements (legally binding). Critical voice on iPay API constraints and state-specific formatting requirements.</div>
+            </div>
+          </div>
+          <div class="collab-item">
+            <div class="collab-dot amber"></div>
+            <div>
+              <div class="collab-name">Nitin Sharma — Manager, COS / CSMPS</div>
+              <div class="collab-role">Primary COS user representative. Provided the real-world detail that made the pain point undeniable — managing NBCU payroll, 1-2 requests per week, the one-week timeline for historical data.</div>
+            </div>
+          </div>
+          <div class="collab-item">
+            <div class="collab-dot"></div>
+            <div>
+              <div class="collab-name">Ambika Prasad Swain — PM, NAS Payroll</div>
+              <div class="collab-role">Aligned feature decisions with payroll product roadmap. Advocated for tab consolidation from a product simplification perspective.</div>
+            </div>
+          </div>
+          <div class="collab-item">
+            <div class="collab-dot"></div>
+            <div>
+              <div class="collab-name">Omprakash Ramanadham — UX Lead</div>
+              <div class="collab-role">Co-facilitation. Created the Right Panel concept (Concept C) and contributed the critical insight that preview-before-commit was a core Lyric design pattern worth preserving.</div>
+            </div>
+          </div>
+          <div class="collab-item">
+            <div class="collab-dot"></div>
+            <div>
+              <div class="collab-name">Engineering Team</div>
+              <div class="collab-role">Early technical feasibility discussions. Flagged iPay API limits for bulk operations and defined the sequential-calls-with-progress-indicator approach as the MVP path.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- DISCOVERY -->
+<section class="discovery-sec reveal" id="discovery">
+  <div class="wrap">
+    <p class="eyebrow">04 — Discovery & Research</p>
+    <div class="disc-two">
+      <div>
+        <h2 class="sec-title">Three findings that <em>changed the design</em></h2>
+        <p class="lead">The Design Thinking workshop ran for 90 minutes with five participants across compliance, COS operations, and product. The most important insights weren't in the initial problem statement — they emerged from the debate.</p>
+        <br>
+        <div class="insight-card">
+          <div class="insight-label">Finding 01 — Two Distinct Mental Models</div>
+          <div class="insight-text">Users come to <strong>download</strong> documents or to <strong>verify totals.</strong> These are separate cognitive tasks. Designing a single unified interface for both created confusion, not convenience. This finding drove the eventual separation of Quick Totals from the bulk download flow.</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-label">Finding 02 — Payroll Results ≠ Pay Statements</div>
+          <div class="insight-text">Payroll Results are internal — used for reconciliation, available in Excel. Pay Statements are legally binding, external-only, always PDF, governed by state compliance rules and produced via the iPay API. <strong>Mixing them in a single interface wasn't just confusing — it was a compliance risk.</strong></div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-label">Finding 03 — iPay API Was a Hard Constraint</div>
+          <div class="insight-text">The iPay system never supported bulk operations. Each statement request goes through AVOD authentication individually. <strong>Any bulk solution would require sequential API calls,</strong> meaning the UX needed to handle graceful loading states rather than instant delivery.</div>
+        </div>
+      </div>
+      <div>
+        <div class="quote-block">
+          <div class="quote-text">"Just imagine the interface on your Android or Apple — when you share a picture, you see all the options at once. Bluetooth, hotspot, all of it. Why do I have to toggle through multiple screens when the use case is the same?"</div>
+          <div class="quote-attr">Nitin Sharma, COS Manager — on consolidating the download experience</div>
+        </div>
+        <div class="quote-block">
+          <div class="quote-text">"Pay statement is always for external usage. There are states like New York where they audit how you print a pay statement and give it to your employee. It can lead to a lawsuit being filed."</div>
+          <div class="quote-attr">Eshwari Banduvula, Compliance PM — on the legal weight of the feature</div>
+        </div>
+        <div class="quote-block">
+          <div class="quote-text">"It gives the practitioner an option to verify before committing — an action that cannot be taken back and might cause corrections later if an employee comes back and complains."</div>
+          <div class="quote-attr">Omprakash Ramanadham, UX Lead — on the value of real-time validation</div>
+        </div>
+        <div style="background:var(--card); border:1px solid var(--br); border-radius:3px; padding:24px; box-shadow:var(--sh-sm); margin-top:16px; border-left:3px solid var(--green);">
+          <div style="font-family:var(--f-mono); font-size:0.56rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--green); margin-bottom:10px;">Research Scope</div>
+          <div style="font-size:0.76rem; color:var(--text2); line-height:1.7;">
+            8 user interviews · COS and non-COS practitioners<br>
+            Competitive analysis: Vantage, Enterprise bulk download patterns<br>
+            Design Thinking workshop: 90 min, 5 cross-functional participants<br>
+            Usability testing: 5 HR administrators on 3 design concepts
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- CONCEPTS -->
+<section class="concepts-sec reveal" id="concepts">
+  <div class="wrap">
+    <p class="eyebrow">05 — Three Concepts Explored</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; margin-bottom:60px;">
+      <div>
+        <h2 class="sec-title">The right answer required <em>the wrong ones first</em></h2>
+        <p class="lead">The workshop generated three distinct design directions. Each was sketched, critiqued in group session, and ultimately tested against real users. The process of elimination was as important as the final direction.</p>
+      </div>
+      <div style="padding-top:12px;">
+        <p class="body-t">My initial hypothesis — that a unified modal combining bulk downloads, quick totals, and detailed breakdowns would serve users best — failed at round one of testing. Users were confused by mixing downloading with data viewing. The pivot came from listening to that confusion rather than defending the design.</p>
+      </div>
+    </div>
+
+    <!-- ARTIFACT 02: Three Concept Sketches -->
+    <div class="artifact-wrap reveal">
+      <div class="artifact-eyebrow">Artifact 02 — Design Thinking Workshop: Three Concepts Sketched and Critiqued</div>
+      <div class="artifact-frame">
+        <svg viewBox="0 0 900 340" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+          <rect width="900" height="340" fill="#EEF2FA"/>
+          <text x="32" y="28" font-family="JetBrains Mono,monospace" font-size="8.5" fill="rgba(28,25,22,0.3)" letter-spacing="2">IDEATION SESSION — THREE DESIGN DIRECTIONS EXPLORED</text>
+
+          <!-- CONCEPT A: Toolbar Modal -->
+          <g transform="translate(18, 44)">
+            <!-- Browser frame -->
+            <rect x="0" y="0" width="262" height="262" rx="3" fill="white" stroke="rgba(220,38,38,0.3)" stroke-width="1.5"/>
+            <!-- Title bar -->
+            <rect x="0" y="0" width="262" height="22" rx="3" fill="rgba(220,38,38,0.08)" stroke="rgba(220,38,38,0.2)" stroke-width="1"/>
+            <circle cx="12" cy="11" r="4" fill="rgba(220,38,38,0.3)"/>
+            <circle cx="24" cy="11" r="4" fill="rgba(220,38,38,0.15)"/>
+            <circle cx="36" cy="11" r="4" fill="rgba(220,38,38,0.15)"/>
+            <text x="131" y="15" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(220,38,38,0.5)" letter-spacing="1">Pay Information</text>
+            <!-- Tab bar -->
+            <rect x="8" y="28" width="72" height="14" rx="2" fill="rgba(42,91,172,0.08)" stroke="rgba(42,91,172,0.2)" stroke-width="0.8"/>
+            <text x="44" y="39" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(42,91,172,0.7)">Pay Statements</text>
+            <rect x="86" y="28" width="78" height="14" rx="2" fill="rgba(28,25,22,0.04)" stroke="rgba(28,25,22,0.1)" stroke-width="0.8"/>
+            <text x="125" y="39" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(28,25,22,0.3)">Payroll Results</text>
+            <!-- Toolbar -->
+            <rect x="8" y="48" width="246" height="20" rx="2" fill="rgba(28,25,22,0.04)" stroke="rgba(28,25,22,0.08)" stroke-width="0.8"/>
+            <rect x="14" y="52" width="50" height="12" rx="1" fill="rgba(42,91,172,0.15)" stroke="rgba(42,91,172,0.3)" stroke-width="0.8"/>
+            <text x="39" y="61" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(42,91,172,0.7)">Actions ▾</text>
+            <rect x="70" y="52" width="38" height="12" rx="1" fill="rgba(28,25,22,0.04)" stroke="rgba(28,25,22,0.08)" stroke-width="0.8"/>
+            <text x="89" y="61" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6" fill="rgba(28,25,22,0.3)">Filter</text>
+            <!-- Table rows -->
+            <rect x="8" y="74" width="246" height="12" rx="1" fill="rgba(42,91,172,0.06)"/>
+            <rect x="8" y="90" width="246" height="12" rx="1" fill="rgba(28,25,22,0.02)"/>
+            <rect x="8" y="106" width="246" height="12" rx="1" fill="rgba(28,25,22,0.02)"/>
+            <rect x="8" y="122" width="246" height="12" rx="1" fill="rgba(28,25,22,0.02)"/>
+            <!-- Checkbox highlights -->
+            <rect x="10" y="76" width="8" height="8" rx="1" fill="rgba(42,91,172,0.3)" stroke="rgba(42,91,172,0.5)" stroke-width="0.8"/>
+            <rect x="10" y="92" width="8" height="8" rx="1" fill="rgba(28,25,22,0.1)" stroke="rgba(28,25,22,0.2)" stroke-width="0.8"/>
+            <rect x="10" y="108" width="8" height="8" rx="1" fill="rgba(28,25,22,0.1)" stroke="rgba(28,25,22,0.2)" stroke-width="0.8"/>
+            <!-- Modal overlay -->
+            <rect x="30" y="140" width="200" height="108" rx="3" fill="white" stroke="rgba(42,91,172,0.35)" stroke-width="1.5" filter="drop-shadow(0 4px 8px rgba(0,0,0,0.15))"/>
+            <rect x="30" y="140" width="200" height="20" rx="3" fill="rgba(42,91,172,0.08)"/>
+            <text x="130" y="154" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.7)" letter-spacing="1">QUICK TOTALS</text>
+            <rect x="40" y="168" width="80" height="14" rx="2" fill="rgba(42,91,172,0.06)" stroke="rgba(42,91,172,0.15)" stroke-width="0.8"/>
+            <text x="80" y="178" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(42,91,172,0.5)">Gross: $4,820</text>
+            <rect x="130" y="168" width="80" height="14" rx="2" fill="rgba(42,91,172,0.06)" stroke="rgba(42,91,172,0.15)" stroke-width="0.8"/>
+            <text x="170" y="178" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(42,91,172,0.5)">Net: $3,290</text>
+            <rect x="40" y="190" width="180" height="16" rx="2" fill="rgba(42,91,172,0.12)" stroke="rgba(42,91,172,0.25)" stroke-width="0.8"/>
+            <text x="130" y="201" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.7)">Export ▾   /   Download PDF</text>
+            <!-- Problem annotation: nested modal -->
+            <rect x="8" y="218" width="245" height="22" rx="2" fill="rgba(220,38,38,0.06)" stroke="rgba(220,38,38,0.2)" stroke-width="0.8"/>
+            <text x="130" y="231" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(220,38,38,0.65)">⚠ Nested modal added friction</text>
+            <!-- Status badge -->
+            <rect x="0" y="270" width="262" height="24" rx="2" fill="rgba(220,38,38,0.08)" stroke="rgba(220,38,38,0.25)" stroke-width="1"/>
+            <text x="131" y="285" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(220,38,38,0.8)" letter-spacing="1.5">DISCARDED — USER TESTING</text>
+          </g>
+
+          <!-- CONCEPT B: Segmented Buttons -->
+          <g transform="translate(318, 44)">
+            <rect x="0" y="0" width="262" height="262" rx="3" fill="white" stroke="rgba(196,120,0,0.3)" stroke-width="1.5"/>
+            <rect x="0" y="0" width="262" height="22" rx="3" fill="rgba(196,120,0,0.06)"/>
+            <text x="131" y="15" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(196,120,0,0.5)" letter-spacing="1">Pay Information</text>
+            <!-- Three action buttons prominently -->
+            <rect x="8" y="28" width="76" height="28" rx="2" fill="rgba(42,91,172,0.10)" stroke="rgba(42,91,172,0.3)" stroke-width="1"/>
+            <text x="46" y="41" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(42,91,172,0.75)" letter-spacing="0.5">PAY</text>
+            <text x="46" y="51" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(42,91,172,0.75)" letter-spacing="0.5">STATEMENT</text>
+            <rect x="92" y="28" width="76" height="28" rx="2" fill="rgba(28,25,22,0.05)" stroke="rgba(28,25,22,0.15)" stroke-width="1"/>
+            <text x="130" y="41" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(28,25,22,0.45)" letter-spacing="0.5">PAY</text>
+            <text x="130" y="51" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(28,25,22,0.45)" letter-spacing="0.5">SUMMARY</text>
+            <rect x="176" y="28" width="78" height="28" rx="2" fill="rgba(28,25,22,0.05)" stroke="rgba(28,25,22,0.15)" stroke-width="1"/>
+            <text x="215" y="41" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(28,25,22,0.45)" letter-spacing="0.5">QUICK</text>
+            <text x="215" y="51" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(28,25,22,0.45)" letter-spacing="0.5">TOTALS</text>
+            <!-- Date range filter -->
+            <rect x="8" y="62" width="246" height="16" rx="2" fill="rgba(28,25,22,0.03)" stroke="rgba(28,25,22,0.08)" stroke-width="0.8"/>
+            <text x="130" y="74" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(28,25,22,0.3)">Date Range: Jan 1 — Dec 31, 2024</text>
+            <!-- Table rows -->
+            <rect x="8" y="84" width="246" height="11" rx="1" fill="rgba(28,25,22,0.04)"/>
+            <rect x="8" y="100" width="246" height="30" rx="1" fill="rgba(42,91,172,0.04)" stroke="rgba(42,91,172,0.1)" stroke-width="0.8"/>
+            <rect x="8" y="134" width="246" height="30" rx="1" fill="rgba(28,25,22,0.02)"/>
+            <rect x="8" y="168" width="246" height="30" rx="1" fill="rgba(28,25,22,0.02)"/>
+            <rect x="8" y="202" width="246" height="30" rx="1" fill="rgba(28,25,22,0.02)"/>
+            <!-- Checkbox -->
+            <rect x="14" y="108" width="8" height="8" rx="1" fill="rgba(42,91,172,0.3)" stroke="rgba(42,91,172,0.5)" stroke-width="0.8"/>
+            <rect x="14" y="142" width="8" height="8" rx="1" fill="rgba(28,25,22,0.08)" stroke="rgba(28,25,22,0.2)" stroke-width="0.8"/>
+            <!-- Concern note -->
+            <rect x="8" y="240" width="246" height="16" rx="2" fill="rgba(196,120,0,0.06)" stroke="rgba(196,120,0,0.2)" stroke-width="0.8"/>
+            <text x="131" y="251" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(196,120,0,0.6)">⚠ Button proliferation as feature grows</text>
+            <!-- Status -->
+            <rect x="0" y="270" width="262" height="24" rx="2" fill="rgba(196,120,0,0.08)" stroke="rgba(196,120,0,0.3)" stroke-width="1"/>
+            <text x="131" y="285" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(196,120,0,0.8)" letter-spacing="1.5">CONSIDERED — SCALABILITY CONCERN</text>
+          </g>
+
+          <!-- CONCEPT C: Right Panel (Preferred) -->
+          <g transform="translate(618, 44)">
+            <rect x="0" y="0" width="262" height="262" rx="3" fill="white" stroke="rgba(42,91,172,0.45)" stroke-width="2"/>
+            <rect x="0" y="0" width="262" height="22" rx="3" fill="rgba(42,91,172,0.10)"/>
+            <text x="131" y="15" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.7)" letter-spacing="1">Export · Pay Information</text>
+            <!-- Left panel: filter + table -->
+            <rect x="8" y="28" width="140" height="230" rx="2" fill="rgba(28,25,22,0.02)" stroke="rgba(28,25,22,0.08)" stroke-width="0.8"/>
+            <!-- Date filter -->
+            <rect x="12" y="32" width="132" height="14" rx="1" fill="rgba(42,91,172,0.07)" stroke="rgba(42,91,172,0.15)" stroke-width="0.8"/>
+            <text x="78" y="42" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(42,91,172,0.6)">Jan 1 — Dec 31, 2024</text>
+            <!-- Table rows in left panel -->
+            <rect x="12" y="50" width="132" height="9" rx="1" fill="rgba(28,25,22,0.06)"/>
+            <rect x="12" y="64" width="132" height="20" rx="1" fill="rgba(42,91,172,0.06)" stroke="rgba(42,91,172,0.1)" stroke-width="0.8"/>
+            <rect x="14" y="68" width="7" height="7" rx="1" fill="rgba(42,91,172,0.4)" stroke="rgba(42,91,172,0.6)" stroke-width="0.8"/>
+            <rect x="12" y="88" width="132" height="20" rx="1" fill="rgba(28,25,22,0.02)"/>
+            <rect x="14" y="92" width="7" height="7" rx="1" fill="rgba(28,25,22,0.08)" stroke="rgba(28,25,22,0.2)" stroke-width="0.8"/>
+            <rect x="12" y="112" width="132" height="20" rx="1" fill="rgba(28,25,22,0.02)"/>
+            <rect x="14" y="116" width="7" height="7" rx="1" fill="rgba(28,25,22,0.08)" stroke="rgba(28,25,22,0.2)" stroke-width="0.8"/>
+            <rect x="12" y="136" width="132" height="20" rx="1" fill="rgba(42,91,172,0.04)"/>
+            <rect x="14" y="140" width="7" height="7" rx="1" fill="rgba(42,91,172,0.25)" stroke="rgba(42,91,172,0.4)" stroke-width="0.8"/>
+            <!-- Right panel: live totals -->
+            <rect x="154" y="28" width="100" height="186" rx="2" fill="rgba(42,91,172,0.04)" stroke="rgba(42,91,172,0.2)" stroke-width="1"/>
+            <text x="204" y="42" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(42,91,172,0.6)" letter-spacing="1">TOTALS</text>
+            <rect x="162" y="48" width="84" height="18" rx="1" fill="rgba(42,91,172,0.08)"/>
+            <text x="204" y="56" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(42,91,172,0.6)">Gross</text>
+            <text x="204" y="62" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="rgba(28,25,22,0.7)" font-style="italic" font-family="Georgia,serif">$4,820</text>
+            <rect x="162" y="70" width="84" height="18" rx="1" fill="rgba(42,91,172,0.05)"/>
+            <text x="204" y="78" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(42,91,172,0.5)">Net</text>
+            <text x="204" y="84" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="rgba(28,25,22,0.6)" font-style="italic" font-family="Georgia,serif">$3,290</text>
+            <rect x="162" y="92" width="84" height="18" rx="1" fill="rgba(42,91,172,0.05)"/>
+            <text x="204" y="100" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(42,91,172,0.5)">Taxes</text>
+            <text x="204" y="106" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="rgba(28,25,22,0.6)" font-style="italic" font-family="Georgia,serif">$948</text>
+            <!-- Config section -->
+            <text x="204" y="124" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6" fill="rgba(28,25,22,0.3)" letter-spacing="1">DOWNLOAD</text>
+            <rect x="162" y="128" width="84" height="12" rx="1" fill="rgba(28,25,22,0.04)" stroke="rgba(28,25,22,0.1)" stroke-width="0.8"/>
+            <text x="204" y="137" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(28,25,22,0.35)">● Internal  ○ External</text>
+            <rect x="162" y="144" width="84" height="18" rx="2" fill="rgba(42,91,172,0.15)" stroke="rgba(42,91,172,0.4)" stroke-width="1"/>
+            <text x="204" y="156" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.85)">DOWNLOAD</text>
+            <!-- Note about component -->
+            <rect x="8" y="218" width="246" height="28" rx="2" fill="rgba(42,91,172,0.05)" stroke="rgba(42,91,172,0.15)" stroke-width="0.8"/>
+            <text x="131" y="230" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.6)">⚠ Right-panel component required</text>
+            <text x="131" y="241" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.4)">investigation with Waypoint design system</text>
+            <!-- Status -->
+            <rect x="0" y="270" width="262" height="24" rx="2" fill="rgba(42,91,172,0.12)" stroke="rgba(42,91,172,0.4)" stroke-width="1.5"/>
+            <text x="131" y="285" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(42,91,172,0.85)" letter-spacing="1.5">PREFERRED — REAL-TIME VALIDATION</text>
+          </g>
+
+          <!-- Concept labels at top -->
+          <text x="149" y="40" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(28,25,22,0.35)" letter-spacing="1">CONCEPT A</text>
+          <text x="449" y="40" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(28,25,22,0.35)" letter-spacing="1">CONCEPT B</text>
+          <text x="749" y="40" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(42,91,172,0.6)" letter-spacing="1">CONCEPT C ★</text>
+        </svg>
+        <div class="artifact-cap">
+          <span>Fig 02 — Workshop ideation: three design directions critiqued against usability, technical feasibility, and compliance constraints</span>
+          <span>Design Thinking Workshop · Ideation Phase</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Concept Cards -->
+    <div class="concepts-grid reveal" style="margin-top:32px;">
+      <div class="concept-card">
+        <div class="concept-header">
+          <div class="concept-num">Concept A</div>
+          <div class="concept-title">Toolbar with Modal</div>
+          <span class="concept-status status-disc">Discarded</span>
+        </div>
+        <div class="concept-body">
+          <div class="concept-why">Gmail-style toolbar with action buttons. Multi-select opens a modal combining Quick Totals, download format, and pay statement generation in tabs.</div>
+          <div class="concept-reason">Testing showed confusion: "Is this for downloading or just viewing data?" Nested modals for pay statements added friction rather than removing it.</div>
+        </div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-header">
+          <div class="concept-num">Concept B</div>
+          <div class="concept-title">Three Segmented Buttons</div>
+          <span class="concept-status status-cons">Considered</span>
+        </div>
+        <div class="concept-body">
+          <div class="concept-why">Three independent action buttons — Pay Statement, Pay Summary, Quick Totals — each launching its own modal. Clearest separation of use cases, fastest path per task.</div>
+          <div class="concept-reason">Button proliferation risk: as feature scope grows with future tax statements and W-4s, this pattern breaks down. Deferred, not abandoned.</div>
+        </div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-header">
+          <div class="concept-num">Concept C</div>
+          <div class="concept-title">Right Panel with Live Updates</div>
+          <span class="concept-status status-pref">Preferred Direction</span>
+        </div>
+        <div class="concept-body">
+          <div class="concept-why">Split-screen: left panel for filtering and selection, right panel updating totals in real time. Single Download CTA with conditional configuration based on Internal vs. External selection.</div>
+          <div class="concept-reason">Best for error prevention — "preview before commit" aligned with Lyric's core design pattern. Required Waypoint design system investigation for right-panel component.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- SOLUTION -->
+<section class="solution-sec reveal" id="solution">
+  <div class="wrap">
+    <p class="eyebrow">06 — The Final Solution</p>
+    <div class="sol-intro">
+      <div>
+        <h2 class="sec-title">Separate the tasks. <em>Simplify each one.</em></h2>
+        <p class="lead">After user testing revealed that combining bulk downloads and quick totals into a single flow created confusion, the architecture shifted. Two separate, focused experiences — each optimised for its distinct use case — turned out to work better than any unified approach.</p>
+      </div>
+      <div style="padding-top:12px;">
+        <p class="body-t">The key design principle wasn't "put everything in one place." It was "make the 80% use case invisible." For bulk downloads: filter, select all, download. Three actions, one CTA. For Quick Totals: a focused modal showing aggregate figures from selected periods, with an optional export — entirely separate from the download flow.</p>
+        <br>
+        <div class="ia-box">
+          <div class="ia-title">Information Architecture</div>
+          Pay Information Table<br>
+          &nbsp;&nbsp;├── Date Range Filters (start / end + presets)<br>
+          &nbsp;&nbsp;├── "Exclude $0 Paychecks" Toggle<br>
+          &nbsp;&nbsp;├── Multi-select Checkboxes<br>
+          &nbsp;&nbsp;└── "Take Actions" Dropdown<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── Download Pay Stubs → PDF (direct)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── View Quick Totals → Focused Modal
+        </div>
+      </div>
+    </div>
+
+    <!-- ARTIFACT 03: Final Design Wireframe -->
+    <div class="artifact-wrap reveal">
+      <div class="artifact-eyebrow">Artifact 03 — Final Design: Pay Information Page + Quick Totals Modal</div>
+      <div class="artifact-frame">
+        <svg viewBox="0 0 900 500" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+          <defs>
+            <marker id="ann-blue" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="rgba(42,91,172,0.7)"/>
+            </marker>
+          </defs>
+          <rect width="900" height="500" fill="#EEF2FA"/>
+
+          <!-- Browser chrome -->
+          <rect x="12" y="10" width="558" height="26" rx="3" fill="#F0F4FB" stroke="rgba(28,25,22,0.1)" stroke-width="1"/>
+          <circle cx="26" cy="23" r="4" fill="rgba(220,38,38,0.5)"/>
+          <circle cx="40" cy="23" r="4" fill="rgba(196,120,0,0.4)"/>
+          <circle cx="54" cy="23" r="4" fill="rgba(22,163,74,0.4)"/>
+          <rect x="116" y="15" width="280" height="14" rx="2" fill="rgba(28,25,22,0.05)" stroke="rgba(28,25,22,0.08)" stroke-width="0.8"/>
+          <text x="256" y="26" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(28,25,22,0.3)">lyric.adp.com / pay-information</text>
+
+          <!-- App nav bar -->
+          <rect x="12" y="36" width="558" height="36" fill="white" stroke="rgba(28,25,22,0.08)" stroke-width="1"/>
+          <rect x="22" y="47" width="52" height="14" rx="2" fill="rgba(42,91,172,0.10)" stroke="rgba(42,91,172,0.25)" stroke-width="0.8"/>
+          <text x="48" y="58" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.7)" letter-spacing="0.5">LYRIC</text>
+          <text x="142" y="60" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(28,25,22,0.5)">Pay Information</text>
+
+          <!-- Page header -->
+          <rect x="12" y="72" width="558" height="44" fill="#F8F8F5" stroke="rgba(28,25,22,0.06)" stroke-width="1"/>
+          <text x="28" y="91" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(28,25,22,0.3)" letter-spacing="1">EMPLOYEE</text>
+          <text x="28" y="107" font-family="JetBrains Mono,monospace" font-size="10" fill="rgba(28,25,22,0.75)">Jordan Reyes · EMP-1847</text>
+
+          <!-- Filter bar -->
+          <rect x="12" y="116" width="558" height="38" fill="white" stroke="rgba(28,25,22,0.08)" stroke-width="1"/>
+          <!-- Date range -->
+          <rect x="22" y="124" width="90" height="22" rx="2" fill="#F0F4FB" stroke="rgba(42,91,172,0.2)" stroke-width="1"/>
+          <text x="67" y="138" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.65)">Jan 1 — Dec 31</text>
+          <rect x="118" y="124" width="70" height="22" rx="2" fill="#F0F4FB" stroke="rgba(42,91,172,0.2)" stroke-width="1"/>
+          <text x="153" y="138" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.65)">Year 2024 ▾</text>
+          <!-- Toggle: Exclude $0 -->
+          <text x="206" y="138" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(28,25,22,0.35)">Exclude $0 Paychecks</text>
+          <rect x="316" y="126" width="32" height="16" rx="8" fill="rgba(42,91,172,0.8)"/>
+          <circle cx="340" cy="134" r="6" fill="white"/>
+
+          <!-- Take Actions CTA (highlighted) -->
+          <rect x="432" y="124" width="130" height="22" rx="2" fill="rgba(42,91,172,0.12)" stroke="rgba(42,91,172,0.4)" stroke-width="1.5"/>
+          <text x="497" y="138" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(42,91,172,0.85)">Take Actions ▾</text>
+
+          <!-- Table header -->
+          <rect x="12" y="154" width="558" height="22" fill="#F2F4FA" stroke="rgba(28,25,22,0.06)" stroke-width="1"/>
+          <text x="30" y="168" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(28,25,22,0.3)" letter-spacing="1">☐</text>
+          <text x="60" y="168" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(28,25,22,0.3)" letter-spacing="1">PAY PERIOD</text>
+          <text x="200" y="168" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(28,25,22,0.3)" letter-spacing="1">GROSS</text>
+          <text x="290" y="168" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(28,25,22,0.3)" letter-spacing="1">NET</text>
+          <text x="380" y="168" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(28,25,22,0.3)" letter-spacing="1">STATUS</text>
+          <text x="480" y="168" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(28,25,22,0.3)" letter-spacing="1">ACTION</text>
+
+          <!-- Table rows — 5 rows shown, 3 selected -->
+          <!-- Row 1 (selected) -->
+          <rect x="12" y="176" width="558" height="32" fill="rgba(42,91,172,0.05)" stroke="rgba(42,91,172,0.12)" stroke-width="1"/>
+          <rect x="22" y="184" width="10" height="10" rx="2" fill="rgba(42,91,172,0.4)" stroke="rgba(42,91,172,0.6)" stroke-width="1"/>
+          <text x="60" y="196" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.6)">Dec 15, 2024</text>
+          <text x="200" y="196" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.6)">$4,820.00</text>
+          <text x="290" y="196" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.6)">$3,291.40</text>
+          <rect x="372" y="183" width="44" height="14" rx="2" fill="rgba(22,163,74,0.1)" stroke="rgba(22,163,74,0.3)" stroke-width="0.8"/>
+          <text x="394" y="193" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(22,163,74,0.8)">Posted</text>
+          <!-- Row 2 (selected) -->
+          <rect x="12" y="208" width="558" height="32" fill="rgba(42,91,172,0.04)" stroke="rgba(42,91,172,0.1)" stroke-width="1"/>
+          <rect x="22" y="216" width="10" height="10" rx="2" fill="rgba(42,91,172,0.4)" stroke="rgba(42,91,172,0.6)" stroke-width="1"/>
+          <text x="60" y="228" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.6)">Nov 30, 2024</text>
+          <text x="200" y="228" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.6)">$4,820.00</text>
+          <text x="290" y="228" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.6)">$3,291.40</text>
+          <rect x="372" y="215" width="44" height="14" rx="2" fill="rgba(22,163,74,0.1)" stroke="rgba(22,163,74,0.3)" stroke-width="0.8"/>
+          <text x="394" y="225" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(22,163,74,0.8)">Posted</text>
+          <!-- Row 3 (selected) -->
+          <rect x="12" y="240" width="558" height="32" fill="rgba(42,91,172,0.04)" stroke="rgba(42,91,172,0.08)" stroke-width="1"/>
+          <rect x="22" y="248" width="10" height="10" rx="2" fill="rgba(42,91,172,0.4)" stroke="rgba(42,91,172,0.6)" stroke-width="1"/>
+          <text x="60" y="260" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.6)">Nov 15, 2024</text>
+          <text x="200" y="260" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.5)">$4,820.00</text>
+          <text x="290" y="260" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.5)">$3,291.40</text>
+          <!-- Row 4 (unselected) -->
+          <rect x="12" y="272" width="558" height="32" fill="white" stroke="rgba(28,25,22,0.06)" stroke-width="1"/>
+          <rect x="22" y="280" width="10" height="10" rx="2" fill="rgba(28,25,22,0.06)" stroke="rgba(28,25,22,0.15)" stroke-width="0.8"/>
+          <text x="60" y="292" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.35)">Oct 31, 2024</text>
+          <text x="200" y="292" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.35)">$4,820.00</text>
+          <!-- Row 5 -->
+          <rect x="12" y="304" width="558" height="32" fill="white" stroke="rgba(28,25,22,0.05)" stroke-width="1"/>
+          <rect x="22" y="312" width="10" height="10" rx="2" fill="rgba(28,25,22,0.06)" stroke="rgba(28,25,22,0.15)" stroke-width="0.8"/>
+          <text x="60" y="324" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.35)">Oct 15, 2024</text>
+
+          <!-- "Take Actions" dropdown shown open -->
+          <rect x="432" y="147" width="138" height="58" rx="3" fill="white" stroke="rgba(42,91,172,0.3)" stroke-width="1" style="filter:drop-shadow(0 4px 12px rgba(0,0,0,0.12))"/>
+          <rect x="440" y="155" width="122" height="20" rx="2" fill="rgba(42,91,172,0.10)"/>
+          <text x="501" y="168" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(42,91,172,0.85)">Download 3 Pay Stubs</text>
+          <rect x="440" y="179" width="122" height="18" rx="2" fill="rgba(28,25,22,0.03)"/>
+          <text x="501" y="191" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.45)">View Quick Totals</text>
+
+          <!-- QUICK TOTALS MODAL (right side) -->
+          <rect x="600" y="36" width="288" height="348" rx="4" fill="white" stroke="rgba(42,91,172,0.25)" stroke-width="1.5" style="filter:drop-shadow(0 8px 24px rgba(0,0,0,0.10))"/>
+          <!-- Modal header -->
+          <rect x="600" y="36" width="288" height="44" rx="4" fill="rgba(42,91,172,0.06)"/>
+          <text x="744" y="54" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(42,91,172,0.7)" letter-spacing="2">QUICK TOTALS</text>
+          <text x="744" y="68" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(28,25,22,0.3)">3 pay periods selected · Jan–Dec 2024</text>
+          <!-- Metric boxes -->
+          <rect x="612" y="88" width="124" height="52" rx="3" fill="#F0F4FB" stroke="rgba(42,91,172,0.12)" stroke-width="1"/>
+          <text x="674" y="108" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.5)" letter-spacing="1">GROSS PAY</text>
+          <text x="674" y="126" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="14" fill="rgba(28,25,22,0.8)" font-style="italic" font-family="Georgia,serif">$14,460</text>
+          <rect x="748" y="88" width="128" height="52" rx="3" fill="#F0F4FB" stroke="rgba(42,91,172,0.12)" stroke-width="1"/>
+          <text x="812" y="108" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.5)" letter-spacing="1">NET PAY</text>
+          <text x="812" y="126" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="14" fill="rgba(28,25,22,0.8)" font-style="italic" font-family="Georgia,serif">$9,874</text>
+          <rect x="612" y="148" width="124" height="52" rx="3" fill="#F0F4FB" stroke="rgba(42,91,172,0.12)" stroke-width="1"/>
+          <text x="674" y="168" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.5)" letter-spacing="1">TAXES</text>
+          <text x="674" y="186" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="14" fill="rgba(28,25,22,0.8)" font-style="italic" font-family="Georgia,serif">$2,844</text>
+          <rect x="748" y="148" width="128" height="52" rx="3" fill="#F0F4FB" stroke="rgba(42,91,172,0.12)" stroke-width="1"/>
+          <text x="812" y="168" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.5)" letter-spacing="1">DEDUCTIONS</text>
+          <text x="812" y="186" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="14" fill="rgba(28,25,22,0.8)" font-style="italic" font-family="Georgia,serif">$1,742</text>
+          <!-- Expandable detail section -->
+          <rect x="612" y="208" width="264" height="28" rx="2" fill="rgba(28,25,22,0.03)" stroke="rgba(28,25,22,0.08)" stroke-width="0.8"/>
+          <text x="680" y="226" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.4)">▶ Earnings Breakdown</text>
+          <rect x="612" y="240" width="264" height="28" rx="2" fill="rgba(28,25,22,0.02)" stroke="rgba(28,25,22,0.06)" stroke-width="0.8"/>
+          <text x="680" y="258" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.3)">▶ Deductions Detail</text>
+          <!-- Modal actions -->
+          <rect x="612" y="276" width="128" height="24" rx="2" fill="rgba(28,25,22,0.05)" stroke="rgba(28,25,22,0.12)" stroke-width="0.8"/>
+          <text x="676" y="291" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.4)">Download Summary</text>
+          <rect x="748" y="276" width="128" height="24" rx="2" fill="rgba(42,91,172,0.12)" stroke="rgba(42,91,172,0.3)" stroke-width="1"/>
+          <text x="812" y="291" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(42,91,172,0.8)">Close</text>
+          <!-- Separator line -->
+          <text x="612" y="330" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(28,25,22,0.2)" letter-spacing="1">QUICK TOTALS — SEPARATE FROM DOWNLOAD FLOW</text>
+
+          <!-- ANNOTATION CALLOUTS -->
+          <!-- 1: Dynamic CTA label -->
+          <circle cx="501" cy="138" r="8" fill="none" stroke="rgba(42,91,172,0.5)" stroke-width="1.2"/>
+          <text x="501" y="142" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(42,91,172,0.8)">1</text>
+          <line x1="501" y1="130" x2="501" y2="90" stroke="rgba(42,91,172,0.3)" stroke-width="1" marker-end="url(#ann-blue)"/>
+          <text x="340" y="83" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.6)">① Label updates with selection count</text>
+
+          <!-- 2: $0 toggle -->
+          <circle cx="316" cy="115" r="8" fill="none" stroke="rgba(42,91,172,0.5)" stroke-width="1.2"/>
+          <text x="316" y="119" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(42,91,172,0.8)">2</text>
+          <line x1="316" y1="107" x2="316" y2="88" stroke="rgba(42,91,172,0.3)" stroke-width="1" marker-end="url(#ann-blue)"/>
+          <text x="155" y="83" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.6)">② High-value filter, not configuration</text>
+
+          <!-- 3: Separated modal -->
+          <circle cx="760" cy="400" r="8" fill="none" stroke="rgba(42,91,172,0.5)" stroke-width="1.2"/>
+          <text x="760" y="404" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(42,91,172,0.8)">3</text>
+          <line x1="760" y1="408" x2="760" y2="430" stroke="rgba(42,91,172,0.3)" stroke-width="1" marker-end="url(#ann-blue)"/>
+          <text x="620" y="448" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.6)">③ Quick Totals: separate, non-blocking modal</text>
+
+          <!-- 4: Selected rows highlight -->
+          <circle cx="37" cy="262" r="8" fill="none" stroke="rgba(42,91,172,0.5)" stroke-width="1.2"/>
+          <text x="37" y="266" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(42,91,172,0.8)">4</text>
+          <line x1="37" y1="270" x2="37" y2="286" stroke="rgba(42,91,172,0.3)" stroke-width="1" marker-end="url(#ann-blue)"/>
+          <text x="18" y="350" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(42,91,172,0.6)">④ Visual selection state across rows</text>
+
+          <!-- Bottom annotation bar -->
+          <rect x="12" y="400" width="558" height="36" rx="2" fill="rgba(42,91,172,0.05)" stroke="rgba(42,91,172,0.12)" stroke-width="1"/>
+          <text x="291" y="415" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(42,91,172,0.6)">Download → Single "Take Actions" → generates combined PDF</text>
+          <text x="291" y="429" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(28,25,22,0.3)">Progress indicator for large batches · Error handling for partial failures</text>
+        </svg>
+        <div class="artifact-cap">
+          <span>Fig 03 — Final design: multi-select table with contextual CTA; Quick Totals as separate focused modal</span>
+          <span>Final Solution · Lyric Platform UI</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solution features -->
+    <div class="sol-features reveal" style="margin-top:40px;">
+      <div class="sol-feature">
+        <div class="sf-num">01</div>
+        <div class="sf-title">Multi-Select Table with Contextual CTA</div>
+        <div class="sf-body">Checkbox selection with "Select All" for the filtered view. The action button label updates in real time: "Download 12 Pay Stubs" rather than a static "Download." No ambiguity about what you're about to commit to.</div>
+      </div>
+      <div class="sol-feature">
+        <div class="sf-num">02</div>
+        <div class="sf-title">Quick Totals as a Separate Modal</div>
+        <div class="sf-body">Gross, Net, Taxes, Deductions aggregated from selected pay periods. A dedicated, non-blocking experience. Answering "what's the total?" does not require generating or downloading a single document.</div>
+      </div>
+      <div class="sol-feature">
+        <div class="sf-num">03</div>
+        <div class="sf-title">"Exclude $0 Paychecks" Toggle</div>
+        <div class="sf-body">The one configuration that genuinely matters. Legal and DOL requests don't always need zero-pay periods. This toggle eliminates irrelevant records before selection, not after. Smart default > optional setting.</div>
+      </div>
+      <div class="sol-feature">
+        <div class="sf-num">04</div>
+        <div class="sf-title">Progress Indicator for Large Batches</div>
+        <div class="sf-body">iPay's API processes statements sequentially, not in parallel. The design communicates that honestly: a progress state for batches over 50, with a warning for very large requests rather than a silent timeout.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- CHALLENGES -->
+<section class="challenges-sec reveal" id="challenges">
+  <div class="wrap">
+    <p class="eyebrow">07 — Challenges & Concepts Not Pursued</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;margin-bottom:0;">
+      <div>
+        <h2 class="sec-title">Honest about <em>what didn't work</em></h2>
+        <p class="lead">Three of the most important design decisions in this project were decisions not to build something. Each discarded direction taught something that improved the final solution.</p>
+      </div>
+      <div style="padding-top:16px;">
+        <p class="body-t">The most instructive failure was the unified modal — my original hypothesis. User testing was direct: mixing downloading with data viewing confused people. They came with a task in mind. An interface that made them choose between two different tasks before executing either was friction, not consolidation.</p>
+      </div>
+    </div>
+    <div class="chal-grid reveal">
+      <div class="chal-item">
+        <div class="chal-status cs-disc">Concept Discarded</div>
+        <div class="chal-title">Unified Tabbed Modal</div>
+        <p class="body-t" style="max-width:460px;">The initial concept bundled bulk downloads, Quick Totals, and detailed breakdown into a single modal with tabs — plus configuration options for SSN masking and YTD toggles. Round one user testing was unambiguous: "Is this for downloading or just viewing data?" Configuration options felt overwhelming for what users described as a quick task. <strong style="color:var(--text);">We separated the use cases entirely and removed redundant controls.</strong></p>
+      </div>
+      <div class="chal-item">
+        <div class="chal-status cs-deferred">Deferred — Not Abandoned</div>
+        <div class="chal-title">Unified "Payroll Results + Pay Statements" Table</div>
+        <p class="body-t" style="max-width:460px;">The majority of workshop participants wanted the two tabs merged into one. The technical reality — different data sources, different legal treatment, and upcoming tax statements requirements — made this premature for MVP. <strong style="color:var(--text);">The two-tab approach was kept with a documented roadmap for consolidation pending engineering assessment.</strong></p>
+      </div>
+      <div class="chal-item">
+        <div class="chal-status cs-constraint">Technical Constraint</div>
+        <div class="chal-title">Native Bulk Download via iPay API</div>
+        <p class="body-t" style="max-width:460px;">The iPay API was built for individual statement retrieval. Each request requires separate AVOD authentication. The "15-minute automated solution" from the workshop would require API negotiation with the iPay team and GSO involvement. <strong style="color:var(--text);">MVP used sequential calls with a progress indicator — an honest and reliable fallback that communicated the delay rather than hiding it.</strong></p>
+      </div>
+      <div class="chal-item">
+        <div class="chal-status cs-constraint">Deprioritized</div>
+        <div class="chal-title">Mobile-Optimised Experience</div>
+        <p class="body-t" style="max-width:460px;">Bulk selection and multi-column compliance tables don't translate cleanly to mobile. Platform analytics confirmed that HR administrators and COS practitioners almost exclusively use desktop. A basic mobile layout was designed, but the mobile-first experience was explicitly scoped to a future release. <strong style="color:var(--text);">Naming the trade-off clearly prevented it from becoming a gap that surprised anyone.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- IMPACT -->
+<section class="impact-sec reveal" id="impact">
+  <div class="wrap">
+    <p class="eyebrow">08 — Impact & Outcomes</p>
+    <div class="impact-intro">
+      <div>
+        <h2 class="sec-title">From a week of manual work <em>to under two minutes</em></h2>
+        <p class="lead">The metrics were not aspirational targets set at the beginning of the project. They were post-launch measurements taken after two weeks of live use. The numbers validated that separating use cases had been the right call.</p>
+      </div>
+      <div style="padding-top:12px;">
+        <p class="body-t">The most meaningful outcome wasn't the time reduction, though 87.5% is significant. It was the 92% retention rate — practitioners who tried the feature came back. That number reflects something harder to design: confidence. The flow was clear enough that users trusted it the second time without hesitation.</p>
+      </div>
+    </div>
+    <div class="metrics-row reveal">
+      <div class="metric-item">
+        <div class="metric-n">87.5%</div>
+        <div class="metric-l">Download time reduction<br>12 min → 1.5 min (50 stubs)</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-n">64%</div>
+        <div class="metric-l">Fewer support tickets for bulk payroll tasks</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-n">78%</div>
+        <div class="metric-l">Adoption rate within first 2 weeks post-launch</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-n">92%</div>
+        <div class="metric-l">Feature retention — users who tried it, came back</div>
+      </div>
+    </div>
+    <div class="impact-cards reveal">
+      <div class="impact-card">
+        <div class="ic-label">User Impact · Associates</div>
+        <div class="ic-list">
+          <div class="ic-item">Weeks-long legal audit preparation reduced to under 20 minutes</div>
+          <div class="ic-item">Self-service capability removed dependency on COS support team</div>
+          <div class="ic-item">Quick Totals answered reconciliation questions without generating reports</div>
+          <div class="ic-item">230+ unique users accessed Quick Totals in the first month alone</div>
+        </div>
+      </div>
+      <div class="impact-card">
+        <div class="ic-label">Business Impact</div>
+        <div class="ic-list">
+          <div class="ic-item">COS teams estimated 15+ hours saved per admin per month</div>
+          <div class="ic-item">Support ticket volume for bulk payroll tasks dropped 64%</div>
+          <div class="ic-item">Lyric achieved feature parity with Vantage and Enterprise products</div>
+          <div class="ic-item">DOL audit and termination offboarding workflows became self-service</div>
+        </div>
+      </div>
+      <div class="impact-card">
+        <div class="ic-label">Qualitative Feedback</div>
+        <div class="ic-list">
+          <div class="ic-item">"I used to dread tax season — now it's so much faster."</div>
+          <div class="ic-item">"I love that I can see the totals without downloading anything."</div>
+          <div class="ic-item">COS practitioners reported reduced anxiety during audit deadlines</div>
+          <div class="ic-item">Non-COS clients reported less reliance on ADP support for routine tasks</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- LEARNINGS -->
+<section class="learnings-sec reveal" id="learnings">
+  <div class="wrap">
+    <p class="eyebrow">09 — Reflections & Learnings</p>
+    <h2 class="sec-title">What this project <em>changed about how I design</em></h2>
+    <div class="learn-list reveal">
+      <div class="learn-item">
+        <div class="learn-n">01</div>
+        <div class="learn-content">
+          <h3>Separate Does Not Mean Fragmented</h3>
+          <p class="body-t" style="max-width:680px;">My starting assumption was that consolidation equals clarity — put everything in one place and users won't have to think. Testing disproved it. Users with a download task in mind were slowed down, not helped, by a modal that also offered totals and configuration. When two use cases have different enough intents, a single interface serves neither well. Focused, single-purpose tools can be more usable than feature-rich ones — and recognising that difference early is a core design skill.</p>
+        </div>
+      </div>
+      <div class="learn-item">
+        <div class="learn-n">02</div>
+        <div class="learn-content">
+          <h3>Configuration Is Often a Signal of Unclear Requirements</h3>
+          <p class="body-t" style="max-width:680px;">The original unified modal had toggles for SSN masking, YTD options, and format selection. Most of these were redundant — the system already enforced SSN masking per organisational policy, and pay statements are always PDF by legal requirement. Configuration that duplicates existing system behaviour adds cognitive load without adding value. When you find yourself adding a lot of toggles and settings, ask first: could smart defaults make these unnecessary?</p>
+        </div>
+      </div>
+      <div class="learn-item">
+        <div class="learn-n">03</div>
+        <div class="learn-content">
+          <h3>Test the Simplest Concept First</h3>
+          <p class="body-t" style="max-width:680px;">I tested the complex unified modal in round one because I assumed simpler flows needed less validation. They don't — they need it more, because the design has fewer places to hide when something's wrong. Testing a simple multi-select → download flow first would have established a baseline faster and led to the pivot earlier. The extra iteration time wasn't wasted — it built conviction — but that conviction could have come sooner.</p>
+        </div>
+      </div>
+      <div class="learn-item">
+        <div class="learn-n">04</div>
+        <div class="learn-content">
+          <h3>Simplicity Is the Output of Discipline, Not Shortcuts</h3>
+          <p class="body-t" style="max-width:680px;">The final design — multi-select table, one CTA, one separate modal — looks obvious in hindsight. It was not obvious in process. It required testing three concepts, discarding one, deferring another, negotiating a technical constraint with engineering, and making the explicit call to separate two features that practitioners conflated. Simple interfaces are the result of many difficult decisions, not the absence of them.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="background:rgba(0,0,0,0.06);"></div>
+
+
+<!-- FOOTER — dark, same as portfolio -->
+<footer>
+  <div class="wrap">
+    <div class="footer-row">
+      <div>
+        <div class="footer-name">Amit Shaw</div>
+        <div class="footer-role">Experience Design Lead · Product Designer · 12+ Years Global Practice</div>
+      </div>
+      <div class="footer-links">
+        <a href="https://as-xd.webflow.io" target="_blank" class="f-link">↗ as-xd.webflow.io</a>
+        <a href="mailto:amit.uxdoffice@gmail.com" class="f-link">amit.uxdoffice@gmail.com</a>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <span class="footer-copy">© 2024 Amit Shaw. All rights reserved.</span>
+      <span class="footer-copy">Paystub Download & Quick Totals · Lyric · ADP Enterprise Payroll</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.style.transitionDelay = `${(i % 3) * 60}ms`;
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

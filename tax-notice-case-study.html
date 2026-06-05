@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <title>Tax Notice Guided Flow · Case Study · Amit Shaw</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* =============================================
+       VARIABLES & BASE — consistent with portfolio
+    ============================================= */
+    :root {
+      --bg:        #080812;
+      --bg2:       #0D0D1C;
+      --card:      #101020;
+      --card-h:    #171730;
+      --accent:    #E8A832;
+      --gold:      #E8A832;
+      --gold-dim:  rgba(232,168,50,0.10);
+      --gold-br:   rgba(232,168,50,0.28);
+      --blue:      #4A7CF0;
+      --blue-dim:  rgba(74,124,240,0.10);
+      --green:     #5EC88A;
+      --red:       #C26060;
+      --text:      #EDE9E3;
+      --text2:     #726C64;
+      --textM:     #7f77a9;
+      --br:        rgba(255,255,255,0.06);
+      --brH:       rgba(255,255,255,0.12);
+      --f-disp:    'DM Serif Display', Georgia, serif;
+      --f-body:    'Sora', system-ui, sans-serif;
+      --f-mono:    'JetBrains Mono', monospace;
+        --max:       1160px;
+         --rule:    rgb(235 243 255 / 17%);
+  --body-max:  720px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--f-body);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 15%, rgba(74,124,240,0.05) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 85%, rgba(232,168,50,0.04) 0%, transparent 55%);
+    }
+
+    /* =============================================
+       NAV
+    ============================================= */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(8,8,18,0.88);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--br);
+    }
+    .nav-logo { font-family: var(--f-disp); font-size: 1.1rem; color: #887f79; text-decoration: none; letter-spacing: 0.01em; }
+    
+    .nav-cta {font-family: var(--f-mono); font-size: 0.75rem; color: var(--text2); text-decoration: none; border: 1px solid var(--br); padding: 0.4rem 1rem; border-radius: 2px; transition: color 0.2s, border-color 0.2s; }
+    .nav-cta:hover { color: var(--gold); border-color: var(--gold-br); }
+
+
+.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 58px; max-width: var(--max); margin: 0 auto; padding: 0 clamp(1.25rem,4vw,2.5rem); }
+/*.nav-logo { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; color: var(--ink); text-decoration: none; }*/
+.nav-back { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text2); text-decoration: none; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+.nav-back:hover { color: var(--gold); }
+.nav-back::before { content: '←'; }
+
+
+/* Sticky Inline Sub-Navigation */
+.sub-nav { position: sticky; top: 59px; background: rgba(8,8,18,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--br); z-index: 90; }
+.sub-nav-inner { display: flex; gap: clamp(1rem, 2vw, 1.75rem); overflow-x: auto; white-space: nowrap; padding: 0.85rem clamp(1.25rem, 4vw, 2.5rem); justify-content: center; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+.sub-nav-inner::-webkit-scrollbar { display: none; }
+.sub-link { font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 100; color: var(--text2); text-decoration: none; transition: color 0.2s, border-color 0.2s; padding-bottom: 0.2rem; border-bottom: 1px solid transparent; }
+.sub-link:hover, .sub-link.active { color: var(--accent); border-color: var(--accent); }
+
+    /* =============================================
+       SCROLL REVEAL
+    ============================================= */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.75s ease, transform 0.75s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* =============================================
+       LAYOUT
+    ============================================= */
+    .wrap { max-width: 1160px; margin: 0 auto; padding: 32px 64px; position: relative; z-index: 1; }
+    .eyebrow { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: flex; align-items: center; gap: 12px; }
+    .eyebrow::before { content: ''; display: block; width: 22px; height: 1px; background: var(--gold); opacity: 0.5; }
+    h2.sec-title { font-family: var(--f-disp); font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 400; line-height: 1.12; color: var(--text); margin-bottom: 20px; }
+    p.lead { font-size: 1rem; color: #A8A29A; line-height: 1.82; max-width: 600px; }
+    p.body { font-size: 0.82rem; color: var(--text2); line-height: 1.78; }
+    .tag { display: inline-block; font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 12px; border: 1px solid var(--br); border-radius: 2px; color: var(--text2); }
+    .tag.gold { border-color: var(--gold-br); color: var(--gold); background: var(--gold-dim); }
+    .tag.blue { border-color: rgba(74,124,240,0.3); color: var(--blue); background: var(--blue-dim); }
+    .divider { height: 1px; background: var(--br); margin: 0; }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; position: relative; overflow: hidden; }
+    .hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px); background-size: 60px 60px; }
+    .hero-glow { position: absolute; top: 12%; left: 52%; width: 600px; height: 600px; background: radial-gradient(ellipse, rgba(74,124,240,0.08) 0%, transparent 68%); pointer-events: none; }
+    .hero-glow-2 { position: absolute; bottom: 20%; left: 20%; width: 400px; height: 400px; background: radial-gradient(ellipse, rgba(232,168,50,0.05) 0%, transparent 68%); pointer-events: none; }
+    .hero-content { position: relative; z-index: 2; padding: 148px 64px 72px; max-width: 1160px; margin: 0 auto; width: 100%; }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
+    .hero-h1 { font-family: var(--f-disp); font-size: clamp(3rem, 7vw, 6.5rem); font-weight: 400; line-height: 1.0; letter-spacing: -0.025em; margin-bottom: 28px; }
+    .hero-h1 em { font-style: italic; color: var(--gold); }
+    .hero-sub { font-size: 1rem; color: #888079; max-width: 560px; line-height: 1.78; margin-bottom: 72px; }
+    .hero-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--br); border-top: 1px solid var(--br); }
+    .meta-item { background: var(--bg); padding: 24px 28px; }
+    .meta-lbl { font-family: var(--f-mono); font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--textM); margin-bottom: 6px; }
+    .meta-val { font-family: var(--f-disp); font-size: 1.15rem; color: var(--text); }
+    .meta-val.big { font-size: 2.2rem; color: var(--gold); font-style: italic; line-height: 1; }
+    .meta-val.med { font-size: 1.5rem; color: var(--gold); font-style: italic; line-height: 1.1; }
+
+    /* =============================================
+       ARTIFACT FRAMES
+    ============================================= */
+    .artifact-wrap { margin-top: 56px; }
+    .artifact-eyebrow { font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--textM); margin-bottom: 10px; }
+    .artifact-frame { border: 1px solid var(--br); border-radius: 3px; overflow: hidden; background: #0C0C1C; }
+    .artifact-cap { font-family: var(--f-mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--textM); padding: 9px 16px; border-top: 1px solid var(--br); display: flex; justify-content: space-between; }
+
+
+
+
+/* Section Galleries & Evidence Thumbnails */
+.section-gallery { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px dashed var(--rule); }
+.gallery-label { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-bottom: 0.85rem; }
+.thumb-grid { display: flex; gap: 1rem; flex-wrap: wrap; }
+.thumb-item { width: clamp(110px, 15vw, 150px); height: clamp(70px, 10vw, 95px); object-fit: cover; border: 1px solid var(--rule); border-radius: 4px; cursor: pointer; background: var(--sketch-bg); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s; }
+.thumb-item:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: 0 6px 16px #e8a8321f; }
+.thumb-item.light {border-width: 2px;}
+.thumb-item.light:hover {box-shadow: 0 6px 16px #e8a8323f;}
+
+/* Overlay Modal Canvas */
+.gallery-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgb(13 13 28 / 94%); z-index: 1000; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; padding: 2rem; }
+.gallery-modal.show { display: flex; opacity: 1; }
+.gallery-modal-content { max-width: 92%; max-height: 82%; object-fit: contain; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.15); transform: scale(0.96); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+.gallery-modal.show .gallery-modal-content { transform: scale(1); }
+.gallery-modal-close { position: absolute; top: 24px; right: 32px; color: var(--white); font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; background: rgba(255,255,255,0.08); padding: 0.5rem 1rem; border-radius: 2px; transition: background 0.2s; }
+.gallery-modal-close:hover { background: rgba(255,255,255,0.18); }
+.gallery-modal-caption { position: absolute; bottom: 28px; color: rgba(255,255,255,0.65); font-family: var(--mono); font-size: 0.72rem; text-align: center; width: 85%; letter-spacing: 0.02em; }
+
+
+/* Image frame */
+.img-frame { border-radius: 4px; overflow: hidden; border: 1px solid var(--rule); margin: 2rem 0; }
+.img-frame img { width: 100%; display: block; }
+.img-frame-caption { padding: 0.75rem 1.25rem; background: var(--white); border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em; color: var(--textM); }
+.img-frame .group { padding: 20px; }
+.img-frame img {border-radius: 4px;}
+.img-frame .prototype {height: 550px; width: 100%;}
+
+    /* =============================================
+       OVERVIEW / CONTEXT
+    ============================================= */
+    .overview { padding: 100px 0; }
+    .overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 60px; align-items: start; }
+    .snapshot-table { border: 1px solid var(--br); border-radius: 3px; overflow: hidden; }
+    .snap-row { display: grid; grid-template-columns: 1fr 1.4fr; border-bottom: 1px solid var(--br); }
+    .snap-row:last-child { border-bottom: none; }
+    .snap-row.header { background: rgba(255,255,255,0.025); }
+    .snap-cell { padding: 12px 18px; font-size: 0.78rem; color: var(--text2); border-right: 1px solid var(--br); line-height: 1.5; }
+    .snap-cell:last-child { border-right: none; }
+    .snap-row.header .snap-cell { font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--textM); }
+    .snap-cell strong { color: var(--text); font-weight: 500; display: block; margin-bottom: 1px; }
+
+    /* =============================================
+       PROBLEM
+    ============================================= */
+    .problem { padding: 100px 0; background: var(--bg2); }
+    .problem-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-bottom: 60px; align-items: start; }
+    .problem-stmt { background: var(--card); border: 1px solid var(--br); border-radius: 3px; padding: 36px 32px; border-left: 3px solid var(--blue); }
+    .problem-stmt blockquote { font-family: var(--f-disp); font-size: 1.12rem; font-weight: 400; line-height: 1.65; color: #C0BABA; font-style: italic; }
+    .pain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--br); border: 1px solid var(--br); }
+    .pain-card { background: var(--bg); padding: 28px 24px; transition: background 0.25s; position: relative; }
+    .pain-card:hover { background: var(--card); }
+    .pain-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--blue); opacity: 0; transition: opacity 0.25s; }
+    .pain-card:hover::before { opacity: 1; }
+    .pain-num { font-family: var(--f-mono); font-size: 0.58rem; letter-spacing: 0.15em; color: var(--blue); opacity: 0.6; margin-bottom: 16px; }
+    .pain-title { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .pain-body { font-size: 0.76rem; color: var(--text2); line-height: 1.65; margin-bottom: 14px; }
+    .impact-tag { font-family: var(--f-mono); font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); background: rgba(194,96,96,0.09); border: 1px solid rgba(194,96,96,0.2); padding: 3px 9px; border-radius: 2px; display: inline-block; }
+    .impact-tag.blue { color: var(--blue); background: var(--blue-dim); border-color: rgba(74,124,240,0.25); }
+
+    /* =============================================
+       ROLE
+    ============================================= */
+    .role { padding: 100px 0; }
+    .role-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 80px; margin-top: 60px; align-items: start; }
+    .role-badge { display: inline-flex; align-items: center; gap: 10px; background: var(--blue-dim); border: 1px solid rgba(74,124,240,0.28); padding: 10px 18px; border-radius: 3px; margin-bottom: 32px; }
+    .role-badge span { font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); }
+    .stake-map { background: var(--card); border: 1px solid var(--br); border-radius: 3px; overflow: hidden; }
+    .stake-header { padding: 16px 24px; border-bottom: 1px solid var(--br); font-family: var(--f-mono); font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--textM); }
+    .stake-item { display: flex; align-items: flex-start; gap: 14px; padding: 16px 24px; border-bottom: 1px solid var(--br); }
+    .stake-item:last-child { border-bottom: none; }
+    .stake-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); margin-top: 5px; flex-shrink: 0; }
+    .stake-dot.gold { background: var(--gold); }
+    .stake-name { font-size: 0.8rem; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .stake-role { font-size: 0.74rem; color: var(--text2); line-height: 1.5; }
+    .res{color: var(--text2);}
+
+    /* =============================================
+       DISCOVERY
+    ============================================= */
+    .research { padding: 100px 0; background: var(--bg2); }
+    .research-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+
+    /* Terminology box */
+    .term-table { border: 1px solid var(--br); border-radius: 3px; overflow: hidden; margin-top: 40px; }
+    .term-header-row { display: grid; grid-template-columns: 1fr 1fr 1fr; background: rgba(255,255,255,0.025); border-bottom: 1px solid var(--br); }
+    .term-header-row > div { padding: 10px 16px; font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--textM); border-right: 1px solid var(--br); }
+    .term-header-row > div:last-child { border-right: none; }
+    .term-row { display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 1px solid var(--br); }
+    .term-row:last-child { border-bottom: none; }
+    .term-cell { padding: 14px 16px; font-size: 0.76rem; line-height: 1.55; border-right: 1px solid var(--br); }
+    .term-cell:last-child { border-right: none; }
+    .term-jargon { font-family: var(--f-mono); font-size: 0.72rem; color: var(--red); letter-spacing: 0.03em; }
+    .term-plain { color: var(--text); }
+    .term-why { color: var(--text2); font-size: 0.74rem; }
+
+    /* =============================================
+       HYPOTHESIS + PRINCIPLES
+    ============================================= */
+    .hypothesis { padding: 100px 0; }
+    .hypo-card { background: var(--card); border: 1px solid var(--gold-br); border-radius: 3px; padding: 36px 40px; border-left: 3px solid var(--gold); margin-top: 48px; }
+    .hypo-card blockquote { font-family: var(--f-disp); font-size: 1.15rem; font-weight: 400; line-height: 1.7; color: #C8C1B8; font-style: italic; margin-bottom: 24px; }
+    .hypo-subs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--br); border-top: 1px solid var(--br); margin-top: 28px; }
+    .hypo-sub { background: var(--card); padding: 20px 24px; }
+    .hypo-sub-label { font-family: var(--f-mono); font-size: 0.65rem;  color: var(--gold); margin-bottom: 8px;  }
+    .hypo-sub-text { font-size: 0.76rem; color: var(--text2); line-height: 1.6; }
+
+    .principles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .principle-card { background: var(--card); border: 1px solid var(--br); border-radius: 3px; padding: 28px 24px; transition: border-color 0.25s; }
+    .principle-card:hover { border-color: var(--gold-br); }
+    .principle-num { font-family: var(--f-disp); font-size: 2rem; font-style: italic; color: var(--gold); opacity: 0.3; line-height: 1; margin-bottom: 14px; }
+    .principle-title { font-size: 0.84rem; font-weight: 600; color: var(--text); margin-bottom: 8px; letter-spacing: 0.03em;}
+    .principle-body { font-size: 0.76rem; color: var(--text2); line-height: 1.65; }
+    .hypo-div{ display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start; }
+
+    /* =============================================
+       SOLUTION
+    ============================================= */
+    .solution { padding: 100px 0; background: var(--bg2); }
+    .solution-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-bottom: 60px; }
+
+    /* Notice type tabs */
+    .notice-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;  }
+    .notice-card { background: var(--card); border: 1px solid var(--br); border-radius: 3px; padding: 28px 24px; transition: border-color 0.25s, background 0.25s; }
+    .notice-card:hover { border-color: var(--gold-br); background: var(--card-h); }
+    .notice-tag { font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: #7f78a9; margin-bottom: 14px; }
+    .notice-title { font-family: var(--f-disp); font-size: 1.2rem; color: var(--text); margin-bottom: 12px; letter-spacing: 0.05em;}
+    .notice-outcome-list { display: flex; flex-direction: column; gap: 6px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--br); }
+    .notice-outcome { font-size: 0.74rem; color: var(--text2); display: flex; gap: 10px; }
+    .notice-outcome::before { content: '→'; color: var(--gold); opacity: 0.6; flex-shrink: 0; }
+
+    /* =============================================
+       DESIGN EVOLUTION
+    ============================================= */
+    .evolution { padding: 100px 0; }
+    .evolution-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .iter-list { display: flex; flex-direction: column; margin-top: 60px; }
+    .iter-item { display: grid; grid-template-columns: 60px 1fr; gap: 40px; padding: 44px 0; border-bottom: 1px solid var(--br); }
+    .iter-item:first-child { border-top: 1px solid var(--br); }
+    .iter-n { font-family: var(--f-disp); font-size: 2.8rem; font-style: italic; color: var(--textM); line-height: 1; padding-top: 4px; }
+    .iter-body h3 { font-family: var(--f-disp); font-size: 1.35rem; font-weight: 400; color: var(--text); margin-bottom: 10px; }
+    .iter-status { display: inline-block; font-family: var(--f-mono); font-size: 0.54rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 9px; border-radius: 2px; margin-bottom: 14px; }
+    .iter-status.discarded { color: var(--red); background: rgba(194,96,96,0.1); border: 1px solid rgba(194,96,96,0.2); }
+    .iter-status.constraint { color: var(--gold); background: var(--gold-dim); border: 1px solid var(--gold-br); }
+    .iter-status.resolved { color: var(--green); background: rgba(94,200,138,0.1); border: 1px solid rgba(94,200,138,0.2); }
+
+    /* =============================================
+       CHALLENGES
+    ============================================= */
+    .challenges { padding: 100px 0; background: var(--bg2); }
+    .chal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; margin-top: 60px; }
+    .chal-item { padding: 36px 0; border-top: 1px solid var(--br); }
+    .chal-status { font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+    .st-disc { color: var(--red); }
+    .st-const { color: var(--gold); }
+    .st-res { color: var(--green); }
+    .chal-title { font-family: var(--f-disp); font-size: 1.15rem; font-weight: 400; color: var(--text); margin-bottom: 10px; }
+
+    /* =============================================
+       IMPACT
+    ============================================= */
+    .impact { padding: 100px 0; }
+    .impact-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-bottom: 60px; }
+    .impact-three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .impact-col { background: var(--card); border: 1px solid var(--br); border-radius: 3px; padding: 36px 28px; }
+    .impact-col-label { font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .impact-col-label::before { content: ''; display: block; width: 16px; height: 1px; background: var(--gold); opacity: 0.4; }
+    .impact-list { display: flex; flex-direction: column; gap: 10px; }
+    .impact-item { display: flex; gap: 12px; font-size: 0.78rem; color: var(--text2); line-height: 1.6; }
+    .impact-item::before { content: '✓'; color: var(--green); flex-shrink: 0; font-size: 0.7rem; padding-top: 1px; }
+    .biz-outcomes { margin-top: 40px; background: var(--card); border: 1px solid var(--br); border-radius: 3px; padding: 36px 40px; }
+    .biz-title { font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--textM); margin-bottom: 24px; }
+    .biz-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--br); border: 1px solid var(--br); }
+    .biz-stat { background: var(--bg); padding: 24px 20px; text-align: center; }
+    .biz-n { font-family: var(--f-disp); font-size: 2rem; font-style: italic; color: var(--gold); line-height: 1; margin-bottom: 6px; }
+    .biz-l { font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text2); }
+
+    /* =============================================
+       LEARNINGS
+    ============================================= */
+    .learnings { padding: 100px 0; background: var(--bg2); }
+    .learn-list { display: flex; flex-direction: column; margin-top: 60px; }
+    .learn-item { display: grid; grid-template-columns: 64px 1fr; gap: 40px; padding: 44px 0; border-bottom: 1px solid var(--br); }
+    .learn-item:first-child { border-top: 1px solid var(--br); }
+    .learn-n { font-family: var(--f-disp); font-size: 2.5rem; font-style: italic; color: var(--gold); opacity: 0.35; line-height: 1; padding-top: 4px; }
+    .learn-content h3 { font-family: var(--f-disp); font-size: 1.4rem; font-weight: 400; color: var(--text); margin-bottom: 12px; }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+
+
+/* Next case study */
+.next-cs { padding: 4rem 0; }
+.next-inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 0 64px; }
+.next-label { font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 0.5rem; }
+.next-title { font-family: var(--f-disp); font-size: 1.6rem; font-weight: 300; color: var(--text2); letter-spacing: 0.02rem; }
+.next-link { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2); text-decoration: none; border: 1px solid var(--text2); padding: 0.65rem 1.5rem; border-radius: 2px; white-space: nowrap; transition: background 0.2s; }
+.next-link:hover { border-color: var(--accent); color: var(--accent);}
+
+/* Footer */
+footer { border-top: 1px solid var(--br); }
+.footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-copy { font-family: var(--f-mono); font-size: 0.75rem; color: var(--text2); }
+.footer-back { font-family: var(--f-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
+.footer-back:hover { color: var(--accent); }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a {
+  font-family: var(--f-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--accent); }
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 920px) {
+      .nav-label { display: none; }
+      .wrap { padding: 0 24px; }
+      .hero-content { padding: 120px 24px 56px; }
+      .hero-meta { grid-template-columns: repeat(2, 1fr); }
+      .overview-grid, .problem-intro, .role-grid,
+      .solution-intro, .research-two-col, .impact-intro,
+      .evolution-intro { grid-template-columns: 1fr; gap: 40px; }
+      .pain-grid, .principles-grid, .notice-types,
+      .impact-three { grid-template-columns: 1fr; }
+      .hypo-subs { grid-template-columns: 1fr; }
+      .chal-grid { grid-template-columns: 1fr; }
+      .iter-item { grid-template-columns: 1fr; gap: 12px; }
+      .learn-item { grid-template-columns: 1fr; gap: 12px; }
+      .learn-n { font-size: 1.8rem; }
+      .biz-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-row { flex-direction: column; gap: 40px; align-items: flex-start; }
+      .footer-links { align-items: flex-start; }
+      .footer-bot { flex-direction: column; gap: 8px; }
+      .sub-nav-inner {justify-content: flex-start;}
+      .wrap.footer-inner {padding: 24px;}
+      .hypo-div{ grid-template-columns:1fr;gap:0px; }
+    }
+    @media (max-width: 560px) {
+      .pain-grid { grid-template-columns: 1fr; }
+      .hero-h1 { font-size: clamp(2.5rem, 9vw, 4.5rem); }
+
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+   <div class="nav-inner">
+  <a href="index.html" class="nav-logo">Amit Shaw</a>
+    <a href="index.html#work" class="nav-back">All work</a>
+  <a href="mailto:amit.uxdoffice@gmail.com" class="nav-cta">Get in touch</a>
+</div>
+</nav>
+
+<!-- Sticky Sub-Navigation Bar -->
+<div class="sub-nav">
+  <div class="sub-nav-inner">
+   <a href="#context" class="sub-link active">01. Context</a>
+    <a href="#problem" class="sub-link active">02. Problem</a>
+    <a href="#role" class="sub-link">03. My Role</a>
+    <a href="#discovery" class="sub-link">03. Discovery</a>
+    <a href="#hypothesis" class="sub-link">04. Hypothesis</a>
+    <a href="#solution" class="sub-link">05. Solution</a>
+    <a href="#evolution" class="sub-link">06. Evolution</a>
+    <a href="#outcomes" class="sub-link">07. Outcomes</a>
+    <a href="#learnings" class="sub-link">08. Learnings</a>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-content">
+    <div class="hero-tags">
+      <span class="tag gold">Enterprise UX</span>
+      <span class="tag blue">Salesforce CRM</span>
+      <span class="tag blue">SLDS</span>
+      <span class="tag">Decision-Support Design</span>
+      <span class="tag">Payroll Tax</span>
+    </div>
+    <h1 class="hero-h1">
+      Tax Notice<br><em>Guided Flow</em>
+    </h1>
+    <p class="hero-sub">
+      On a live call, an associate navigated three systems, consulted mental checklists, and made a judgment call — with inconsistent results. This project replaced that judgment call with a structured decision.
+    </p>
+  </div>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <div class="meta-lbl">Platform</div>
+      <div class="meta-val">ADP Zone · Salesforce CRM</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-lbl">Resolution Delay Targeted</div>
+      <div class="meta-val med">10–20 Days</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-lbl">Validation Gates Designed</div>
+      <div class="meta-val big">8</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-lbl">Notice Types Covered</div>
+      <div class="meta-val big">3</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== CONTEXT ===== -->
+<section class="overview reveal" id="context">
+  <div class="wrap">
+    <p class="eyebrow">01 — Context & Background</p>
+    <div class="overview-grid">
+      <div>
+        <h2 class="sec-title">High-stakes calls, <em>fragmented tools</em></h2>
+        <p class="lead">ADP associates support hundreds of thousands of business clients on payroll tax. When those clients receive tax agency notices — from the IRS, state agencies, or unemployment bureaus — they call ADP expecting clarity, not more confusion.</p>
+        <br>
+        <p class="body"><strong>Zone is ADP's enterprise support platform, built on Salesforce CRM.</strong> It's where associates live during every client interaction. The guided flow needed to embed within Zone. Associates are on live calls under time pressure. Every extra click, every system switch, every ambiguous decision costs the client.</p>
+        <br>
+        <p class="body">The scale is significant. ADP manages payroll tax for over <strong>300,000 small business clients</strong> with state and local jurisdictions. A tax notice can mean anything from a missed deposit to a rate change to a legal name mismatch — and the associate on the call often has seconds, not minutes, to classify which one.</p>
+      </div>
+      <div>
+        <div class="snapshot-table">
+          <div class="snap-row header">
+            <div class="snap-cell">Project Dimension</div>
+            <div class="snap-cell">Detail</div>
+          </div>
+          <div class="snap-row">
+            <div class="snap-cell"><strong>Platform</strong></div>
+            <div class="snap-cell" style="color:var(--text2);">ADP Zone — enterprise support platform on Salesforce CRM</div>
+          </div>
+          <div class="snap-row">
+            <div class="snap-cell"><strong>Primary Users</strong></div>
+            <div class="snap-cell" style="color:var(--text2);">ADP service associates handling live client tax notice calls</div>
+          </div>
+          <div class="snap-row">
+            <div class="snap-cell"><strong>Notice Types</strong></div>
+            <div class="snap-cell" style="color:var(--text2);">Tax notice escalations, SUI rate changes, deposit frequency changes</div>
+          </div>
+          <div class="snap-row">
+            <div class="snap-cell"><strong>Business Goal</strong></div>
+            <div class="snap-cell" style="color:var(--text2);">Reduce unnecessary escalations, shrink resolution delays, improve case completeness</div>
+          </div>
+          <div class="snap-row">
+            <div class="snap-cell"><strong>Design Challenge</strong></div>
+            <div class="snap-cell" style="color:var(--text2);">Guide associates through notice validation and route only qualified cases to research teams</div>
+          </div>
+          <div class="snap-row">
+            <div class="snap-cell"><strong>My Role</strong></div>
+            <div class="snap-cell" style="color:var(--text2);">UX Strategist — workflow analysis, IA, guided flow design, interaction design, stakeholder alignment</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ===== PROBLEM ===== -->
+<section class="problem reveal" id="problem">
+  <div class="wrap">
+    <p class="eyebrow">02 — The Problem to Solve</p>
+    <div class="problem-intro">
+      <div>
+        <h2 class="sec-title">Two associates, same notice, <em>different decisions</em></h2>
+        <p class="lead">The core failure was not a technology gap — it was a decision-support gap. Associates determined ownership, validated details, and choose to escalate or resolve based on training memory and personal judgment. The result was inconsistency at scale.</p>
+        <br>
+        <p class="body">Research teams were the visible victims: they received cases that were incomplete, invalid, or could have been resolved on the initial call. Each avoidable escalation added 10 to 20 days to a client's wait. For a small business staring at a penalty notice, that delay had real financial consequences.</p>
+      </div>
+      <div>
+        <div class="problem-stmt">
+          <div class="eyebrow" style="margin-bottom:16px; color:var(--blue);">Problem Statement</div>
+          <blockquote>"During live, high-stress client calls, service associates lacked a standardized workflow to validate payroll tax notices. This resulted in inconsistent case intake, increased cognitive load that impacted handling times, and avoidable escalations that delayed case resolution to 10–20 days, compounding client anxiety and exposing businesses to costly regulatory penalties."</blockquote>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARTIFACT 01: Current State Flow -->
+    <div class="artifact-wrap reveal">
+      <div class="artifact-eyebrow">Artifact — Current Workflow:</div>
+      <div class="artifact-frame">
+        <svg viewBox="0 0 900 340" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+          <defs>
+            <marker id="flow-w" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <path d="M0,0 L7,3.5 L0,7 Z" fill="rgba(255,255,255,0.15)"/>
+            </marker>
+            <marker id="flow-r" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <path d="M0,0 L7,3.5 L0,7 Z" fill="rgba(194,96,96,0.6)"/>
+            </marker>
+          </defs>
+          <rect width="900" height="340" fill="#0A0A1C"/>
+          <text x="32" y="30" font-family="JetBrains Mono,monospace" font-size="8.5" fill="rgba(255, 255, 255, 0.4)" letter-spacing="2">MANUAL, JUDGMENT-DEPENDENT TRIAGE PROCESS</text>
+
+          <!-- Step boxes: 8 steps across, y=80, h=60 -->
+          <!-- Step 1: Client Call -->
+          <rect x="20" y="72" width="90" height="56" rx="3" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          <text x="65" y="96" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(255,255,255,0.7)" letter-spacing="1">CLIENT</text>
+          <text x="65" y="110" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(255,255,255,0.7)" letter-spacing="1">CALLS ADP</text>
+
+          <!-- Arrow -->
+          <line x1="110" y1="100" x2="126" y2="100" stroke="rgba(255,255,255,0.12)" stroke-width="1" marker-end="url(#flow-w)"/>
+
+          <!-- Step 2: Manual Interpretation -->
+          <rect x="126" y="72" width="104" height="56" rx="3" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          <text x="178" y="90" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.7)">MANUAL</text>
+          <text x="178" y="104" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.7)">NOTICE</text>
+          <text x="178" y="118" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.7)">INTERPRET</text>
+
+          <line x1="230" y1="100" x2="246" y2="100" stroke="rgba(255,255,255,0.12)" stroke-width="1" marker-end="url(#flow-w)"/>
+
+          <!-- Step 3: Multi-system Check -->
+          <rect x="246" y="72" width="100" height="56" rx="3" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          <text x="296" y="90" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.7)">MULTI-SYSTEM</text>
+          <text x="296" y="104" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.7)">MANUAL</text>
+          <text x="296" y="118" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.7)">CHECKS</text>
+
+          <line x1="346" y1="100" x2="362" y2="100" stroke="rgba(255,255,255,0.12)" stroke-width="1" marker-end="url(#flow-w)"/>
+
+          <!-- Step 4: Validate (or not) -->
+          <rect x="362" y="72" width="100" height="56" rx="3" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          <text x="412" y="90" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.7)">VALIDATE</text>
+          <text x="412" y="104" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.7)">DETAILS</text>
+          <text x="412" y="118" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(194,96,96,0.7)">INCONSISTENT</text>
+
+          <line x1="462" y1="100" x2="478" y2="100" stroke="rgba(255,255,255,0.12)" stroke-width="1" marker-end="url(#flow-w)"/>
+
+          <!-- Step 5: Judgment Call -->
+          <rect x="478" y="72" width="100" height="56" rx="3" fill="rgba(194,96,96,0.06)" stroke="rgba(194,96,96,0.25)" stroke-width="1"/>
+          <text x="528" y="90" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(194,96,96,0.9)">JUDGMENT</text>
+          <text x="528" y="104" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(194,96,96,0.9)">CALL</text>
+          <text x="528" y="118" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(194,96,96,0.7)">NO GUARDRAILS</text>
+
+          <line x1="578" y1="100" x2="594" y2="100" stroke="rgba(255,255,255,0.12)" stroke-width="1" marker-end="url(#flow-w)"/>
+
+          <!-- Step 6: Escalation -->
+          <rect x="594" y="72" width="100" height="56" rx="3" fill="rgba(194,96,96,0.06)" stroke="rgba(194,96,96,0.25)" stroke-width="1"/>
+          <text x="644" y="90" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(194,96,96,0.9)">PREMATURE</text>
+          <text x="644" y="104" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(194,96,96,0.9)">ESCALATION</text>
+          <text x="644" y="118" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(194,96,96,0.7)">INCOMPLETE</text>
+
+          <line x1="694" y1="100" x2="710" y2="100" stroke="rgba(194,96,96,0.3)" stroke-width="1" marker-end="url(#flow-r)"/>
+
+          <!-- Step 7: Research Queue -->
+          <rect x="710" y="72" width="86" height="56" rx="3" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          <text x="753" y="90" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.7)">RESEARCH</text>
+          <text x="753" y="104" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.7)">TEAM</text>
+          <text x="753" y="118" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.45)">REWORKS CASE</text>
+
+          <line x1="796" y1="100" x2="812" y2="100" stroke="rgba(194,96,96,0.3)" stroke-width="1" marker-end="url(#flow-r)"/>
+
+          <!-- Step 8: Client Wait — RED callout -->
+          <rect x="812" y="60" width="72" height="80" rx="3" fill="rgba(194,96,96,0.12)" stroke="rgba(194,96,96,0.5)" stroke-width="1.5"/>
+          <text x="848" y="84" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(194,96,96,1)" letter-spacing="0.5">CLIENT</text>
+          <text x="848" y="96" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(194,96,96,1)" letter-spacing="0.5">WAIT</text>
+          <text x="848" y="116" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="15" fill="rgba(194,96,96,1)" font-style="italic" font-family="Georgia,serif">10–20</text>
+          <text x="848" y="132" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(194,96,96,1)">DAYS</text>
+
+          <!-- Pain annotations (above steps) -->
+          <text x="178" y="55" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(232,168,50,0.8)">⚠ No structured path</text>
+          <line x1="178" y1="60" x2="178" y2="72" stroke="rgba(232,168,50,0.2)" stroke-width="1" stroke-dasharray="2 2"/>
+
+          <text x="296" y="55" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(232,168,50,0.8)">⚠ 3 systems, no guide</text>
+          <line x1="296" y1="60" x2="296" y2="72" stroke="rgba(232,168,50,0.2)" stroke-width="1" stroke-dasharray="2 2"/>
+
+          <text x="528" y="55" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(232,168,50,0.8)">⚠ Inconsistent outcomes</text>
+          <line x1="528" y1="60" x2="528" y2="72" stroke="rgba(232,168,50,0.2)" stroke-width="1" stroke-dasharray="2 2"/>
+
+          <!-- Pain annotations (below steps) -->
+          <text x="412" y="155" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(232,168,50,0.8)">⚠ Terminology confusion & Fragmented knowladge</text>
+          <line x1="412" y1="148" x2="412" y2="155" stroke="rgba(232,168,50,0.15)" stroke-width="1" stroke-dasharray="2 2"/>
+
+          <text x="644" y="155" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(194,96,96,0.8)">⚠ Invalid / incomplete escalations</text>
+          <line x1="644" y1="148" x2="644" y2="155" stroke="rgba(194,96,96,0.2)" stroke-width="1" stroke-dasharray="2 2"/>
+
+          <!-- Legend box -->
+          <rect x="20" y="188" width="380" height="48" rx="2" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          <text x="32" y="206" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(255,255,255,0.6)" letter-spacing="1">Outcome:</text>
+          <text x="32" y="222" font-family="JetBrains Mono,monospace" font-size="9" fill="rgba(194,96,96,0.9)">Research teams received cases they couldn't act on without rework.</text>
+
+          <text x="20" y="264" font-family="JetBrains Mono,monospace" font-size="9" fill="rgba(255, 255, 255, 0.4)" letter-spacing="2">Manual Process · No Validation gates · Judgment-dependent escalation decisions</text>
+          <text x="20" y="280" font-family="JetBrains Mono,monospace" font-size="9" fill="rgba(255,255,255,0.4)" letter-spacing="2">Two associates handeling the same notice could reach different outcomes</text>
+        </svg>
+        <div class="artifact-cap">
+          <span>Before state: Manual, judgment-dependent triage with no structured validation path</span>
+          <span>Discovery Phase · Current State Analysis</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pain Points Grid -->
+    <div style="margin-top:48px;" class="reveal">
+      <div class="pain-grid">
+        <div class="pain-card">
+          <div class="pain-num">01</div>
+          <div class="pain-title">No Consistent Decision Path</div>
+          <div class="pain-body">Associates determined ownership, validated details, and choose to escalate based on training recall. The process lived in people's heads — not in the platform.</div>
+          <span class="impact-tag">Operational Inconsistency</span>
+        </div>
+        <div class="pain-card">
+          <div class="pain-num">02</div>
+          <div class="pain-title">Premature Escalations</div>
+          <div class="pain-body">Cases reached research teams before required validation was complete — missing tax IDs, unconfirmed jurisdictions, absent POA documentation. Research teams spent significant time on rework before they could begin actual investigation.</div>
+          <span class="impact-tag">Research Team Burden</span>
+        </div>
+        <div class="pain-card">
+          <div class="pain-num">03</div>
+          <div class="pain-title">Fragmented Knowledge</div>
+          <div class="pain-body">Siloed knowledge forced associates to manually cross-reference multiple disconnected systems to check payroll configurations. Under live call pressure, this operational friction caused severe cognitive overload and a persistent fear of giving incorrect guidance.</div>
+          <span class="impact-tag blue">High Cognitive Burden</span>
+        </div>
+        <div class="pain-card">
+          <div class="pain-num">04</div>
+          <div class="pain-title">10–20 Day Client Delays</div>
+          <div class="pain-body">Clients holding penalty notices waited weeks — even when some issues could have been clarified on the initial call. The delay wasn't always necessary. It was the system defaulting to escalation because resolution criteria were unclear.</div>
+          <span class="impact-tag">Client Experience Risk</span>
+        </div>
+        <div class="pain-card">
+          <div class="pain-num">05</div>
+          <div class="pain-title">No Scalable Framework</div>
+          <div class="pain-body">Tax notices, SUI rate changes, and deposit frequency changes each had different handling rules. There was no reusable logic framework — every notice type was a separate institutional knowledge silo.</div>
+          <span class="impact-tag">Scalability Risk</span>
+        </div>
+        <div class="pain-card" style="background: rgba(74,124,240,0.04); border-color:rgba(74,124,240,0.25);">
+          <div class="pain-num" style="color:var(--blue);opacity:1;">→</div>
+          <div class="pain-title" style="color:var(--blue);">The Downstream Effect</div>
+          <div class="pain-body" style="color:#A09890;">Every incomplete escalation created a chain: rework for research, delays for clients, and eroding associate confidence. The cost wasn't just operational — it was the firm's credibility during a client's most stressful payroll moment.</div>
+          <span class="impact-tag blue">Strategic Business Risk</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ===== ROLE ===== -->
+<section class="role reveal" id="role">
+  <div class="wrap">
+    <p class="eyebrow">03 — My Role & Collaboration</p>
+    <div class="role-grid">
+      <div>
+        <h2 class="sec-title">Translating <em>operational complexity</em> into structured interaction</h2>
+        <div class="role-badge">
+          <span>UX Strategist · Service Cloud</span>
+        </div>
+        <p class="body" style="color:#A8A29A; font-size:1rem; line-height:1.82; max-width:520px;">I owned the end-to-end UX lifecycle: from researching how associates handled calls and mapping the complex decision logic, to designing a guided flow structure tailored to the technical constraints of Salesforce Flow-Builder.</p>
+        <br>
+        <p class="body">My specific contributions:</p>
+        <br>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:10px;">
+          <li style="display:flex;gap:12px;align-items:flex-start;"><span style="color:var(--blue);font-family:var(--f-mono);font-size:0.7rem;padding-top:1px;">→</span><span class="body res">Mapped legacy workflows to isolate inconsistent decision points and synthesized stakeholder requirements into a unified, audit-ready flow model.</span></li>
+          <li style="display:flex;gap:12px;align-items:flex-start;"><span style="color:var(--blue);font-family:var(--f-mono);font-size:0.7rem;padding-top:1px;">→</span><span class="body res">Defined the 8-gate validation framework and branching logic across all notice types</span></li>
+          <li style="display:flex;gap:12px;align-items:flex-start;"><span style="color:var(--blue);font-family:var(--f-mono);font-size:0.7rem;padding-top:1px;">→</span><span class="body res">Translated internal acronyms into contextual, associate-facing guidance to eliminate ambiguity.</span></li>
+          <li style="display:flex;gap:12px;align-items:flex-start;"><span style="color:var(--blue);font-family:var(--f-mono);font-size:0.7rem;padding-top:1px;">→</span><span class="body res">Created UX artifacts to align product, operations, Salesforce engineering, and research teams on a shared solution</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="stake-map">
+          <div class="stake-header">Collaboration Ecosystem</div>
+          <div class="stake-item">
+            <div class="stake-dot gold"></div>
+            <div>
+              <div class="stake-name">Product Owner</div>
+              <div class="stake-role">Defined business goals, prioritization, and platform scope. The bridge between operational need and development roadmap.</div>
+            </div>
+          </div>
+          <div class="stake-item">
+            <div class="stake-dot gold"></div>
+            <div>
+              <div class="stake-name">Tax Subject Matter Experts</div>
+              <div class="stake-role">Clarified notice handling rules, jurisdiction setup, POA/TPA requirements, and escalation criteria. Their knowledge became the logic behind the validation gates.</div>
+            </div>
+          </div>
+          <div class="stake-item">
+            <div class="stake-dot"></div>
+            <div>
+              <div class="stake-name">Service Associates / Operations Leads</div>
+              <div class="stake-role">Provided real call-handling behaviors, edge cases, and the exact moments of uncertainty that the flow needed to address.</div>
+            </div>
+          </div>
+          <div class="stake-item">
+            <div class="stake-dot"></div>
+            <div>
+              <div class="stake-name">Solution Architect & Engineering</div>
+              <div class="stake-role">Determined what could be supported inside the platform — how guided logic could connect to case creation and structured CRM data capture.</div>
+            </div>
+          </div>
+          <div class="stake-item">
+            <div class="stake-dot"></div>
+            <div>
+              <div class="stake-name">Business stakeholders - VP Client Service</div>
+              <div class="stake-role">Defined what a "valid escalation" looks like — the required fields and documentation before a case should reach the research queue.</div>
+            </div>
+          </div>
+          <div style="padding:16px 24px; background:rgba(74,124,240,0.04); border-top:1px solid var(--br);">
+            <div class="body">Tax SMEs and research teams were the most critical voices. The gap between what associates understood and what research teams needed was where the design had the most leverage.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ===== DISCOVERY ===== -->
+<section class="research reveal" id="discovery">
+  <div class="wrap">
+    <p class="eyebrow">04 — Discovery & Research</p>
+    <div class="research-two-col">
+      <div>
+        <h2 class="sec-title">Understanding the <em>call in real time</em></h2>
+        <p class="lead">Discovery focused on two things: mapping what associates actually did during tax notice calls, and identifying where the process broke down — not in theory, but in the specific moment of a live client interaction.</p>
+        <br>
+        <p class="body">Research inputs included associate interview, stakeholder conversations, process documentation, existing workflow diagrams, Salesforce/Zone case handling patterns, SME walkthroughs, and research team intake requirements. The goal wasn't to document the full policy — it was to find the decision points that caused inconsistency.</p>
+        <br>
+        <p class="body"><strong style="color:var(--text);">The critical insight:</strong> most associate uncertainty clustered around the same questions. Is this ADP's period? Is the jurisdiction set up? Does the Tax ID match? Does ADP have authorization? These weren't rare edge cases — they were the standard path, and they had no in-platform support.</p>
+      </div>
+      <div>
+        <div style="background: var(--card); border: 1px solid var(--br); border-radius: 3px; padding: 32px 28px;">
+          <div class="eyebrow" style="margin-bottom:20px;">Key Questions That Shaped the Design</div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex;gap:14px;align-items:flex-start;">
+              <span style="color:var(--blue);font-family:var(--f-mono);font-size:0.68rem;padding-top:1px;flex-shrink:0;">Q</span>
+              <span class="body" style="font-size:0.8rem;">Which notice types do associates handle most — and where does each one go wrong?</span>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;">
+              <span style="color:var(--blue);font-family:var(--f-mono);font-size:0.68rem;padding-top:1px;flex-shrink:0;">Q</span>
+              <span class="body" style="font-size:0.8rem;">What must be validated before a case is valid to escalate?</span>
+            </div>
+           <!-- <div style="display:flex;gap:14px;align-items:flex-start;">
+              <span style="color:var(--blue);font-family:var(--f-mono);font-size:0.68rem;padding-top:1px;flex-shrink:0;">Q</span>
+              <span class="body" style="font-size:0.8rem;">Which terms — POA, TPA, open alert RAA — cause the most confusion during live calls?</span>
+            </div> -->
+            <div style="display:flex;gap:14px;align-items:flex-start;">
+              <span style="color:var(--blue);font-family:var(--f-mono);font-size:0.68rem;padding-top:1px;flex-shrink:0;">Q</span>
+              <span class="body" style="font-size:0.8rem;">Where do associates currently get stuck, and what do they reach for when they do?</span>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;">
+              <span style="color:var(--blue);font-family:var(--f-mono);font-size:0.68rem;padding-top:1px;flex-shrink:0;">Q</span>
+              <span class="body" style="font-size:0.8rem;">What does a "valid escalation" mean for each notice type, from the research team's perspective?</span>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;">
+              <span style="color:var(--blue);font-family:var(--f-mono);font-size:0.68rem;padding-top:1px;flex-shrink:0;">Q</span>
+              <span class="body" style="font-size:0.8rem;">Which cases could have been resolved on the first call — and weren't?</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terminology as UX 
+    <div style="margin-top:60px;" class="reveal">
+      <div class="eyebrow" style="margin-bottom:16px;">Terminology as a UX Problem — Translating Internal Language</div>
+      <p class="body" style="max-width:700px; margin-bottom:28px;">Internal acronyms were not a content problem — they were a workflow problem. Each term carried routing weight: an associate who misunderstood "open alert RAA" could create a duplicate case. I treated terminology design as a core part of the UX, not a footnote.</p>
+      <div class="term-table">
+        <div class="term-header-row">
+          <div>Internal Term</div>
+          <div>Plain-Language Translation</div>
+          <div>UX Implication in the Flow</div>
+        </div>
+        <div class="term-row">
+          <div class="term-cell"><span class="term-jargon">Open Alert RAA</span></div>
+          <div class="term-cell term-plain">An existing open alert already tracking an agency or account issue related to this client</div>
+          <div class="term-cell term-why">If an alert exists, the flow prevents duplicate case creation and surfaces the existing item for review first</div>
+        </div>
+        <div class="term-row">
+          <div class="term-cell"><span class="term-jargon">POA</span></div>
+          <div class="term-cell term-plain">ADP's authorization to act or communicate with a tax agency on the client's behalf</div>
+          <div class="term-cell term-why">Gate 6 checks POA status. If missing or expired, the flow stops escalation and prompts the associate to request authorization from the client</div>
+        </div>
+        <div class="term-row">
+          <div class="term-cell"><span class="term-jargon">TPA</span></div>
+          <div class="term-cell term-plain">ADP's access to the state unemployment agency portal to verify or update rates on the client's behalf</div>
+          <div class="term-cell term-why">Required for SUI rate changes. If TPA access is missing, the flow routes the associate to guide the client through granting access before proceeding</div>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- Section Gallery Thumbnails -->
+  <div class="section-gallery reveal">
+      <span class="gallery-label">Artifacts </span>
+      <div class="thumb-grid">
+        <img src="assets/associate-empathy-map.png" class="thumb-item" alt="Service Associates - Empathy Map" draggable="false">
+        <img src="assets/associate-persona.png" class="thumb-item" alt="Service Associates - Persona Map" draggable="false">
+        <img src="assets/client-empathy.png" class="thumb-item" alt="Client (Alex) - Empathy Map" draggable="false">
+        <img src="assets/client-persona.png" class="thumb-item" alt="Client (Alex) - Persona Map" draggable="false">
+        <img src="assets/associate-journey.png" class="thumb-item" alt="Service Associates - Journey Map" draggable="false">
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ===== HYPOTHESIS + PRINCIPLES ===== -->
+<section class="hypothesis reveal" id="hypothesis">
+  <div class="wrap">
+    <p class="eyebrow">05 — Hypothesis & Design Principles</p>
+    <div class="hypo-div">
+      <div>
+        <h2 class="sec-title">Validation first, <em>escalation second</em></h2>
+        <p class="lead">The central design hypothesis was about sequencing, not simplification. The tax rules themselves didn't need to be hidden — they needed to be revealed in the right order, at the right moment, through the right question.</p>
+      </div>
+      <div style="padding-top:16px;">
+        <p class="body">The guided flow's core value was not speed. It was consistency. An associate who is confident in their decision — because the platform walked them through validation — serves the client better than an associate who is fast but uncertain. That insight shaped every design decision that followed.</p>
+      </div>
+    </div>
+
+    <div class="hypo-card reveal">
+      <div class="eyebrow" style="color:var(--gold);margin-bottom:16px;">Core Hypothesis</div>
+      <blockquote>"If associates are guided through a structured tax notice validation flow inside Zone, then they will determine responsibility more consistently, resolve eligible cases during the call, reduce unnecessary escalations, and give clients clearer expectations — without requiring associates to memorize every exception or rule."</blockquote>
+      <div class="hypo-subs">
+        <div class="hypo-sub">
+          <div class="hypo-sub-label">Associates wanted guidance, not hand-holding</div>
+          <div class="hypo-sub-text">Experienced users needed the flexibility to skip steps or take shortcuts, while new users needed more support.</div>
+        </div>
+        <div class="hypo-sub">
+          <div class="hypo-sub-label">Context switching killed productivity</div>
+          <div class="hypo-sub-text">Every time users had to leave the flow to check documentation, they lost momentum and increased error rates.</div>
+        </div>
+        <div class="hypo-sub">
+          <div class="hypo-sub-label">Visual cues beat text explanations</div>
+          <div class="hypo-sub-text">Users responded better to visual indicators and progressive disclosure than lengthy instructions.</div>
+        </div>
+      </div>
+    </div>
+<div class="eyebrow" style="color:var(--gold);margin-bottom:16px; margin-top: 60px; ">Design principles</div>
+    <div class="principles-grid reveal">
+      <div class="principle-card">
+        <div class="principle-num">01</div>
+        <div class="principle-title">Structured Guidence</div>
+        <div class="principle-body">Step-by-step flows that reduce cognitive load while maintaining transparency</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">02</div>
+        <div class="principle-title">Determine ADP responsibility early</div>
+        <div class="principle-body">Guide associates through the steps to determine issue responsibility — whether it is ADP-owned, client-owned or agency-owned.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">03</div>
+        <div class="principle-title">Plain Language Over Jargon</div>
+        <div class="principle-body">Internal terms are contextualised, not exposed raw. Clear instructions, helper text, and "Knowledge bites" replace acronyms with meaning — without removing the underlying logic.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">04</div>
+        <div class="principle-title">Designed for Live Call Pressure</div>
+        <div class="principle-body">Short prompts. Clear next steps. Minimal backtracking. No question asks the associate to leave Zone to find the answer. Every gate is resolvable within the context of the current screen.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">05</div>
+        <div class="principle-title">Capture Once, Reuse Downstream</div>
+        <div class="principle-body">Information entered during the guided flow populates the Salesforce case object. The associate does not re-enter data. The research team receives a complete record, not a blank intake form.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">06</div>
+        <div class="principle-title">Sequence Complexity, Don't Hide It</div>
+        <div class="principle-body">Tax notice handling is genuinely complex. The design doesn't oversimplify — it reveals the right complexity at the right time. Associates encounter difficulty when they're ready for it, with context.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ===== SOLUTION ===== -->
+<section class="solution reveal" id="solution">
+  <div class="wrap">
+    <p class="eyebrow">06 — The Proposed Solution</p>
+    <div class="solution-intro">
+      <div>
+        <h2 class="sec-title">Eight gates that <em>changed the routing logic</em></h2>
+        <p class="lead">The Tax Notice Guided Flow embedded directly within Zone — no context switching, no separate tool. It guides associates through ownership determination, validation gates, structured notice classification, and either in-call resolution or qualified escalation.</p>
+      </div>
+      <div style="padding-top:8px;">
+        <p class="body">The validation gate framework is the intellectual core of the solution. Each gate asks a specific question that determines whether the case can continue, needs correction, or should stop. The gates are not bureaucratic checkboxes — they are the exact questions that tax SMEs said must be answered before a case is valid to escalate. The design made those questions unavoidable.</p>
+      </div>
+    </div>
+
+    <!-- ARTIFACT 02: Validation Gate Framework -->
+    <div class="artifact-wrap reveal">
+      <div class="artifact-eyebrow">Artifact — Core Design: The 8-Gate Validation Framework</div>
+      <div class="artifact-frame">
+        <svg viewBox="0 0 900 460" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+          <defs>
+            <marker id="gate-arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <path d="M0,0 L7,3.5 L0,7 Z" fill="rgba(232,168,50,0.5)"/>
+            </marker>
+            <marker id="gate-arr-g" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <path d="M0,0 L7,3.5 L0,7 Z" fill="rgba(94,200,138,0.5)"/>
+            </marker>
+            <marker id="gate-arr-b" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <path d="M0,0 L7,3.5 L0,7 Z" fill="rgba(74,124,240,0.5)"/>
+            </marker>
+          </defs>
+          <rect width="900" height="460" fill="#0A0A1C"/>
+
+          <!-- Title 
+          <text x="32" y="30" font-family="JetBrains Mono,monospace" font-size="8.5" fill="rgba(255,255,255,0.45)" letter-spacing="2">VALIDATION GATE FRAMEWORK — SEQUENTIAL DECISION SUPPORT</text> -->
+          <text x="32" y="37" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(255,255,255,0.45)" letter-spacing="1">GATES RUN IN SEQUENCE · EACH GATE DETERMINES WHETHER THE CASE PROCEEDS, REDIRECTS, OR STOPS</text>
+
+          <!-- Phase labels -->
+          <text x="32" y="75" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(232,168,50,0.4)" letter-spacing="2">PHASE 01 — IDENTITY &amp; AUTHORIZATION</text>
+          <text x="32" y="195" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(232,168,50,0.4)" letter-spacing="2">PHASE 02 — NOTICE &amp; Routing</text>
+          <text x="32" y="315" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(232,168,50,0.4)" letter-spacing="2">PHASE 03 — CASE READINESS</text>
+
+          <!-- GATE CARDS — Row 1 (Gates 1-4), y=82 -->
+          <!-- Gate 1 -->
+          <rect x="32" y="82" width="192" height="90" rx="3" fill="rgba(232,168,50,0.06)" stroke="rgba(232,168,50,0.25)" stroke-width="1"/>
+          <text x="44" y="101" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(232,168,50,0.6)" letter-spacing="1.5">GATE 01</text>
+          <text x="44" y="116" font-family="JetBrains Mono,monospace" font-size="8.5" fill="rgba(255,255,255,0.7)">Determine ADP Responsibility</text>
+          <text x="44" y="130" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">Is the notice period within</text>
+          <text x="44" y="142" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">ADP's responsibility window?</text>
+          <text x="44" y="158" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(232,168,50,0.75)">Stops: outside ADP period</text>
+
+          <!-- Arrow 1→2 -->
+          <line x1="224" y1="127" x2="242" y2="127" stroke="rgba(232,168,50,0.35)" stroke-width="1.5" marker-end="url(#gate-arr)"/>
+
+          <!-- Gate 2 -->
+          <rect x="242" y="82" width="192" height="90" rx="3" fill="rgba(232,168,50,0.06)" stroke="rgba(232,168,50,0.25)" stroke-width="1"/>
+          <text x="254" y="101" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(232,168,50,0.6)" letter-spacing="1.5">GATE 02</text>
+          <text x="254" y="116" font-family="JetBrains Mono,monospace" font-size="8.5" fill="rgba(255,255,255,0.7)">Jurisdiction</text>
+          <text x="254" y="130" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">Is the jurisdiction active and</text>
+          <text x="254" y="142" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">correctly set up in ADP?</text>
+          <text x="254" y="158" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(232,168,50,0.75)">Stops & route: missing / inactive / mismatch</text>
+
+          <!-- Arrow 2→3 -->
+          <line x1="434" y1="127" x2="452" y2="127" stroke="rgba(232,168,50,0.35)" stroke-width="1.5" marker-end="url(#gate-arr)"/>
+
+          <!-- Gate 3 -->
+          <rect x="452" y="82" width="192" height="90" rx="3" fill="rgba(232,168,50,0.06)" stroke="rgba(232,168,50,0.25)" stroke-width="1"/>
+          <text x="464" y="101" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(232,168,50,0.6)" letter-spacing="1.5">GATE 03</text>
+          <text x="464" y="116" font-family="JetBrains Mono,monospace" font-size="8.5" fill="rgba(255,255,255,0.7)">Tax ID</text>
+          <text x="464" y="130" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">Does the Tax ID on the notice</text>
+          <text x="464" y="142" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">match ADP's records?</text>
+          <text x="464" y="158" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(232,168,50,0.75)">Stops: mismatch → registration check</text>
+
+          <!-- Arrow 3→4 -->
+          <line x1="644" y1="127" x2="662" y2="127" stroke="rgba(232,168,50,0.35)" stroke-width="1.5" marker-end="url(#gate-arr)"/>
+
+          <!-- Gate 4 -->
+          <rect x="662" y="82" width="206" height="90" rx="3" fill="rgba(232,168,50,0.06)" stroke="rgba(232,168,50,0.25)" stroke-width="1"/>
+          <text x="674" y="101" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(232,168,50,0.6)" letter-spacing="1.5">GATE 04</text>
+          <text x="674" y="116" font-family="JetBrains Mono,monospace" font-size="8.5" fill="rgba(255,255,255,0.7)">Legal Name</text>
+          <text x="674" y="130" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">Does the legal name on the notice</text>
+          <text x="674" y="142" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">match the client record in ADP?</text>
+          <text x="674" y="158" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(232,168,50,0.75)">Flags: minor variation / mismatch</text>
+
+          <!-- Wrap arrow: from Gate 4 down to Row 2, then left to Gate 5 -->
+          <path d="M 765,172 L 765,202" stroke="rgba(232,168,50,0.25)" stroke-width="1" stroke-dasharray="3 3" fill="none" marker-end="url(#gate-arr)"/>
+
+          <!-- GATE CARDS — Row 2 (Gates 5-8), y=202 -->
+          <!-- Gate 5 -->
+          <rect x="662" y="202" width="206" height="90" rx="3" fill="rgba(232,168,50,0.06)" stroke="rgba(232,168,50,0.25)" stroke-width="1"/>
+          <text x="674" y="221" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(232,168,50,0.6)" letter-spacing="1.5">GATE 05</text>
+          <text x="674" y="236" font-family="JetBrains Mono,monospace" font-size="8.5" fill="rgba(255,255,255,0.7)">Notice Type</text>
+          <text x="674" y="250" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">What kind of notice did</text>
+          <text x="674" y="262" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">the client receive?</text>
+          <text x="674" y="278" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(232,168,50,0.75)">Routes: Tax / SUI / Deposit Freq</text>
+
+          <!-- Arrow 5→6 (rightward becomes leftward) -->
+          <line x1="662" y1="247" x2="644" y2="247" stroke="rgba(232,168,50,0.35)" stroke-width="1.5" marker-end="url(#gate-arr)"/>
+
+          <!-- Gate 6 -->
+          <rect x="452" y="202" width="192" height="90" rx="3" fill="rgba(232,168,50,0.06)" stroke="rgba(232,168,50,0.25)" stroke-width="1"/>
+          <text x="464" y="221" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(232,168,50,0.6)" letter-spacing="1.5">GATE 06</text>
+          <text x="464" y="236" font-family="JetBrains Mono,monospace" font-size="8.5" fill="rgba(255,255,255,0.7)">Authorization</text>
+          <text x="464" y="250" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">Does ADP have valid POA or</text>
+          <text x="464" y="262" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">TPA authorization for this case?</text>
+          <text x="464" y="278" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(232,168,50,0.75)">Stops: missing / expired → request</text>
+
+          <!-- Arrow 6→7 -->
+          <line x1="452" y1="247" x2="434" y2="247" stroke="rgba(232,168,50,0.35)" stroke-width="1.5" marker-end="url(#gate-arr)"/>
+
+          <!-- Gate 7 -->
+          <rect x="242" y="202" width="192" height="90" rx="3" fill="rgba(232,168,50,0.06)" stroke="rgba(232,168,50,0.25)" stroke-width="1"/>
+          <text x="254" y="221" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(232,168,50,0.6)" letter-spacing="1.5">GATE 07</text>
+          <text x="254" y="236" font-family="JetBrains Mono,monospace" font-size="8.5" fill="rgba(255,255,255,0.7)">Open Cases</text>
+          <text x="254" y="250" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">Is there an existing open case,</text>
+          <text x="254" y="262" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">alert, or RAA for this issue?</text>
+          <text x="254" y="278" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(232,168,50,0.75)">Stops: prevents duplicate cases</text>
+
+          <!-- Arrow 7→8 -->
+          <line x1="242" y1="247" x2="224" y2="247" stroke="rgba(232,168,50,0.35)" stroke-width="1.5" marker-end="url(#gate-arr)"/>
+
+          <!-- Gate 8 -->
+          <rect x="32" y="202" width="192" height="90" rx="3" fill="rgba(232,168,50,0.10)" stroke="rgba(232,168,50,0.45)" stroke-width="1.5"/>
+          <text x="44" y="221" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(232,168,50,0.8)" letter-spacing="1.5">GATE 08</text>
+          <text x="44" y="236" font-family="JetBrains Mono,monospace" font-size="8.5" fill="rgba(255,255,255,0.85)">Escalation Readiness</text>
+          <text x="44" y="250" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">Is the case valid and complete</text>
+          <text x="44" y="262" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="0.3">enough to send to research?</text>
+          <text x="44" y="278" font-family="JetBrains Mono,monospace" font-size="6.5" fill="rgba(232,168,50,0.9)">Only qualified cases reach research</text>
+
+          <!-- Outcome arrows from Gate 8 down -->
+          <path d="M 128,292 L 128,322" stroke="rgba(255,255,255,0.15)" stroke-width="1" fill="none" marker-end="url(#gate-arr)"/>
+
+          <!-- OUTCOME NODES, y=322 -->
+          <!-- Resolve -->
+          <rect x="32" y="322" width="196" height="70" rx="3" fill="rgba(94,200,138,0.08)" stroke="rgba(94,200,138,0.35)" stroke-width="1.5"/>
+          <text x="130" y="348" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(94,200,138,0.9)" letter-spacing="1.5">✓  RESOLVE</text>
+          <text x="130" y="364" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(94,200,138,0.8)">Eligible cases closed</text>
+          <text x="130" y="376" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(94,200,138,0.8)">during the initial call</text>
+
+          <!-- Redirect -->
+          <rect x="352" y="322" width="196" height="70" rx="3" fill="rgba(74,124,240,0.08)" stroke="rgba(74,124,240,0.35)" stroke-width="1.5"/>
+          <text x="450" y="348" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(74,124,240,0.9)" letter-spacing="1.5">→  REDIRECT</text>
+          <text x="450" y="364" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(74,124,240,0.8)">Client/agency action required</text>
+          <text x="450" y="376" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(74,124,240,0.8)">with clear instructions</text>
+
+          <!-- Escalate -->
+          <rect x="672" y="322" width="196" height="70" rx="3" fill="rgba(232,168,50,0.10)" stroke="rgba(232,168,50,0.45)" stroke-width="1.5"/>
+          <text x="770" y="348" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="rgba(232,168,50,0.9)" letter-spacing="1.5">↑  ESCALATE</text>
+          <text x="770" y="364" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(232,168,50,0.8)">Qualified cases reach research</text>
+          <text x="770" y="376" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(232,168,50,0.8)">with complete validation data</text>
+
+          <!-- Arrows to outcomes -->
+          <line x1="128" y1="292" x2="128" y2="322" stroke="rgba(94,200,138,0.25)" stroke-width="1" marker-end="url(#gate-arr-g)"/>
+          <path d="M 128,307 L 450,307 L 450,322" stroke="rgba(74,124,240,0.2)" stroke-width="1" fill="none" stroke-dasharray="3 3" marker-end="url(#gate-arr-b)"/>
+          <path d="M 128,307 L 770,307 L 770,322" stroke="rgba(232,168,50,0.2)" stroke-width="1" fill="none" stroke-dasharray="3 3" marker-end="url(#gate-arr)"/>
+
+          <!-- Footer note 
+          <text x="32" y="418" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.12)" letter-spacing="1.5">ALL 8 GATES RUN SEQUENTIALLY · A FAILED GATE STOPS ESCALATION · ESCALATION IS AN EARNED OUTCOME, NOT A DEFAULT</text> -->
+          <text x="32" y="433" font-family="JetBrains Mono,monospace" font-size="7" fill="rgba(255,255,255,0.45)" letter-spacing="1.5">GATE 8 ENSURES COMPLETE CASE DATA: CLIENT ID · AGENCY · TAX PERIOD · TAX ID · POA STATUS · NOTICE DOCUMENT · ASSOCIATE NOTES</text>
+        </svg>
+        <div class="artifact-cap">
+          <span>Each gate is a required check before escalation becomes available</span>
+          <span>Core Solution Design · ADP Zone</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Design challenges -->
+    <div style="margin-top:60px;" class="reveal">
+      <div class="eyebrow" style="margin-bottom:20px;">Key Design Challenges</div>
+      <div class="notice-types">
+        <div class="notice-card">
+          <div class="notice-tag">Implementation Related</div>
+          <div class="notice-title">System Limitations</div>
+          <p class="body">Working within constraints of Salesfore flow-Builder while pushing for modern UX.</p>
+          <!--<div class="notice-outcome-list">
+            <div class="notice-outcome">Resolve if within ADP period and setup is correct</div>
+            <div class="notice-outcome">Redirect if agency or client action is required</div>
+            <div class="notice-outcome">Escalate only when all 8 gates are validated</div>
+          </div> -->
+        </div>
+        <div class="notice-card">
+          <div class="notice-tag">Implementation Related</div>
+          <div class="notice-title">Cross-team Dependencies</div>
+          <p class="body">Coordinating with multiple teams to align on shared vision and implementation.</p>
+          <!--<div class="notice-outcome-list">
+            <div class="notice-outcome">Update rate if TPA access is active and rate differs</div>
+            <div class="notice-outcome">Guide client to grant TPA access if missing</div>
+            <div class="notice-outcome">Escalate if account or agency mismatch requires research</div>
+          </div> -->
+        </div>
+        <div class="notice-card">
+          <div class="notice-tag">Implementation Related</div>
+          <div class="notice-title">Legacy UX Patterns</div>
+          <p class="body">The reliance on legacy infrastructure and Salesforce Lightning Web Components (LWC) slowed development, as each new design solution requires custom coding.</p>
+          <!--<div class="notice-outcome-list">
+            <div class="notice-outcome">Update deposit frequency if jurisdiction is active</div>
+            <div class="notice-outcome">Route to setup team if configuration change is required</div>
+            <div class="notice-outcome">Escalate with documentation if discrepancy requires research</div>
+          </div> -->
+        </div>
+        <div class="notice-card">
+          <div class="notice-tag">User Related</div>
+          <div class="notice-title">Balancing Guidance with Flexibility</div>
+          <p class="body">How do we provide guidance without constraining the efficiency of high-performing associates who operate with speed and precision?</p>
+       </div>
+       <div class="notice-card">
+          <div class="notice-tag">User Related</div>
+          <div class="notice-title">Progressive Disclosure</div>
+          <p class="body">How much info should we show at each step? Confusion vs. feeling overwhelmed.</p>
+       </div>
+       <div class="notice-card">
+          <div class="notice-tag">User Related</div>
+          <div class="notice-title">Real-time Decision Support</div>
+          <p class="body">How can we help associates make quick decisions during calls?</p>
+       </div>
+      </div>
+    </div>
+
+
+
+  <!-- Section Gallery Thumbnails -->
+  <div class="section-gallery reveal">
+      <span class="gallery-label">Evidence </span>
+      <div class="thumb-grid">
+        <img src="assets/tax-notice-ia.png" class="thumb-item light" alt="Guided Flow - Information Architecture" draggable="false">
+        <img src="assets/system-map.png" class="thumb-item light" alt="System Map" draggable="false">
+        <img src="assets/let-alex.png" class="thumb-item light" alt="Introducing: Let Alex Know - Communiaction prompts" draggable="false">
+        <img src="assets/KB.png" class="thumb-item light" alt="Intoducing: Knowledge Bites" draggable="false">
+        <img src="assets/SN.png" class="thumb-item light" alt="Scooped Notification - Contextual instructions to Associates" draggable="false">
+        <img src="assets/de.jpeg" class="thumb-item light" alt="Design Exploration - Jurisdiction Selection" draggable="false">
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ===== DESIGN EVOLUTION ===== -->
+<section class="evolution reveal" id="evolution">
+  <div class="wrap">
+    <p class="eyebrow">07 — Design Evolution & Concepts Not Pursued</p>
+    <div class="evolution-intro">
+      <div>
+        <h2 class="sec-title">Ideas tested, <em>and good reasons to stop</em></h2>
+        <p class="lead">Each discarded concept revealed something important about the real problem — and pushed the solution toward the validation-gate framework.</p>
+      </div>
+      <div style="padding-top:16px;">
+        <p class="body">Enterprise design constraints are real. The solution had to live inside Zone, work with Salesforce case objects, support associates with varying experience levels, and handle compliance-critical decisions without automation risk. That combination ruled out several initially appealing directions.</p>
+      </div>
+    </div>
+
+   
+
+    <div class="iter-list reveal" style="margin-top:60px;">
+      <div class="iter-item">
+        <div class="iter-n">01</div>
+        <div class="iter-body">
+          <span class="iter-status discarded">Concept Discarded</span>
+          <h3>Tree structure Jusrisdiction Selection</h3>
+          <p class="body" style="max-width:620px;">Jurisdiction data from state and local agencies is highly unstructured and inconsistently formatted across federal, state, and local levels, making it unreliable.</strong></p>
+        </div>
+      </div>
+      <div class="iter-item">
+        <div class="iter-n">02</div>
+        <div class="iter-body">
+          <span class="iter-status discarded">Concept Discarded</span>
+          <h3>Automating the validation of associate input against system records</h3>
+          <p class="body" style="max-width:620px;">Business rejected fully automated validation due to high agency-data variability, potential system latency, and the critical need for human-in-the-loop compliance. Incorrect automation poses significant regulatory risks and undermines the transparency required during high-stakes client calls. Instead, we adopted Guided Manual Validation, where the system surfaces contextual data while the associate confirms findings, ensuring each decision is accurate and explainable.</p>
+        </div>
+      </div>
+      <div class="iter-item">
+        <div class="iter-n">03</div>
+        <div class="iter-body">
+          <span class="iter-status discarded">Concept Discarded</span>
+          <h3>Modern conversational experience</h3>
+          <p class="body" style="max-width:620px;">Prioritized a structured interface to maximize technical feasibility and reduce development costs, as internal tools derive more value from streamlined task completion than stunning interface. Current task-centric design leverages existing associate workflows to ensure familiarity and minimize training time.</p>
+        </div>
+      </div>
+
+    </div>
+    <div style="margin-top:60px;" class="reveal">
+      <div class="eyebrow" style="margin-bottom:20px;">Before & After</div>
+      <div class="img-frame reveal">
+         <div class="group"><img src="assets/tn-ba.png" alt="Before & After" onerror="this.style.display='none'" draggable="false">
+         <img src="assets/tn-ba-value.png" alt="Before & After value" onerror="this.style.display='none'" draggable="false"></div>
+      <div class="img-frame-caption">Other Guided Flows Vs Tax Notice Flow</div>
+    </div>
+     <div class="img-frame reveal">
+      <video class="prototype" src="assets/tax-notice-full-flow.mov" alt="Tax notice full flow" onerror="this.style.display='none'" draggable="false" type="video/mov" controls autoplay muted> </video>
+      <div class="img-frame-caption">Tax Notice Guided Flow - Prototype</div>
+       
+</div>
+
+  <!-- Section Gallery Thumbnails -->
+  <div class="section-gallery reveal">
+      <span class="gallery-label">Production Designs </span>
+      <div class="thumb-grid">
+        <img src="assets/case-page.png" class="thumb-item light" alt="Case Detail Page - Zone Platform" draggable="false">
+        <img src="assets/TN-flow.jpeg" class="thumb-item light" alt="Tax Notice Guided flow Screen" draggable="false"> 
+        <img src="assets/tn-vd-1.png" class="thumb-item light" alt="Tax Notice Guided flow Screens - Jurisdictions" draggable="false">
+        <img src="assets/tn-vd-2.png" class="thumb-item light" alt="Flow conditional Screens" draggable="false">
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ===== IMPACT ===== -->
+<section class="impact reveal" id="outcomes">
+  <div class="wrap">
+    <p class="eyebrow">08 — Impact & Outcomes</p>
+    <div class="impact-intro">
+      <div>
+        <h2 class="sec-title">One flow, <em>three groups better off</em></h2>
+        <p class="lead">The guided flow was not designed for a single user. Every design decision was evaluated against how it would land for associates on the call, clients waiting for answers, and research teams receiving the escalated case.</p>
+      </div>
+      <div style="padding-top:8px;">
+        <p class="body">Associates could tell clients exactly what would happen next, and why. That clarity had compounding value: fewer callbacks, fewer duplicate cases, fewer stalled investigations.</p>
+      </div>
+    </div>
+
+    <div class="impact-three reveal">
+      <div class="impact-col">
+        <div class="impact-col-label">Associates</div>
+        <div class="impact-list">
+          <div class="impact-item">Clear decision path: knows what question to ask next, at every step</div>
+          <div class="impact-item">Reduced uncertainty during live client calls under time pressure</div>
+          <div class="impact-item">Consistent validation outcomes regardless of experience level</div>
+          <div class="impact-item">Plain-language support for complex terms — no separate lookup needed</div>
+          <div class="impact-item">Confidence to explain next steps clearly, with system-backed reasoning</div>
+          <div class="impact-item">Faster onboarding: the flow teaches while it guides</div>
+        </div>
+      </div>
+      <div class="impact-col">
+        <div class="impact-col-label">Clients</div>
+        <div class="impact-list">
+          <div class="impact-item">Faster resolution for cases that could be closed during the initial call</div>
+          <div class="impact-item">Clear ownership: "ADP handles this" vs. "here's what you need to do"</div>
+          <div class="impact-item">No unnecessary delays for cases that were being escalated prematurely</div>
+          <div class="impact-item">More complete case handling — associates collect the right information once</div>
+          <div class="impact-item">Realistic, specific follow-up expectations — not generic "we'll get back to you"</div>
+          <div class="impact-item">Reduced callbacks from clients following up on stalled cases</div>
+        </div>
+      </div>
+      <div class="impact-col">
+        <div class="impact-col-label">Research Teams</div>
+        <div class="impact-list">
+          <div class="impact-item">Complete case intake: client ID, agency, jurisdiction, Tax ID, POA status, notice document</div>
+          <div class="impact-item">Validation summary included — research teams see what was already checked</div>
+          <div class="impact-item">No invalid cases: premature escalations blocked before they reach the queue</div>
+          <div class="impact-item">Less time spent requesting missing information from associates before work begins</div>
+          <div class="impact-item">Focus shifted toward investigation rather than intake correction</div>
+          <div class="impact-item">Structured escalation reason: clear, consistent basis for every queued case</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="biz-outcomes reveal">
+      <div class="biz-title">Target Business Outcomes</div>
+      <div class="biz-grid">
+        <div class="biz-stat">
+          <div class="biz-n">↓ 10–20d</div>
+          <div class="biz-l">Resolution delay targeted for early-closeable cases</div>
+        </div>
+        <div class="biz-stat">
+          <div class="biz-n">↑ FCR</div>
+          <div class="biz-l">First-contact resolution for eligible notice types</div>
+        </div>
+        <div class="biz-stat">
+          <div class="biz-n">↓ Rework</div>
+          <div class="biz-l">Research team case rework rate</div>
+        </div>
+        <div class="biz-stat">
+          <div class="biz-n">↑ CSAT</div>
+          <div class="biz-l">Client satisfaction on tax notice calls</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ===== LEARNINGS ===== -->
+<section class="learnings reveal" id="learnings">
+  <div class="wrap">
+    <p class="eyebrow">09 — Reflections & Learnings</p>
+    <div>
+      <h2 class="sec-title">What this project <em>changed about how I design</em></h2>
+    </div>
+    <div class="learn-list reveal">
+      <div class="learn-item">
+        <div class="learn-n">01</div>
+        <div class="learn-content">
+          <h3>Guided Workflows Are Most Valuable When the Stakes Are Highest</h3>
+          <p class="body" style="max-width:680px;">This project refined a core belief: the time to structure a decision process is before the situation becomes stressful, not after. On a live client call about a penalty notice, an associate's working memory is occupied. The design's job is to hold the process so the associate can hold the conversation. Any interface that requires the user to remember the next step has already failed under pressure.</p>
+        </div>
+      </div>
+      <div class="learn-item">
+        <div class="learn-n">02</div>
+        <div class="learn-content">
+          <h3>Validation Logic Is a UX Artifact — Not Just an Engineering Concern</h3>
+          <p class="body" style="max-width:680px;">In enterprise compliance, I learned that information architecture and decision logic—not screen design—are the true frontiers of critical design thinking, where the sequence of validation gates directly dictates operational accuracy and business outcomes.</p>
+        </div>
+      </div>
+      <div class="learn-item">
+        <div class="learn-n">03</div>
+        <div class="learn-content">
+          <h3>Internal Terminology Is a Workflow Problem, Not a Content Problem</h3>
+          <p class="body" style="max-width:680px;">Reframing complex terminology as a structural design challenge—rather than a cosmetic one—enabled me to eliminate decision gaps and standardize case outcomes through contextual guidance.</p>
+        </div>
+      </div>
+      <div class="learn-item">
+        <div class="learn-n">04</div>
+        <div class="learn-content">
+          <h3>Not Every Decision Should Be Automated — Especially Not Compliance Decisions</h3>
+          <p class="body" style="max-width:680px;">The temptation to automate ownership determination was real. It would have felt like a more sophisticated solution. But in a compliance workflow, incorrect automation creates risk that no UX polish can recover from. Decision support — structured guidance that combines system data with human judgment — was the right model. The associate remains accountable, but the platform removes the inconsistency. That distinction matters: it protects the client, the associate, and the firm.</p>
+        </div>
+      </div>
+      <div class="learn-item">
+        <div class="learn-n">05</div>
+        <div class="learn-content">
+          <h3>The Best Enterprise Solutions Reduce Work for Multiple Groups Simultaneously</h3>
+          <p class="body" style="max-width:680px;">A design that helps one group and burdens another is not a solution — it is a redistribution of friction. The validation gate framework served associates, clients, and research teams at the same time. Associates had structure. Clients had faster clarity. Research teams had complete cases. That alignment happened because the design started from a shared definition of what a "valid escalation" meant — not from a single user's perspective, but from the full workflow. That systems thinking is what I carry forward into every enterprise project.</p>
+        </div>
+      </div>
+    </div>
+
+     <div class="hypo-card reveal">
+      <blockquote>"The UI must do the thinking for them. Our associates shouldn't need to remember steps—the system should guide them through the right sequence every time."</blockquote>
+   </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ===== FOOTER ===== -->
+<!-- Next case study -->
+<div class="next-cs">
+  <div class="wrap next-inner">
+    <div>
+      <div class="next-label">Next case study</div>
+      <div class="next-title">Audit Issue Tracker Redesign</div>
+    </div>
+    <a href="https://as-xd.webflow.io/work/issue-tracker" target="_blank" class="next-link">View case study →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap footer-inner">
+    <a href="index.html#work" class="footer-back">← Back to all work</a>
+    <span class="footer-copy">Amit Kumar Shaw · UX Strategist · 2026</span>
+     <div class="footer-links">
+      <a href="https://www.linkedin.com/in/amit-shaw-design-thinker/" target="_blank">LinkedIn</a>
+      <a href="https://www.behance.net/amit-shaw" target="_blank">Behance</a>
+      <a href="https://dribbble.com/amitshaw" target="_blank">Dribbble</a>
+      <a href="mailto:amit.uxdoffice@gmail.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════════
+     MODAL OVERLAY SYSTEM
+══════════════════════════════════════════════ -->
+<div class="gallery-modal" id="gallery-modal">
+  <div class="gallery-modal-close" id="gallery-modal-close">Close ✕</div>
+  <img src="" class="gallery-modal-content" id="modal-target-img" alt="Enlarged View" draggable="false">
+  <div class="gallery-modal-caption" id="modal-target-caption"></div>
+</div>
+
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.07, rootMargin: '0px 0px -48px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Stagger child cards
+  document.querySelectorAll('.pain-card, .principle-card, .notice-card, .impact-col, .stake-item').forEach((el, i) => {
+    el.style.transitionDelay = `${(i % 3) * 80}ms`;
+  });
+
+
+  // Fixed Inline Navigation Scrollspy & Active State System
+const sections = document.querySelectorAll('section[id], div[id="comparison"]');
+const subLinks = document.querySelectorAll('.sub-link');
+
+function updateActiveSubnav() {
+  let activeId = '';
+  const scrollPosition = window.scrollY + 140;
+
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    const sectionHeight = section.offsetHeight;
+    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+      activeId = section.getAttribute('id');
+    }
+  });
+
+  subLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === `#${activeId}`) {
+      link.classList.add('active');
+      // Auto scroll sub-navigation bar smoothly on small device headers
+      const container = document.querySelector('.sub-nav-inner');
+      const linkOffset = link.offsetLeft - container.offsetWidth / 2 + link.offsetWidth / 2;
+      container.scrollTo({ left: linkOffset, behavior: 'smooth' });
+    }
+  });
+}
+window.addEventListener('scroll', updateActiveSubnav);
+window.addEventListener('load', updateActiveSubnav);
+
+// Gallery Overlay Modal Interaction System
+const modal = document.getElementById('gallery-modal');
+const modalImg = document.getElementById('modal-target-img');
+const modalCaption = document.getElementById('modal-target-caption');
+const modalClose = document.getElementById('gallery-modal-close');
+
+document.querySelectorAll('.thumb-item').forEach(thumbnail => {
+  thumbnail.addEventListener('click', () => {
+    modalImg.src = thumbnail.src;
+    modalCaption.textContent = thumbnail.alt;
+    modal.style.display = 'flex';
+    // Force simple repaint for smooth transition visibility properties
+    setTimeout(() => { modal.classList.add('show'); }, 10);
+    document.body.style.overflow = 'hidden';
+  });
+});
+
+function closeModal() {
+  modal.classList.remove('show');
+  setTimeout(() => { modal.style.display = 'none'; }, 300);
+  document.body.style.overflow = '';
+}
+
+modalClose.addEventListener('click', closeModal);
+modal.addEventListener('click', (event) => {
+  if (event.target === modal) { closeModal(); }
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && modal.classList.contains('show')) { closeModal(); }
+});
+
+
+// new features 
+(async () => {
+  const modal = document.getElementById('gallery-modal');
+  const modalImg = document.getElementById('modal-target-img');
+  const modalCaption = document.getElementById('modal-target-caption');
+  
+  // 1. Add Navigation Controls to the DOM
+  const prevBtn = document.createElement('div');
+  prevBtn.id = 'gallery-modal-prev';
+  prevBtn.className = 'gallery-nav-btn';
+  prevBtn.innerHTML = '&#10094;';
+  
+  const nextBtn = document.createElement('div');
+  nextBtn.id = 'gallery-modal-next';
+  nextBtn.className = 'gallery-nav-btn';
+  nextBtn.innerHTML = '&#10095;';
+  
+  modal.appendChild(prevBtn);
+  modal.appendChild(nextBtn);
+
+  // 2. Add Styles for the new controls
+  const style = document.createElement('style');
+  style.textContent = `
+    .gallery-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      padding: 20px;
+      cursor: pointer;
+      user-select: none;
+      background-color: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+      z-index: 1001;
+    }
+    .gallery-nav-btn:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-50%) scale(1.1);
+    }
+    .gallery-nav-btn:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+    #gallery-modal-prev { left: 30px; }
+    #gallery-modal-next { right: 30px; }
+    
+    @media (max-width: 768px) {
+      .gallery-nav-btn {
+        padding: 10px;
+        width: 30px;
+        height: 30px;
+      }
+      #gallery-modal-prev { left: 10px; }
+      #gallery-modal-next { right: 10px; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // 3. Logic to handle navigation
+  let currentItems = [];
+  let currentIndex = -1;
+
+  function updateModalContent(index) {
+    if (index < 0 || index >= currentItems.length) return;
+    currentIndex = index;
+    const item = currentItems[currentIndex];
+    modalImg.src = item.src;
+    modalCaption.textContent = item.alt || '';
+  }
+
+  function navigate(direction) {
+    if (currentItems.length === 0) return;
+    let nextIndex = currentIndex + direction;
+    if (nextIndex < 0) nextIndex = currentItems.length - 1;
+    if (nextIndex >= currentItems.length) nextIndex = 0;
+    updateModalContent(nextIndex);
+  }
+
+  // Intercept the original opening logic or enhance it
+  document.querySelectorAll('.thumb-item').forEach(thumbnail => {
+    thumbnail.addEventListener('click', () => {
+      // Find all thumbnails in the SAME section
+      const section = thumbnail.closest('section');
+      currentItems = Array.from(section.querySelectorAll('.thumb-item'));
+      currentIndex = currentItems.indexOf(thumbnail);
+      
+      // The original script already opens the modal, but we've now updated the current list context
+    });
+  });
+
+  // Event Listeners for Buttons
+  prevBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    navigate(-1);
+  });
+  nextBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    navigate(1);
+  });
+
+  // 4. Keyboard Support
+  document.addEventListener('keydown', (event) => {
+    if (!modal.classList.contains('show')) return;
+    
+    if (event.key === 'ArrowLeft') {
+      navigate(-1);
+    } else if (event.key === 'ArrowRight') {
+      navigate(1);
+    }
+  });
+
+
+  
+
+
+  window.data = { success: true };
+})();
+
+
+//modal-image-count
+(async () => {
+  const modalCaption = document.getElementById('modal-target-caption');
+  
+  // Create counter element if it doesn't exist
+  let counter = document.getElementById('modal-counter');
+  if (!counter) {
+    counter = document.createElement('div');
+    counter.id = 'modal-counter';
+    // Style it to look like it belongs to the caption area
+    counter.style.cssText = `
+      position: absolute;
+    top: 28px;
+    color: rgba(255, 255, 255, 0.65);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-align: center;
+    letter-spacing: 0.02em;
+    `;
+    modalCaption.parentNode.insertBefore(counter, modalCaption.nextSibling);
+  }
+
+  // Find the state variables from the previous injection or re-find them
+  // Since we injected the script into the page scope, we need a way to update it.
+  // I will redefine the update function to also handle the counter.
+
+  // We need to hook into the navigation logic we already established.
+  // The best way is to monkey-patch the updateModalContent function if I can,
+  // or just re-apply the logic globally.
+
+  const originalUpdate = window.updateModalContent; // This might not be accessible if it was in an IIFE.
+  
+  // Re-inject the logic with the counter support
+  const scriptContent = `
+    (function() {
+      const modalImg = document.getElementById('modal-target-img');
+      const modalCaption = document.getElementById('modal-target-caption');
+      const counter = document.getElementById('modal-counter');
+      let currentItems = [];
+      let currentIndex = -1;
+
+      function updateCounter() {
+        if (currentItems.length > 0) {
+          counter.textContent = (currentIndex + 1) + ' of ' + currentItems.length;
+        } else {
+          counter.textContent = '';
+        }
+      }
+
+      function updateModalContent(index) {
+        if (index < 0 || index >= currentItems.length) return;
+        currentIndex = index;
+        const item = currentItems[currentIndex];
+        modalImg.src = item.src;
+        modalCaption.textContent = item.alt || '';
+        updateCounter();
+      }
+
+      function navigate(direction) {
+        if (currentItems.length === 0) return;
+        let nextIndex = currentIndex + direction;
+        if (nextIndex < 0) nextIndex = currentItems.length - 1;
+        if (nextIndex >= currentItems.length) nextIndex = 0;
+        updateModalContent(nextIndex);
+      }
+
+      // Re-attach listeners to ensure they use the local currentItems/currentIndex
+      document.querySelectorAll('.thumb-item').forEach(thumbnail => {
+        thumbnail.addEventListener('click', () => {
+          const section = thumbnail.closest('section');
+          currentItems = Array.from(section.querySelectorAll('.thumb-item'));
+          currentIndex = currentItems.indexOf(thumbnail);
+          updateCounter();
+        });
+      });
+
+      document.getElementById('gallery-modal-prev').onclick = (e) => { e.stopPropagation(); navigate(-1); };
+      document.getElementById('gallery-modal-next').onclick = (e) => { e.stopPropagation(); navigate(1); };
+      
+      // Update the keydown listener as well
+      const oldHandler = document.onkeydown;
+      document.addEventListener('keydown', (event) => {
+        const modal = document.getElementById('gallery-modal');
+        if (!modal.classList.contains('show')) return;
+        if (event.key === 'ArrowLeft') navigate(-1);
+        if (event.key === 'ArrowRight') navigate(1);
+      });
+    })();
+  `;
+
+  const script = document.createElement('script');
+  script.textContent = scriptContent;
+  document.body.appendChild(script);
+
+  window.data = { success: true };
+})();
+
+//hide button for single image
+(function() {
+  const prevBtn = document.getElementById('gallery-modal-prev');
+  const nextBtn = document.getElementById('gallery-modal-next');
+  const counter = document.getElementById('modal-counter');
+
+  // We need to update the logic that opens the modal and navigates.
+  // I will inject a function that checks the item count and toggles button visibility.
+  
+  const updateControlsVisibility = (count) => {
+    const displayValue = count > 1 ? 'flex' : 'none';
+    if (prevBtn) prevBtn.style.display = displayValue;
+    if (nextBtn) nextBtn.style.display = displayValue;
+    if (counter) counter.style.display = displayValue;
+  };
+
+  // Re-hook the click events on thumbnails to trigger this check
+  document.querySelectorAll('.thumb-item').forEach(thumbnail => {
+    thumbnail.addEventListener('click', () => {
+      const section = thumbnail.closest('section');
+      const items = section ? section.querySelectorAll('.thumb-item') : [];
+      updateControlsVisibility(items.length);
+    });
+  });
+
+  // Also check if the modal is already open (for immediate state)
+  const modal = document.getElementById('gallery-modal');
+  if (modal && modal.classList.contains('show')) {
+    const activeImg = document.getElementById('modal-target-img');
+    // Try to find which section this image belongs to by matching src
+    const allThumbs = Array.from(document.querySelectorAll('.thumb-item'));
+    const match = allThumbs.find(t => t.src === activeImg.src);
+    if (match) {
+      const section = match.closest('section');
+      const count = section ? section.querySelectorAll('.thumb-item').length : 0;
+      updateControlsVisibility(count);
+    }
+  }
+
+  window.data = { success: true };
+})();
+
+//mobile swipe guesture
+(function() {
+  const modal = document.getElementById('gallery-modal');
+  if (!modal) return;
+
+  let touchStartX = 0;
+  let touchEndX = 0;
+  const swipeThreshold = 50; // Minimum distance in pixels for a swipe
+
+  function handleGesture() {
+    const diff = touchEndX - touchStartX;
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff < 0) {
+        // Swiped left -> Next
+        const nextBtn = document.getElementById('gallery-modal-next');
+        if (nextBtn && nextBtn.style.display !== 'none') {
+          nextBtn.click();
+        }
+      } else {
+        // Swiped right -> Prev
+        const prevBtn = document.getElementById('gallery-modal-prev');
+        if (prevBtn && prevBtn.style.display !== 'none') {
+          prevBtn.click();
+        }
+      }
+    }
+  }
+
+  modal.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  modal.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleGesture();
+  }, { passive: true });
+
+  // Prevent default scroll behavior when swiping on the modal image
+  const modalImg = document.getElementById('modal-target-img');
+  if (modalImg) {
+    modalImg.addEventListener('touchmove', (e) => {
+      if (e.cancelable) e.preventDefault();
+    }, { passive: false });
+  }
+
+  window.data = { success: true };
+
+// Disable right-click
+//document.addEventListener('contextmenu', event => event.preventDefault());
+
+
+
+})();
+
+</script>
+</body>
+</html>

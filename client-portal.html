@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<title>Audit Client Portal — UX Case Study · Amit Kumar Shaw</title>
+<meta name="description" content="How a research-led redesign of EY's Audit Client Portal lifted the blended UX score by 45% and improved usability metrics by 50%.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink:       #1A2E4A;
+  --ink-mid:   #3D5168;
+  --paper:     #F8F5EE;
+  --white:     #FFFFFF;
+  --accent:    #1A5FAA;
+  --acc-light: rgba(26,95,170,0.08);
+  --muted:     #8A9AAC;
+  --rule:      rgba(26,46,74,0.09);
+  --dark:      #0D1B2A;
+  --dark-mid:  #152338;
+  --sand:      #EDE9DF;
+  --sketch-bg: #F5F2EB;
+  --serif:     'Cormorant Garamond', Georgia, serif;
+  --sans:      'DM Sans', system-ui, sans-serif;
+  --mono:      'DM Mono', monospace;
+  --max:       1160px;
+  --body-max:  720px;
+}
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); background: var(--paper); color: var(--ink); line-height: 1.6; overflow-x: hidden; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 2.5rem); }
+.body-wrap { max-width: var(--body-max); margin: 0 auto; }
+
+/* Progress bar */
+#progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); z-index: 200; width: 0%; transition: width 0.1s linear; }
+
+/* Nav */
+nav { position: fixed; top: 2px; left: 0; right: 0; z-index: 100; background: rgba(248,245,238,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--rule); }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 58px; max-width: var(--max); margin: 0 auto; padding: 0 clamp(1.25rem,4vw,2.5rem); }
+.nav-logo { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; color: var(--ink); text-decoration: none; }
+.nav-back { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+.nav-back:hover { color: var(--accent); }
+.nav-back::before { content: '←'; }
+.nav-cta { font-size: 0.78rem; font-weight: 500; color: var(--accent); text-decoration: none; border: 1px solid currentColor; padding: 0.4rem 1rem; border-radius: 2px; letter-spacing: 0.04em; transition: background 0.2s, color 0.2s; }
+.nav-cta:hover { background: var(--accent); color: var(--white); }
+
+/* Sticky Inline Sub-Navigation */
+.sub-nav { position: sticky; top: 60px; background: rgba(248,245,238,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--rule); z-index: 90; }
+.sub-nav-inner { display: flex; gap: clamp(1rem, 2vw, 1.75rem); overflow-x: auto; white-space: nowrap; padding: 0.85rem clamp(1.25rem, 4vw, 2.5rem); justify-content: center; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+.sub-nav-inner::-webkit-scrollbar { display: none; }
+.sub-link { font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); text-decoration: none; transition: color 0.2s, border-color 0.2s; padding-bottom: 0.2rem; border-bottom: 1px solid transparent; }
+.sub-link:hover, .sub-link.active { color: var(--accent); border-color: var(--accent); }
+
+/* Utility */
+.label { font-family: var(--mono); font-size: 0.67rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.in { opacity: 1; transform: translateY(0); }
+.ch-num { font-family: var(--serif); font-size: 5rem; font-weight: 300; color: rgba(26,46,74,0.06); line-height: 1; margin-bottom: -1rem; letter-spacing: -0.02em; }
+.ch-title { font-family: var(--serif); font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 300; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 1rem; }
+.ch-rule { height: 1px; background: var(--rule); margin-bottom: 2.5rem; }
+.body-p { font-size: 0.95rem; color: var(--ink-mid); line-height: 1.9; font-weight: 300; margin-bottom: 1.1rem; }
+.body-p strong { font-weight: 500; color: var(--ink); }
+section { padding: clamp(3rem, 6vw, 5.5rem) 0; }
+.section-divider { height: 1px; background: var(--rule); margin: 0; }
+
+/* Section Galleries & Evidence Thumbnails */
+.section-gallery { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px dashed var(--rule); }
+.gallery-label { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-bottom: 0.85rem; }
+.thumb-grid { display: flex; gap: 1rem; flex-wrap: wrap; }
+.thumb-item { width: clamp(110px, 15vw, 150px); height: clamp(70px, 10vw, 95px); object-fit: cover; border: 1px solid var(--rule); border-radius: 4px; cursor: pointer; background: var(--sketch-bg); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s; }
+.thumb-item:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: 0 6px 16px rgba(26,95,170,0.12); }
+
+/* Overlay Modal Canvas */
+.gallery-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(13, 27, 42, 0.96); z-index: 1000; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; padding: 2rem; }
+.gallery-modal.show { display: flex; opacity: 1; }
+.gallery-modal-content { max-width: 92%; max-height: 82%; object-fit: contain; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.15); transform: scale(0.96); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+.gallery-modal.show .gallery-modal-content { transform: scale(1); }
+.gallery-modal-close { position: absolute; top: 24px; right: 32px; color: var(--white); font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; background: rgba(255,255,255,0.08); padding: 0.5rem 1rem; border-radius: 2px; transition: background 0.2s; }
+.gallery-modal-close:hover { background: rgba(255,255,255,0.18); }
+.gallery-modal-caption { position: absolute; bottom: 28px; color: rgba(255,255,255,0.65); font-family: var(--mono); font-size: 0.72rem; text-align: center; width: 85%; letter-spacing: 0.02em; }
+
+/* Before & After Interface Layout */
+.ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2.5rem; }
+.ba-card { background: var(--white); border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; }
+.ba-badge { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 2px; }
+.ba-badge.before { background: rgba(204,68,68,0.1); color: #CC4444; }
+.ba-badge.after { background: rgba(26,110,74,0.1); color: #1A6E4A; }
+
+/* ── HERO ── */
+.cs-hero { padding-top: 80px; padding-bottom: 0; background: var(--paper); }
+.cs-breadcrumb { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 2.5rem; padding-top: 2rem; }
+.cs-breadcrumb a { font-family: var(--mono); font-size: 0.67rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.cs-breadcrumb a:hover { color: var(--accent); }
+.cs-breadcrumb span { font-family: var(--mono); font-size: 0.67rem; }
+.cs-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+.cs-tag { font-family: var(--mono); font-size: 0.63rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); background: var(--acc-light); padding: 0.28rem 0.65rem; border-radius: 2px; }
+.cs-h1 { font-family: var(--serif); font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 300; line-height: 1.15; letter-spacing: -0.015em; margin-bottom: 1.25rem; max-width: 900px; }
+.cs-lead { font-family: var(--serif); font-size: clamp(1.05rem, 2vw, 1.3rem); font-style: italic; color: var(--ink-mid); font-weight: 300; line-height: 1.65; max-width: 680px; margin-bottom: 2.5rem; }
+
+/* Meta grid */
+.cs-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; margin-bottom: 3rem; }
+.cs-meta-cell { padding: 1.25rem 1.5rem; border-right: 1px solid var(--rule); }
+.cs-meta-cell:last-child { border-right: none; }
+.cs-meta-label { display: block; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
+.cs-meta-val { font-size: 0.88rem; font-weight: 500; color: var(--ink); }
+
+/* Hero images */
+.cs-hero-img-wrap { margin-top: 0; overflow: hidden; border-radius: 4px 4px 0 0; background-image: linear-gradient(#1a2e4a 5%, #2a1c0d 100%); }
+.cs-hero-img-wrap img { width: 100%; display: block; max-height: 560px; object-fit: cover; object-position: center top; opacity: 0.5;}
+
+/* Impact strip */
+.impact-strip { background: var(--dark); padding: 3rem 0; }
+.impact-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+.impact-cell { padding: 0 2rem; border-right: 1px solid rgba(255,255,255,0.07); }
+.impact-cell:last-child { border-right: none; }
+.impact-num { font-family: var(--serif); font-size: clamp(2rem,3.5vw,2.8rem); font-weight: 300; color: #fff; line-height: 1; margin-bottom: 0.35rem; letter-spacing: -0.02em; }
+.impact-num span { color: #4A9FDC; }
+.impact-desc { font-family: var(--mono); font-size: 0.62rem; color: rgba(255,255,255,0.38); letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.55; }
+
+/* ── CHAPTERS ── */
+.chapter { padding: clamp(3.5rem,7vw,6rem) 0; }
+
+/* Two-column layout */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+.two-col-3-2 { display: grid; grid-template-columns: 3fr 2fr; gap: 4rem; align-items: start; }
+.two-col-2-3 { display: grid; grid-template-columns: 2fr 3fr; gap: 4rem; align-items: start; }
+
+/* Pull quote */
+.pull-quote { border-left: 3px solid var(--accent); padding: 1.25rem 1.75rem; margin: 2rem 0; background: var(--acc-light); border-radius: 0 4px 4px 0; }
+.pull-quote p { font-family: var(--serif); font-size: 1.2rem; font-style: italic; font-weight: 300; line-height: 1.6; color: var(--ink); }
+.pull-quote cite { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); display: block; margin-top: 0.5rem; }
+
+/* Sketch artifact */
+.sketch-wrap { background: var(--sketch-bg); border: 1.5px solid #D8D4CB; border-radius: 4px; padding: 1.75rem; position: relative; }
+.sketch-label { position: absolute; top: -10px; left: 1.25rem; background: var(--sketch-bg); border: 1px solid #D8D4CB; padding: 0.15rem 0.6rem; border-radius: 2px; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.sketch-caption { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; color: var(--muted); margin-top: 0.75rem; text-align: center; }
+
+/* List styles */
+.cs-list { list-style: none; margin: 1rem 0 1.5rem; }
+.cs-list li { display: flex; gap: 0.75rem; font-size: 0.9rem; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0.6rem; font-weight: 300; width: 100%}
+.cs-list li::before { content: '—'; color: var(--accent); flex-shrink: 0; font-family: var(--mono); font-size: 0.75rem; padding-top: 0.2rem; }
+.cs-list li strong {width: 25%;}
+.cs-list li .des { width: 73%; padding-left: 2%; }
+
+/* HMW cards */
+.hmw-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0; }
+.hmw-card { background: var(--white); border: 1px solid var(--rule); border-radius: 4px; padding: 1.25rem 1.25rem 1rem; }
+.hmw-card .hmw-q { font-family: var(--serif); font-size: 0.95rem; font-style: italic; font-weight: 300; color: var(--ink); line-height: 1.55; margin-bottom: 0.6rem; }
+.hmw-card .hmw-area { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+
+/* Findings cards */
+.findings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin: 2rem 0; }
+.finding-card { background: var(--white); border: 1px solid var(--rule); border-radius: 4px; padding: 1.5rem; }
+.finding-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--acc-light); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+.finding-title { font-weight: 500; font-size: 0.88rem; color: var(--ink); margin-bottom: 0.5rem; }
+.finding-body { font-size: 0.82rem; color: var(--ink-mid); line-height: 1.7; font-weight: 300; }
+
+/* Concept comparison */
+.concept-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+.concept-card { border-radius: 4px; overflow: hidden; border: 1px solid var(--rule); }
+.concept-head { padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+.concept-head-accepted { background: rgba(26,95,170,0.06); border-bottom: 2px solid var(--accent); }
+.concept-head-rejected { background: rgba(120,120,120,0.05); border-bottom: 1px solid var(--rule); }
+.concept-name { font-weight: 500; font-size: 0.88rem; }
+.concept-verdict { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 2px; }
+.verdict-kept { color: var(--accent); background: var(--acc-light); }
+.verdict-dropped { color: var(--muted); background: rgba(138,154,172,0.08); }
+.concept-body { padding: 1.25rem 1.5rem; }
+.concept-finding { font-size: 0.83rem; color: var(--ink-mid); line-height: 1.7; font-weight: 300; margin-bottom: 0.5rem; }
+.concept-finding::before { content: '→ '; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+.before-image, .after-image {
+    width: 100%;
+    margin-top: 20px;
+    border: 1.5px solid #D8D4CB;
+    border-radius: 4px;}
+    .before-image img { width: 100%; padding: 4.3% 0; }
+    .after-image img { width: 100%; }
+
+/* Outcomes */
+.outcomes-dark { background: var(--dark-mid); padding: clamp(3.5rem,7vw,6rem) 0; }
+.outcomes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+.outcome-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 4px; padding: 2rem; }
+.outcome-num { font-family: var(--serif); font-size: 3rem; font-weight: 300; color: #fff; line-height: 1; margin-bottom: 0.4rem; letter-spacing: -0.02em; }
+.outcome-num span { color: #4A9FDC; }
+.outcome-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.35); line-height: 1.6; }
+.outcome-note { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 0.75rem; font-weight: 300; line-height: 1.65; }
+.outcomes-survey { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1.5rem; }
+.survey-cell { text-align: center; padding: 1.25rem; background: rgba(255,255,255,0.03); border-radius: 4px; border: 1px solid rgba(255,255,255,0.06); }
+.survey-pct { font-family: var(--serif); font-size: 2.2rem; font-weight: 300; color: #4A9FDC; line-height: 1; }
+.survey-desc { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-top: 0.4rem; line-height: 1.6; }
+
+/* Learnings */
+.learnings-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2rem; }
+.learning-card { border: 1px solid var(--rule); border-radius: 4px; padding: 1.75rem; background: var(--white); }
+.learning-num { font-family: var(--serif); font-size: 2rem; font-weight: 300; color: rgba(26,46,74,0.1); line-height: 1; margin-bottom: 0.75rem; }
+.learning-title { font-weight: 500; font-size: 0.92rem; color: var(--ink); margin-bottom: 0.6rem; }
+.learning-body { font-size: 0.85rem; color: var(--ink-mid); line-height: 1.8; font-weight: 300; }
+
+/* Image frame */
+.img-frame { border-radius: 4px; overflow: hidden; border: 1px solid var(--rule); margin: 2rem 0; }
+.img-frame img { width: 100%; display: block; }
+.img-frame-caption { padding: 0.75rem 1.25rem; background: var(--white); border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em; color: var(--muted); }
+
+/* Process steps */
+.process-steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin: 2.5rem 0; position: relative; }
+.process-steps::before { content: ''; position: absolute; top: 22px; left: 10%; right: 10%; height: 1px; background: var(--rule); z-index: 0; }
+.ps-item { text-align: center; position: relative; z-index: 1; }
+.ps-dot { width: 44px; height: 44px; border-radius: 50%; background: var(--white); border: 1.5px solid var(--accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; font-family: var(--serif); font-size: 1.05rem; font-weight: 400; color: var(--accent); }
+.ps-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); line-height: 1.5; }
+
+/* Next case study */
+.next-cs { background: var(--dark); padding: 4rem 0; }
+.next-inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+.next-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 0.5rem; }
+.next-title { font-family: var(--serif); font-size: 1.6rem; font-weight: 300; color: var(--white); }
+.next-link { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); text-decoration: none; border: 1px solid rgba(74,159,220,0.3); padding: 0.65rem 1.5rem; border-radius: 2px; white-space: nowrap; transition: background 0.2s; }
+.next-link:hover { background: rgba(74,159,220,0.1); }
+
+/* Footer */
+footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.04); padding: 2rem 0; }
+.footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-copy { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
+.footer-back { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
+.footer-back:hover { color: rgba(255,255,255,0.7); }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .cs-meta { grid-template-columns: repeat(2, 1fr); }
+  .cs-meta-cell:nth-child(2) { border-right: none; }
+  .cs-meta-cell:nth-child(3) { border-top: 1px solid var(--rule); border-right: 1px solid var(--rule); }
+  .cs-meta-cell:nth-child(4) { border-top: 1px solid var(--rule); }
+  .impact-grid { grid-template-columns: repeat(2, 1fr); }
+  .impact-cell { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); padding: 1.5rem; }
+  .two-col, .two-col-3-2, .two-col-2-3 { grid-template-columns: 1fr; gap: 2.5rem; }
+  .hmw-grid { grid-template-columns: 1fr 1fr; }
+  .findings-grid { grid-template-columns: 1fr; }
+  .concept-compare { grid-template-columns: 1fr; }
+  .outcomes-grid { grid-template-columns: repeat(2, 1fr); }
+  .outcomes-survey { grid-template-columns: repeat(2, 1fr); }
+  .process-steps { grid-template-columns: 1fr; gap: 1rem; }
+  .process-steps::before { display: none; }
+  .learnings-grid { grid-template-columns: 1fr; }
+  .next-inner { flex-direction: column; align-items: flex-start; }
+  .ba-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .sub-nav-inner {justify-content: flex-start;}
+}
+@media (max-width: 600px) {
+  .cs-meta { grid-template-columns: 1fr; }
+  .cs-meta-cell { border-right: none; border-bottom: 1px solid var(--rule); }
+  .hmw-grid { grid-template-columns: 1fr; }
+  .outcomes-grid { grid-template-columns: 1fr; }
+  .outcomes-survey { grid-template-columns: repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- Progress -->
+<div id="progress"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Amit Shaw</a>
+    <a href="index.html#work" class="nav-back">All work</a>
+    <a href="mailto:amit.uxdoffice@gmail.com" class="nav-cta">Get in touch</a>
+  </div>
+</nav>
+
+<!-- Sticky Sub-Navigation Bar -->
+<div class="sub-nav">
+  <div class="sub-nav-inner">
+    <a href="#problem" class="sub-link active">01. Problem</a>
+    <a href="#role" class="sub-link">02. My Role</a>
+    <a href="#discovery" class="sub-link">03. Discovery</a>
+    <a href="#ideation" class="sub-link">04. Ideation</a>
+    <a href="#design" class="sub-link">05. Design &amp; Testing</a>
+    <a href="#comparison" class="sub-link">06. Before &amp; After</a>
+    <a href="#outcomes" class="sub-link">07. Outcomes</a>
+    <a href="#learnings" class="sub-link">08. Learnings</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<section class="cs-hero">
+  <div class="wrap">
+    <div class="cs-breadcrumb reveal">
+      <a href="amit-shaw-portfolio.html">Portfolio</a>
+      <span>/</span>
+      <span class="label">Case Study</span>
+    </div>
+
+    <div class="cs-tags reveal">
+      <span class="cs-tag">Enterprise UX</span>
+      <span class="cs-tag">Research-Led Design</span>
+      <span class="cs-tag">H1 Initiative</span>
+      <span class="cs-tag">Usability Testing</span>
+      <span class="cs-tag">Platform Scalability</span>
+    </div>
+
+    <h1 class="cs-h1 reveal">Audit Client Portal — Customer Experience Redesign</h1>
+    <p class="cs-lead reveal">How we discovered that a portal's real problem was not navigation or broken features — it was that neither auditors nor clients could see the same picture at the same time.</p>
+
+    <div class="cs-meta reveal">
+      <div class="cs-meta-cell">
+        <span class="cs-meta-label">Client</span>
+        <span class="cs-meta-val">Ernst &amp; Young</span>
+      </div>
+      <div class="cs-meta-cell">
+        <span class="cs-meta-label">Timeline</span>
+        <span class="cs-meta-val">July 2023 – February 2025</span>
+      </div>
+      <div class="cs-meta-cell">
+        <span class="cs-meta-label">My Role</span>
+        <span class="cs-meta-val">Experience Design Lead</span>
+      </div>
+      <div class="cs-meta-cell">
+        <span class="cs-meta-label">Platform</span>
+        <span class="cs-meta-val">Client portal · Global Audit Platform</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cs-hero-img-wrap reveal">
+    <img src="assets/cover.jpg"
+         alt="EY Audit Client Portal redesign overview"
+         onerror="this.style.minHeight='360px';this.style.background='#0D1B2A'">
+  </div>
+</section>
+
+<!-- Impact strip -->
+<div class="impact-strip">
+  <div class="wrap">
+    <div class="impact-grid">
+      <div class="impact-cell reveal"><div class="impact-num"><span>45</span>%</div><div class="impact-desc">Blended UX score<br>uplift (BUX)</div></div>
+      <div class="impact-cell reveal" style="transition-delay:.08s"><div class="impact-num"><span>50</span>%</div><div class="impact-desc">Usability metrics<br>improvement</div></div>
+      <div class="impact-cell reveal" style="transition-delay:.16s"><div class="impact-num"><span>64</span>%</div><div class="impact-desc">NPS score<br>(target was 50)</div></div>
+      <div class="impact-cell reveal" style="transition-delay:.24s"><div class="impact-num">82<span>%</span></div><div class="impact-desc">User reported<br>Time Saving</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     CH 1 — THE PROBLEM
+══════════════════════════════════════════════ -->
+<section class="chapter" id="problem">
+  <div class="wrap">
+    <div class="reveal"><div class="ch-num">01</div></div>
+    <div class="two-col-3-2">
+      <div>
+        <h2 class="ch-title reveal">The problem — and the problem behind the problem</h2>
+        <div class="ch-rule"></div>
+        <p class="body-p reveal">The brief was clear: the Client Portal had usability issues. Navigation was confusing, the issue tracker was cumbersome, and clients were struggling to complete requests. Fix those things and the portal would perform.</p>
+        <p class="body-p reveal">The brief was wrong. Or rather, it was incomplete.</p>
+        <p class="body-p reveal">When we started talking to users, a pattern emerged that no ticket or stakeholder briefing had captured: <strong>clients were not struggling with the portal because of bad UI. They were avoiding it entirely.</strong> The portal was not their platform — it was an external company's system that they were expected to learn and use infrequently, under time pressure, for an audit they did not fully understand.</p>
+        <div class="pull-quote reveal">
+          <p>"The average client user's attitude to the portal was avoidance — it was too confusing and daunting. This is not their own work platform, but an external company's platform."</p>
+          <cite>— Research finding, Discovery phase</cite>
+        </div>
+        <p class="body-p reveal">The consequence was systemic: coordination defaulted to email. Audit teams spent time chasing clients through a channel they had no visibility into. Requests fell behind. Trust eroded — on both sides.</p>
+        <p class="body-p reveal"><strong>The real problem: neither party had a shared, unambiguous picture of what was outstanding, what was urgent, and what was coming due.</strong> That shared visibility was what the redesign needed to create.</p>
+      </div>
+      <div class="reveal" style="transition-delay:.1s">
+        <!-- Sketch: Problem space diagram -->
+        <div class="sketch-wrap">
+          <span class="sketch-label">Problem Map</span>
+          <svg viewBox="0 0 280 320" xmlns="http://www.w3.org/2000/svg" width="100%">
+            <!-- Audit team side -->
+            <rect x="10" y="30" width="110" height="52" rx="4" fill="none" stroke="#8A9AAC" stroke-width="1.2"/>
+            <circle cx="32" cy="50" r="9" fill="none" stroke="#1A5FAA" stroke-width="1.2"/>
+            <line x1="32" y1="59" x2="32" y2="72" stroke="#1A5FAA" stroke-width="1"/>
+            <line x1="22" y1="64" x2="42" y2="64" stroke="#1A5FAA" stroke-width="1"/>
+            <text x="48" y="50" font-family="DM Mono,monospace" font-size="7" fill="#3D5168">Audit Team</text>
+            <text x="48" y="61" font-family="DM Sans,sans-serif" font-size="6.5" fill="rgb(97 125 156)">Senior / Staff</text>
+            <text x="48" y="72" font-family="DM Sans,sans-serif" font-size="6.5" fill="rgb(97 125 156)">Auditor</text>
+            <!-- Client side -->
+            <rect x="162" y="30" width="110" height="52" rx="4" fill="none" stroke="#8A9AAC" stroke-width="1.2"/>
+            <circle cx="184" cy="50" r="9" fill="none" stroke="#8A9AAC" stroke-width="1.2"/>
+            <line x1="184" y1="59" x2="184" y2="72" stroke="#8A9AAC" stroke-width="1"/>
+            <line x1="174" y1="64" x2="194" y2="64" stroke="#8A9AAC" stroke-width="1"/>
+            <text x="200" y="50" font-family="DM Mono,monospace" font-size="7" fill="#3D5168">Client User</text>
+            <text x="200" y="61" font-family="DM Sans,sans-serif" font-size="6.5" fill="rgb(97 125 156)">Operations /</text>
+            <text x="200" y="72" font-family="DM Sans,sans-serif" font-size="6.5" fill="rgb(97 125 156)">VP Finance</text>
+            <!-- Portal (broken) -->
+            <rect x="80" y="116" width="122" height="56" rx="4" fill="none" stroke="#D8D4CB" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <text x="141" y="138" font-family="DM Mono,monospace" font-size="7" fill="rgb(97 125 156)" text-anchor="middle">Client Portal</text>
+            <text x="141" y="152" font-family="DM Sans,sans-serif" font-size="6.5" fill="rgb(120 101 55)" text-anchor="middle">Document repository</text>
+            <text x="141" y="163" font-family="DM Sans,sans-serif" font-size="6.5" fill="rgb(120 101 55)" text-anchor="middle">Confusing · Avoided</text>
+            <!-- Arrow: Audit → Portal (thin, weak) -->
+            <line x1="65" y1="82" x2="110" y2="116" stroke="#D0CCC5" stroke-width="0.8" stroke-dasharray="3 2"/>
+            <!-- Arrow: Client → Email (bypasses portal) -->
+            <line x1="217" y1="82" x2="217" y2="100" stroke="#8A9AAC" stroke-width="1" stroke-dasharray="3 2"/>
+            <!-- Email bypass box -->
+            <rect x="182" y="100" width="68" height="26" rx="3" fill="none" stroke="#8A9AAC" stroke-width="1"/>
+            <text x="216" y="114" font-family="DM Mono,monospace" font-size="6.5" fill="#8A9AAC" text-anchor="middle">Email ↩</text>
+            <text x="216" y="123" font-family="DM Sans,sans-serif" font-size="6" fill="rgb(97 125 156)" text-anchor="middle">Default fallback</text>
+            <!-- Pain marker -->
+            <circle cx="141" cy="210" r="26" fill="none" stroke="#CC4444" stroke-width="1" stroke-dasharray="3 2" opacity=".5"/>
+            <text x="141" y="206" font-family="DM Sans,sans-serif" font-size="6.5" fill="#CC4444" text-anchor="middle">No shared</text>
+            <text x="141" y="216" font-family="DM Sans,sans-serif" font-size="6.5" fill="#CC4444" text-anchor="middle">visibility</text>
+            <!-- Consequence -->
+            <rect x="30" y="255" width="222" height="44" rx="4" fill="rgba(26,46,74,0.04)" stroke="var(--rule)" stroke-width="1"/>
+            <text x="141" y="272" font-family="DM Sans,sans-serif" font-size="7" fill="#3D5168" text-anchor="middle">Result: Requests overdue · Trust erodes</text>
+            <text x="141" y="286" font-family="DM Mono,monospace" font-size="6.5" fill="#8A9AAC" text-anchor="middle">Audit teams chase via email · More friction</text>
+          </svg>
+          <p class="sketch-caption">Problem space — portal avoided, email becomes default, visibility gap widens</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Gallery Thumbnails 
+    <div class="section-gallery reveal">
+      <span class="gallery-label">Artifact Evidence</span>
+      <div class="thumb-grid">
+        <img src="https://cdn.prod.website-files.com/67f679f602e6247ed7e0b4be/67f68a04f9659231a472185a_db8c84dbde5065e293e2af1bae45fd98_CX-case-study%20%281%29.jpg" class="thumb-item" alt="EY Audit Client Portal Discovery Framework Overview">
+      </div>
+    </div> -->
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     CH 2 — MY ROLE
+══════════════════════════════════════════════ -->
+<section class="chapter" id="role">
+  <div class="wrap">
+    <div class="reveal"><div class="ch-num">02</div></div>
+    <h2 class="ch-title reveal">My role and how the team worked</h2>
+    <div class="ch-rule"></div>
+    <div class="two-col">
+      <div>
+        <p class="body-p reveal">As Experience Design Lead, I owned the end-to-end UX process — from discovery through to production handoff — working within a cross-functional team that spanned UX research, product management, engineering, and business stakeholders.</p>
+        <p class="body-p reveal">I led the research phase jointly with a fellow researcher, designed the study protocol, facilitated stakeholder workshops, produced all wireframes and prototypes, and coordinated the usability testing sessions.</p>
+        <p class="body-p reveal">Stakeholder alignment was a critical part of the role. The redesign touched multiple product teams and business sponsors across EY globally.</p><div class="body-p reveal"><strong>Teams & Collaboration</strong></div>
+        <ul class="cs-list"><li><strong>UX Researcher</strong><div class="des">Client user interviews, research synthesis, insight generation</div></li><li><strong>Business Product Manager</strong><div class="des">Prioritization, roadmap alignment, business strategy</div></li><li><strong>Technical Product Manager</strong><div class="des">Feasibility assessment, implementation planning</div></li><li><strong>Audit Partners</strong><div class="des">Audit process expertise and solution validation</div></li></ul>
+      </div>
+      <div class="reveal" style="transition-delay:.1s">
+        <p class="body-p reveal"><strong>Experience Design Lead (Me)</strong></p>
+        <ul class="cs-list">
+          <li><strong>Discovery &amp; Research</strong><div class="des">1:1 interviews with auditors across four seniority levels and three geographies (APAC, US, EMEIA)</div></li>
+          <li><strong>Journey Mapping</strong><div class="des">Mapped two user paths: Staff Auditor requesting client data, and Client Data Provider fulfilling requests</div></li>
+          <li><strong>Ideation Facilitation</strong><div class="des">How Might We workshops, competitor analysis, decision tree sessions with product and business stakeholders</div></li>
+          <li><strong>Prototyping</strong><div class="des">Two competing design concepts taken to wireframe quality for user testing</div></li>
+          <li><strong>Usability Testing</strong><div class="des">Validated wireframes with cross-geography participants; moderated sessions and synthesised findings</div></li>
+          <li><strong>Design System Contribution</strong><div class="des">Extended SLDS-compliant component library to support new interaction patterns</div></li>
+          <li><strong>Dev Handoff</strong><div class="des">Detailed Figma specifications and collaboration with engineering leads through implementation<</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Section Gallery Thumbnails -->
+    <div class="section-gallery reveal">
+      <span class="gallery-label">Artifact</span>
+      <div class="thumb-grid">
+        <img src="assets/working-plan.jpeg" class="thumb-item" alt="Cross-functional alignment boards and working plan">
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     CH 3 — DISCOVERY
+══════════════════════════════════════════════ -->
+<section class="chapter" id="discovery">
+  <div class="wrap">
+    <div class="reveal"><div class="ch-num">03</div></div>
+    <h2 class="ch-title reveal">Discovery — what we found when we looked</h2>
+    <div class="ch-rule"></div>
+
+    <p class="body-p reveal" style="max-width:var(--body-max)">The discovery phase was designed around a single question: how do auditors and their clients actually coordinate on request completion — and where does that process break down? We ran a series of 1:1 user interviews across seniority levels and geographies before a single design decision was made.</p>
+
+    <!-- Process steps -->
+    <div class="process-steps reveal">
+      <div class="ps-item"><div class="ps-dot">1</div><div class="ps-label">Stakeholder<br>interviews</div></div>
+      <div class="ps-item"><div class="ps-dot">2</div><div class="ps-label">User<br>interviews</div></div>
+      <div class="ps-item"><div class="ps-dot">3</div><div class="ps-label">Journey<br>mapping</div></div>
+      <div class="ps-item"><div class="ps-dot">4</div><div class="ps-label">Competitor<br>analysis</div></div>
+      <div class="ps-item"><div class="ps-dot">5</div><div class="ps-label">Synthesis<br>&amp; personas</div></div>
+    </div>
+
+    <!-- Key findings -->
+    <div class="findings-grid">
+      <div class="finding-card reveal">
+        <div class="finding-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="#1A5FAA" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="9" stroke="#1A5FAA" stroke-width="1.5"/><circle cx="8" cy="11" r="0.8" fill="#1A5FAA"/></svg>
+        </div>
+        <div class="finding-title">Infrequent users demands radical simplicity</div>
+        <div class="finding-body">Client users are not regular portal users. Unlike auditors who use the platform daily, clients access it sporadically under time pressure. This made any learning curve unacceptable — the experience had to be immediately clear on every visit.</div>
+      </div>
+      <div class="finding-card reveal" style="transition-delay:.08s">
+        <div class="finding-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="2" fill="none" stroke="#1A5FAA" stroke-width="1.5"/><line x1="5" y1="7" x2="11" y2="7" stroke="#1A5FAA" stroke-width="1.2"/><line x1="5" y1="10" x2="9" y2="10" stroke="#1A5FAA" stroke-width="1.2"/></svg>
+        </div>
+        <div class="finding-title">Email was the real benchmark</div>
+        <div class="finding-body">Auditors found email faster for following up with clients. Not because email is better — but because it requires no learning and creates a direct, personal alert. The portal needed to match that sense of directed urgency to displace it.</div>
+      </div>
+      <div class="finding-card reveal" style="transition-delay:.16s">
+        <div class="finding-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="5" cy="8" r="2.5" fill="none" stroke="#1A5FAA" stroke-width="1.5"/><circle cx="11" cy="8" r="2.5" fill="none" stroke="#1A5FAA" stroke-width="1.5"/><line x1="7.5" y1="8" x2="8.5" y2="8" stroke="#1A5FAA" stroke-width="1.2"/></svg>
+        </div>
+        <div class="finding-title">Two personas, one shared goal</div>
+        <div class="finding-body">We identified Operational Managers (day-to-day request managing on client sides) and Senior Planners (strategic overview, team performance). Both shared a primary goal: get audit requests completed on time so the audit progresses smoothly.</div>
+      </div>
+    </div>
+
+    <!-- Personas -->
+    <div class="two-col reveal" style="margin-top:2rem">
+      <div class="sketch-wrap">
+        <span class="sketch-label">Persona A — Operational Manager</span>
+        <svg viewBox="0 0 280 210" xmlns="http://www.w3.org/2000/svg" width="100%">
+          <!-- Avatar -->
+          <circle cx="36" cy="36" r="20" fill="none" stroke="#1A5FAA" stroke-width="1.2"/>
+          <circle cx="36" cy="30" r="9" fill="none" stroke="#1A5FAA" stroke-width="1"/>
+          <path d="M18,52 Q36,42 54,52" fill="none" stroke="#1A5FAA" stroke-width="1"/>
+          <!-- Name + role -->
+          <text x="64" y="28" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="#1A2E4A">Greg</text>
+          <text x="64" y="40" font-family="DM Mono,monospace" font-size="7" fill="#8A9AAC">Operations Manager · Client Side</text>
+          <text x="64" y="52" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">Visits portal 2–3× per audit engagement</text>
+          <!-- Divider -->
+          <line x1="10" y1="68" x2="270" y2="68" stroke="#D8D4CB" stroke-width="0.8"/>
+          <!-- Goals -->
+          <text x="10" y="83" font-family="DM Mono,monospace" font-size="7" fill="#1A5FAA">GOALS</text>
+          <text x="10" y="97" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">→ Know exactly what is outstanding and by when</text>
+          <text x="10" y="110" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">→ Submit the right documents on time</text>
+          <text x="10" y="123" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">→ Communicate clearly with audit team without extra steps</text>
+          <!-- Divider -->
+          <line x1="10" y1="135" x2="270" y2="135" stroke="#D8D4CB" stroke-width="0.8"/>
+          <!-- Pain points -->
+          <text x="10" y="150" font-family="DM Mono,monospace" font-size="7" fill="#CC4444">PAIN POINTS</text>
+          <text x="10" y="164" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">✕  Portal is daunting — defaults to email instead</text>
+          <text x="10" y="177" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">✕  Cannot see which items are truly urgent at a glance</text>
+          <text x="10" y="190" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">✕  Audit stages and jargon are unfamiliar</text>
+          <text x="10" y="203" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">✕  Feels like extra work on top of their own job</text>
+        </svg>
+      </div>
+      <div class="sketch-wrap reveal" style="transition-delay:.1s">
+        <span class="sketch-label">Persona B — Senior Planner</span>
+        <svg viewBox="0 0 280 210" xmlns="http://www.w3.org/2000/svg" width="100%">
+          <!-- Avatar -->
+          <circle cx="36" cy="36" r="20" fill="none" stroke="#8A9AAC" stroke-width="1.2"/>
+          <circle cx="36" cy="30" r="9" fill="none" stroke="#8A9AAC" stroke-width="1"/>
+          <path d="M18,52 Q36,42 54,52" fill="none" stroke="#8A9AAC" stroke-width="1"/>
+          <!-- Name + role -->
+          <text x="64" y="28" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="#1A2E4A">Samantha</text>
+          <text x="64" y="40" font-family="DM Mono,monospace" font-size="7" fill="#8A9AAC">VP Finance · Client Organisation</text>
+          <text x="64" y="52" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">Needs strategic overview, not operational detail</text>
+          <!-- Divider -->
+          <line x1="10" y1="68" x2="270" y2="68" stroke="#D8D4CB" stroke-width="0.8"/>
+          <!-- Goals -->
+          <text x="10" y="83" font-family="DM Mono,monospace" font-size="7" fill="#1A5FAA">GOALS</text>
+          <text x="10" y="97" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">→ See overall audit progress at a glance</text>
+          <text x="10" y="110" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">→ Identify risk areas and bottlenecks early</text>
+          <text x="10" y="123" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">→ Understand team performance and engagement</text>
+          <!-- Divider -->
+          <line x1="10" y1="135" x2="270" y2="135" stroke="#D8D4CB" stroke-width="0.8"/>
+          <!-- Pain points -->
+          <text x="10" y="150" font-family="DM Mono,monospace" font-size="7" fill="#CC4444">PAIN POINTS</text>
+          <text x="10" y="164" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">✕  High coordination effort across stakeholders and deadlines</text>
+          <text x="10" y="177" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">✕  Redundant work from disconnected data and tracking</text>
+          <text x="10" y="190" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">✕  Operational friction compounding audit delays and costs</text>
+          <text x="10" y="203" font-family="DM Sans,sans-serif" font-size="8" fill="#3D5168">✕  No ability to drill from summary to detail</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Journey map 
+    <div class="img-frame reveal" style="margin-top:2rem">
+      <img src="https://cdn.prod.website-files.com/67f679f602e6247ed7e0b4be/67f6991c78c7f425784cec60_07f2c6ace5ff3e1bbcca53326ab48e59_UT.jpg"
+           alt="Usability testing and user research documentation"
+           onerror="this.style.display='none'">
+      <div class="img-frame-caption">Usability testing sessions — cross-geography participants across APAC, US and EMEIA</div>
+    </div>
+     -->
+    <!-- Simplified journey map sketch -->
+    <div class="sketch-wrap reveal" style="margin-top:1.5rem">
+      <span class="sketch-label">Simplified User Journey — Client Data Provider</span>
+      <svg viewBox="0 0 680 180" xmlns="http://www.w3.org/2000/svg" width="100%">
+        <!-- Stage headers -->
+        <text x="60" y="20" font-family="DM Mono,monospace" font-size="7.5" fill="#1A5FAA" text-anchor="middle">NOTIFIED</text>
+        <text x="180" y="20" font-family="DM Mono,monospace" font-size="7.5" fill="#1A5FAA" text-anchor="middle">ACCESS</text>
+        <text x="300" y="20" font-family="DM Mono,monospace" font-size="7.5" fill="#1A5FAA" text-anchor="middle">UNDERSTAND</text>
+        <text x="424" y="20" font-family="DM Mono,monospace" font-size="7.5" fill="#1A5FAA" text-anchor="middle">RESPOND</text>
+        <text x="544" y="20" font-family="DM Mono,monospace" font-size="7.5" fill="#1A5FAA" text-anchor="middle">CONFIRM</text>
+        <!-- Stage boxes -->
+        <rect x="10" y="28" width="100" height="32" rx="3" fill="rgba(26,95,170,0.06)" stroke="#D8D4CB" stroke-width="0.8"/>
+        <rect x="130" y="28" width="100" height="32" rx="3" fill="rgba(26,95,170,0.06)" stroke="#D8D4CB" stroke-width="0.8"/>
+        <rect x="250" y="28" width="100" height="32" rx="3" fill="rgba(26,95,170,0.06)" stroke="#D8D4CB" stroke-width="0.8"/>
+        <rect x="374" y="28" width="100" height="32" rx="3" fill="rgba(26,95,170,0.06)" stroke="#D8D4CB" stroke-width="0.8"/>
+        <rect x="494" y="28" width="100" height="32" rx="3" fill="rgba(26,95,170,0.06)" stroke="#D8D4CB" stroke-width="0.8"/>
+        <!-- Actions -->
+        <text x="60" y="43" font-family="DM Sans,sans-serif" font-size="7" fill="#3D5168" text-anchor="middle">Gets email</text>
+        <text x="60" y="53" font-family="DM Sans,sans-serif" font-size="7" fill="#3D5168" text-anchor="middle">from auditor</text>
+        <text x="180" y="43" font-family="DM Sans,sans-serif" font-size="7" fill="#3D5168" text-anchor="middle">Logs into</text>
+        <text x="180" y="53" font-family="DM Sans,sans-serif" font-size="7" fill="#3D5168" text-anchor="middle">portal (or not)</text>
+        <text x="300" y="43" font-family="DM Sans,sans-serif" font-size="7" fill="#3D5168" text-anchor="middle">Tries to find</text>
+        <text x="300" y="53" font-family="DM Sans,sans-serif" font-size="7" fill="#3D5168" text-anchor="middle">their requests</text>
+        <text x="424" y="43" font-family="DM Sans,sans-serif" font-size="7" fill="#3D5168" text-anchor="middle">Uploads</text>
+        <text x="424" y="53" font-family="DM Sans,sans-serif" font-size="7" fill="#3D5168" text-anchor="middle">documents</text>
+        <text x="544" y="43" font-family="DM Sans,sans-serif" font-size="7" fill="#3D5168" text-anchor="middle">Waits for</text>
+        <text x="544" y="53" font-family="DM Sans,sans-serif" font-size="7" fill="#3D5168" text-anchor="middle">confirmation</text>
+        <!-- Connectors -->
+        <line x1="110" y1="44" x2="130" y2="44" stroke="#D8D4CB" stroke-width="0.8"/>
+        <line x1="230" y1="44" x2="250" y2="44" stroke="#D8D4CB" stroke-width="0.8"/>
+        <line x1="350" y1="44" x2="374" y2="44" stroke="#D8D4CB" stroke-width="0.8"/>
+        <line x1="474" y1="44" x2="494" y2="44" stroke="#D8D4CB" stroke-width="0.8"/>
+        <!-- Emotion curve -->
+        <path d="M 60,95 C 100,88 130,105 180,115 C 220,122 240,110 300,128 C 340,140 380,122 424,108 C 468,94 510,102 544,96" fill="none" stroke="#1A5FAA" stroke-width="1.5"/>
+        <!-- Emotion labels -->
+        <text x="10" y="92" font-family="DM Mono,monospace" font-size="6" fill="#8A9AAC">😐 Neutral</text>
+        <text x="10" y="120" font-family="DM Mono,monospace" font-size="6" fill="#CC4444">😕 Frustrated</text>
+        <!-- Pain markers -->
+        <circle cx="180" cy="115" r="5" fill="none" stroke="#CC4444" stroke-width="1.2"/>
+        <text x="170" y="130" font-family="DM Sans,sans-serif" font-size="6.5" fill="#CC4444">Portal</text>
+        <text x="162" y="139" font-family="DM Sans,sans-serif" font-size="6.5" fill="#CC4444">avoidance</text>
+        <circle cx="300" cy="128" r="5" fill="none" stroke="#CC4444" stroke-width="1.2"/>
+        <text x="285" y="144" font-family="DM Sans,sans-serif" font-size="6.5" fill="#CC4444">Confusing</text>
+        <text x="278" y="153" font-family="DM Sans,sans-serif" font-size="6.5" fill="#CC4444">navigation</text>
+        <!-- Opportunity marker -->
+        <circle cx="544" cy="96" r="5" fill="rgba(26,95,170,0.15)" stroke="#1A5FAA" stroke-width="1"/>
+        <text x="510" y="79" font-family="DM Sans,sans-serif" font-size="6.5" fill="#1A5FAA">Opportunity:</text>
+        <text x="504" y="88" font-family="DM Sans,sans-serif" font-size="6.5" fill="#1A5FAA">clear confirmation</text>
+        <!-- Legend -->
+        <line x1="420" y1="168" x2="444" y2="168" stroke="#1A5FAA" stroke-width="1.5"/>
+        <text x="448" y="171" font-family="DM Mono,monospace" font-size="6" fill="#8A9AAC">Emotional curve</text>
+        <circle cx="556" cy="168" r="4" fill="none" stroke="#CC4444" stroke-width="1"/>
+        <text x="563" y="171" font-family="DM Mono,monospace" font-size="6" fill="#8A9AAC">Pain point</text>
+      </svg>
+      <p class="sketch-caption">Journey map — Client data provider fulfilling audit requests · Key pain points clustered around portal access and navigation</p>
+    </div>
+
+    <!-- Section Gallery Thumbnails -->
+    <div class="section-gallery reveal">
+      <span class="gallery-label">Artifacts</span>
+      <div class="thumb-grid">
+        <img src="assets/client-persona-greg.jpg" class="thumb-item" alt="Client data provider persona map">
+        <img src="assets/client-persona-samantha.jpg" class="thumb-item" alt="Client strategic manager persona map">
+         <img src="assets/staff-audit-persona.jpg" class="thumb-item" alt="Staff Auditor persona map">
+          <img src="assets/greg-journey-map.jpg" class="thumb-item" alt="Client data provider journey map">
+           <img src="assets/auditor-journey-map.jpg" class="thumb-item" alt="Staff Auditor journey map">
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     CH 4 — IDEATION
+══════════════════════════════════════════════ -->
+<section class="chapter" id="ideation">
+  <div class="wrap">
+    <div class="reveal"><div class="ch-num">04</div></div>
+    <h2 class="ch-title reveal">Defining direction — from research to design bets</h2>
+    <div class="ch-rule"></div>
+
+    <p class="body-p reveal" style="max-width:var(--body-max)">With research synthesised into clear user needs, we ran structured ideation sessions using How Might We questions to convert problem areas into design opportunities. These were then filtered through stakeholder workshops and a decision tree to determine which opportunities had both the highest user value and business viability.</p>
+
+    <!-- HMW questions -->
+    <div class="hmw-grid">
+      <div class="hmw-card reveal">
+        <p class="hmw-q">How might we reduce the time audit teams spend on manual status updates?</p>
+        <span class="hmw-area">Audit Status</span>
+      </div>
+      <div class="hmw-card reveal" style="transition-delay:.08s">
+        <p class="hmw-q">How might we show clear metrics on overdue, coming due, and high-priority items at a glance?</p>
+        <span class="hmw-area">Request Visibility</span>
+      </div>
+      <div class="hmw-card reveal" style="transition-delay:.16s">
+        <p class="hmw-q">How might we give clients contextual information to understand audit findings without needing a tutorial?</p>
+        <span class="hmw-area">Client Analytics</span>
+      </div>
+      <div class="hmw-card reveal" style="transition-delay:.0s">
+        <p class="hmw-q">How might we surface the most relevant KPIs for both operational and strategic decision-making?</p>
+        <span class="hmw-area">Landing Page</span>
+      </div>
+      <div class="hmw-card reveal" style="transition-delay:.08s">
+        <p class="hmw-q">How might we create a seamless navigation experience that requires no re-learning on each visit?</p>
+        <span class="hmw-area">Navigation UX</span>
+      </div>
+      <div class="hmw-card reveal" style="transition-delay:.16s">
+        <p class="hmw-q">How might we allow bulk actions on requests to reduce individual task overhead?</p>
+        <span class="hmw-area">Request Management</span>
+      </div>
+    </div>
+
+    <!-- Decision tree sketch -->
+    <div class="two-col-2-3" style="margin-top:2.5rem">
+      <div class="reveal">
+        <h3 style="font-family:var(--serif);font-size:1.3rem;font-weight:400;margin-bottom:1rem;line-height:1.35">Feature prioritisation through stakeholder consensus</h3>
+        <p class="body-p">I used a structured decision tree approach with stakeholders: each potential feature was evaluated against evidence from user research findings during workshops. This meant that by the time wireframing started, there was existing agreement on what to build and why.</p>
+        <p class="body-p">Features were scoped across three horizons: Autumn 2023 (foundational UX), Spring 2024 (analytics and calendar), and beyond (risk radar, client priorities tracking, ecosystem expansion).</p>
+      </div>
+      <div class="sketch-wrap reveal" style="transition-delay:.1s">
+        <span class="sketch-label">Feature Decision Tree — Simplified</span>
+        <svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" width="100%">
+          <!-- Root -->
+          <rect x="95" y="8" width="110" height="28" rx="3" fill="rgba(26,95,170,0.08)" stroke="#1A5FAA" stroke-width="1"/>
+          <text x="150" y="20" font-family="DM Sans,sans-serif" font-size="7.5" fill="#1A2E4A" text-anchor="middle">User Research Finding</text>
+          <text x="150" y="30" font-family="DM Mono,monospace" font-size="6" fill="#8A9AAC" text-anchor="middle">Evidence-based entry</text>
+          <!-- Level 2 branches -->
+          <line x1="150" y1="36" x2="150" y2="52" stroke="#D8D4CB" stroke-width="0.8"/>
+          <line x1="60" y1="52" x2="240" y2="52" stroke="#D8D4CB" stroke-width="0.8"/>
+          <line x1="60" y1="52" x2="60" y2="64" stroke="#D8D4CB" stroke-width="0.8"/>
+          <line x1="150" y1="52" x2="150" y2="64" stroke="#D8D4CB" stroke-width="0.8"/>
+          <line x1="240" y1="52" x2="240" y2="64" stroke="#D8D4CB" stroke-width="0.8"/>
+          <!-- L2 boxes -->
+          <rect x="10" y="64" width="100" height="22" rx="2" fill="rgba(26,95,170,0.05)" stroke="#D8D4CB" stroke-width="0.8"/>
+          <text x="60" y="75" font-family="DM Sans,sans-serif" font-size="7" fill="#3D5168" text-anchor="middle">High user value</text>
+          <text x="60" y="83" font-family="DM Mono,monospace" font-size="6" fill="#8A9AAC" text-anchor="middle">+ Low effort</text>
+          <rect x="100" y="64" width="100" height="22" rx="2" fill="rgba(26,95,170,0.05)" stroke="#D8D4CB" stroke-width="0.8"/>
+          <text x="150" y="75" font-family="DM Sans,sans-serif" font-size="7" fill="#3D5168" text-anchor="middle">High user value</text>
+          <text x="150" y="83" font-family="DM Mono,monospace" font-size="6" fill="#8A9AAC" text-anchor="middle">+ High effort</text>
+          <rect x="190" y="64" width="100" height="22" rx="2" fill="rgba(26,95,170,0.03)" stroke="#D8D4CB" stroke-width="0.8"/>
+          <text x="240" y="75" font-family="DM Sans,sans-serif" font-size="7" fill="#3D5168" text-anchor="middle">Low user value</text>
+          <text x="240" y="83" font-family="DM Mono,monospace" font-size="6" fill="#C4B89A" text-anchor="middle">De-prioritise</text>
+          <!-- Connectors L2 to L3 -->
+          <line x1="60" y1="86" x2="60" y2="104" stroke="#D8D4CB" stroke-width="0.8"/>
+          <line x1="150" y1="86" x2="150" y2="104" stroke="#D8D4CB" stroke-width="0.8"/>
+          <!-- L3: Now / Later -->
+          <rect x="10" y="104" width="100" height="22" rx="2" fill="rgba(26,95,170,0.1)" stroke="#1A5FAA" stroke-width="1"/>
+          <text x="60" y="118" font-family="DM Mono,monospace" font-size="7" fill="#1A5FAA" text-anchor="middle">NOW · Autumn 2023</text>
+          <rect x="100" y="104" width="100" height="22" rx="2" fill="rgba(26,46,74,0.05)" stroke="#D8D4CB" stroke-width="0.8"/>
+          <text x="150" y="118" font-family="DM Mono,monospace" font-size="7" fill="#8A9AAC" text-anchor="middle">NEXT · Spring 2024</text>
+          <!-- Features -->
+          <line x1="60" y1="126" x2="60" y2="140" stroke="#1A5FAA" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <rect x="10" y="140" width="100" height="18" rx="2" fill="none" stroke="#1A5FAA" stroke-width="0.8"/>
+          <text x="60" y="152" font-family="DM Sans,sans-serif" font-size="6.5" fill="#1A5FAA" text-anchor="middle">Landing page redesign</text>
+          <line x1="60" y1="158" x2="60" y2="172" stroke="#1A5FAA" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <rect x="10" y="172" width="100" height="18" rx="2" fill="none" stroke="#1A5FAA" stroke-width="0.8"/>
+          <text x="60" y="184" font-family="DM Sans,sans-serif" font-size="6.5" fill="#1A5FAA" text-anchor="middle">Timeline · Calendar view</text>
+          <line x1="60" y1="190" x2="60" y2="204" stroke="#1A5FAA" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <rect x="10" y="204" width="100" height="18" rx="2" fill="none" stroke="#1A5FAA" stroke-width="0.8"/>
+          <text x="60" y="216" font-family="DM Sans,sans-serif" font-size="6.5" fill="#1A5FAA" text-anchor="middle">Voice notes · Multi-assignee</text>
+          <line x1="150" y1="126" x2="150" y2="140" stroke="#D8D4CB" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <rect x="100" y="140" width="100" height="18" rx="2" fill="none" stroke="#D8D4CB" stroke-width="0.8"/>
+          <text x="150" y="152" font-family="DM Sans,sans-serif" font-size="6.5" fill="#8A9AAC" text-anchor="middle">Client analytics access</text>
+          <line x1="150" y1="158" x2="150" y2="172" stroke="#D8D4CB" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <rect x="100" y="172" width="100" height="18" rx="2" fill="none" stroke="#D8D4CB" stroke-width="0.8"/>
+          <text x="150" y="184" font-family="DM Sans,sans-serif" font-size="6.5" fill="#8A9AAC" text-anchor="middle">JE tagging · Risk radar</text>
+          <line x1="150" y1="190" x2="150" y2="204" stroke="#D8D4CB" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <rect x="100" y="204" width="100" height="18" rx="2" fill="none" stroke="#D8D4CB" stroke-width="0.8"/>
+          <text x="150" y="216" font-family="DM Sans,sans-serif" font-size="6.5" fill="#8A9AAC" text-anchor="middle">Export · Calendar view</text>
+          <text x="150" y="226" font-family="DM Mono,monospace" font-size="5.5" fill="#C4B89A" text-anchor="middle">Spring 2024</text>
+        </svg>
+        <p class="sketch-caption">Feature decision tree — structured consensus before design began</p>
+      </div>
+    </div>
+
+    <!-- Section Gallery Thumbnails -->
+    <div class="section-gallery reveal">
+      <span class="gallery-label">Evidence</span>
+      <div class="thumb-grid">
+        <img src="assets/solutioning.JPG" class="thumb-item" alt="Solutioning">
+        <img src="assets/descision-tree.JPG" class="thumb-item" alt="Descision-tree : Prioritization matrix and strategic backlog planning">
+        <img src="assets/design-ideas-users.JPG" class="thumb-item" alt="Design ideas by users">
+        <img src="assets/Landing-page-inspiration.JPG" class="thumb-item" alt="Landing page inspiration">
+        <img src="assets/competitor-analysis.JPG" class="thumb-item" alt="Competitor Analysis">
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     CH 5 — DESIGN + WHAT FAILED
+══════════════════════════════════════════════ -->
+<section class="chapter" id="design">
+  <div class="wrap">
+    <div class="reveal"><div class="ch-num">05</div></div>
+    <h2 class="ch-title reveal">Design, testing, and what we were wrong about</h2>
+    <div class="ch-rule"></div>
+
+    <p class="body-p reveal" style="max-width:var(--body-max)">Two competing design concepts were taken to wireframe quality for user testing — a Calendar concept and a Timeline concept. Each approached the core problem from a different angle. We had a hypothesis about which would win. The users told us something more interesting: both were partly right, and neither was sufficient alone.</p>
+
+    <!-- Wireframe sketches -->
+    <div class="concept-compare">
+      <div class="concept-card reveal" style="transition-delay:.1s">
+        <div class="concept-head concept-head-accepted">
+          <span class="concept-name">Timeline Concept</span>
+          <span class="concept-verdict verdict-kept">Foundation — iterated</span>
+        </div>
+        <div class="concept-body">
+          <div class="sketch-wrap" style="padding:1rem;margin-bottom:1rem">
+            <svg viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg" width="100%">
+              <!-- Timeline header bar -->
+              <rect x="8" y="8" width="224" height="22" rx="3" fill="rgba(26,95,170,0.06)" stroke="#1A5FAA" stroke-width="0.8"/>
+              <text x="20" y="22" font-family="DM Mono,monospace" font-size="7" fill="#1A5FAA">Overall audit progress: 62%</text>
+              <rect x="160" y="12" width="60" height="14" rx="2" fill="rgba(26,95,170,0.15)"/>
+              <text x="190" y="22" font-family="DM Mono,monospace" font-size="6.5" fill="#1A5FAA" text-anchor="middle">Audit Phases</text>
+              <!-- Progress bar -->
+              <rect x="8" y="34" width="224" height="10" rx="2" fill="#F0EDE6"/>
+              <rect x="8" y="34" width="140" height="10" rx="2" fill="rgba(26,95,170,0.3)"/>
+              <!-- Milestone markers -->
+              <circle cx="50" cy="39" r="5" fill="rgba(26,95,170,0.6)"/>
+              <circle cx="100" cy="39" r="5" fill="rgba(26,95,170,0.6)"/>
+              <circle cx="140" cy="39" r="5" fill="rgba(26,95,170,0.4)"/>
+              <circle cx="190" cy="39" r="5" fill="none" stroke="#D8D4CB" stroke-width="1"/>
+              <!-- Summary stats row -->
+              <rect x="8" y="52" width="50" height="30" rx="3" fill="rgba(204,68,68,0.08)" stroke="rgba(204,68,68,0.3)" stroke-width="0.8"/>
+              <text x="33" y="63" font-family="DM Mono,monospace" font-size="7" fill="#CC4444" text-anchor="middle">12</text>
+              <text x="33" y="74" font-family="DM Sans,sans-serif" font-size="6" fill="#CC4444" text-anchor="middle">Overdue</text>
+              <rect x="64" y="52" width="50" height="30" rx="3" fill="rgba(210,160,40,0.08)" stroke="rgba(210,160,40,0.3)" stroke-width="0.8"/>
+              <text x="89" y="63" font-family="DM Mono,monospace" font-size="7" fill="#C47A00" text-anchor="middle">8</text>
+              <text x="89" y="74" font-family="DM Sans,sans-serif" font-size="6" fill="#C47A00" text-anchor="middle">Coming due</text>
+              <rect x="120" y="52" width="50" height="30" rx="3" fill="rgba(26,95,170,0.06)" stroke="rgba(26,95,170,0.2)" stroke-width="0.8"/>
+              <text x="145" y="63" font-family="DM Mono,monospace" font-size="7" fill="#1A5FAA" text-anchor="middle">34</text>
+              <text x="145" y="74" font-family="DM Sans,sans-serif" font-size="6" fill="#8A9AAC" text-anchor="middle">Outstanding</text>
+              <rect x="176" y="52" width="56" height="30" rx="3" fill="rgba(26,120,80,0.06)" stroke="rgba(26,120,80,0.2)" stroke-width="0.8"/>
+              <text x="204" y="63" font-family="DM Mono,monospace" font-size="7" fill="#1A6E4A" text-anchor="middle">54</text>
+              <text x="204" y="74" font-family="DM Sans,sans-serif" font-size="6" fill="#8A9AAC" text-anchor="middle">Completed</text>
+              <!-- Request list -->
+              <rect x="8" y="90" width="224" height="14" rx="2" fill="rgba(204,68,68,0.06)" stroke="#D8D4CB" stroke-width="0.5"/>
+              <text x="16" y="100" font-family="DM Sans,sans-serif" font-size="7" fill="#CC4444">● Q3 Financial Statements  —  OVERDUE · 3 days</text>
+              <rect x="8" y="108" width="224" height="14" rx="2" fill="rgba(210,160,40,0.04)" stroke="#D8D4CB" stroke-width="0.5"/>
+              <text x="16" y="118" font-family="DM Sans,sans-serif" font-size="7" fill="#C47A00">● Board Resolution Copy  —  Due in 2 days</text>
+              <rect x="8" y="126" width="224" height="14" rx="2" fill="none" stroke="#D8D4CB" stroke-width="0.5"/>
+              <text x="16" y="136" font-family="DM Sans,sans-serif" font-size="7" fill="#8A9AAC">○ Bank Reconciliation Dec  —  Due in 8 days</text>
+              <text x="120" y="158" font-family="DM Mono,monospace" font-size="5.5" fill="#1A5FAA" text-anchor="middle">Clear hierarchy · Easy to scan · Actionable</text>
+            </svg>
+          </div>
+          <p class="concept-finding">Showing stages are not generally understood by the client data providers</p>
+          <p class="concept-finding">Summary stats (overdue, coming due, outstanding) tested as the three most useful data points for both sides</p>
+          <p class="concept-finding">Drill-down from summary to filtered request list was highly requested — users wanted the macro, then the micro</p>
+        </div>
+      </div>
+      <div class="concept-card reveal">
+        <div class="concept-head concept-head-rejected">
+          <span class="concept-name">Calendar Concept</span>
+          <span class="concept-verdict verdict-dropped">Partial — reworked</span>
+        </div>
+        <div class="concept-body">
+          <div class="sketch-wrap" style="padding:1rem;margin-bottom:1rem">
+            <svg viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg" width="100%">
+              <!-- Calendar grid -->
+              <rect x="8" y="8" width="224" height="144" rx="3" fill="none" stroke="#C4B89A" stroke-width="0.8"/>
+              <!-- Header -->
+              <rect x="8" y="8" width="224" height="22" rx="3" fill="rgb(93 93 93 / 7%)"/>
+              <text x="20" y="22" font-family="DM Mono,monospace" font-size="7" fill="#8A9AAC">Mon</text>
+              <text x="55" y="22" font-family="DM Mono,monospace" font-size="7" fill="#8A9AAC">Tue</text>
+              <text x="85" y="22" font-family="DM Mono,monospace" font-size="7" fill="#8A9AAC">Wed</text>
+              <text x="115" y="22" font-family="DM Mono,monospace" font-size="7" fill="#8A9AAC">Thu</text>
+              <text x="145" y="22" font-family="DM Mono,monospace" font-size="7" fill="#8A9AAC">Fri</text>
+              <text x="175" y="22" font-family="DM Mono,monospace" font-size="7" fill="#8A9AAC">Sat</text>
+              <text x="210" y="22" font-family="DM Mono,monospace" font-size="7" fill="#8A9AAC">Sun</text>
+              <!-- Day rows -->
+              <line x1="8" y1="52" x2="232" y2="52" stroke="#D8D4CB" stroke-width="0.5"/>
+              <line x1="8" y1="84" x2="232" y2="84" stroke="#D8D4CB" stroke-width="0.5"/>
+              <line x1="8" y1="116" x2="232" y2="116" stroke="#D8D4CB" stroke-width="0.5"/>
+              <!-- Col dividers -->
+              <line x1="40" y1="30" x2="40" y2="152" stroke="#D8D4CB" stroke-width="0.5"/>
+              <line x1="72" y1="30" x2="72" y2="152" stroke="#D8D4CB" stroke-width="0.5"/>
+              <line x1="104" y1="30" x2="104" y2="152" stroke="#D8D4CB" stroke-width="0.5"/>
+              <line x1="136" y1="30" x2="136" y2="152" stroke="#D8D4CB" stroke-width="0.5"/>
+              <line x1="168" y1="30" x2="168" y2="152" stroke="#D8D4CB" stroke-width="0.5"/>
+              <line x1="200" y1="30" x2="200" y2="152" stroke="#D8D4CB" stroke-width="0.5"/>
+              <!-- Lots of items -->
+              <rect x="10" y="34" width="28" height="8" rx="1" fill="rgba(204,68,68,0.2)" stroke="rgba(204,68,68,0.4)" stroke-width="0.5"/>
+              <rect x="10" y="44" width="28" height="6" rx="1" fill="rgba(26,95,170,0.15)" stroke="rgba(26,95,170,0.3)" stroke-width="0.5"/>
+              <rect x="44" y="34" width="28" height="8" rx="1" fill="rgba(26,95,170,0.15)" stroke="rgba(26,95,170,0.3)" stroke-width="0.5"/>
+              <rect x="44" y="44" width="28" height="6" rx="1" fill="rgba(26,95,170,0.15)" stroke="rgba(26,95,170,0.3)" stroke-width="0.5"/>
+              <rect x="76" y="34" width="28" height="8" rx="1" fill="rgba(204,68,68,0.2)" stroke="rgba(204,68,68,0.4)" stroke-width="0.5"/>
+              <rect x="108" y="34" width="28" height="8" rx="1" fill="rgba(26,95,170,0.15)" stroke="rgba(26,95,170,0.3)" stroke-width="0.5"/>
+              <rect x="108" y="44" width="28" height="6" rx="1" fill="rgba(26,95,170,0.15)" stroke="rgba(26,95,170,0.3)" stroke-width="0.5"/>
+              <rect x="140" y="34" width="28" height="8" rx="1" fill="rgba(26,95,170,0.1)" stroke="#D8D4CB" stroke-width="0.5"/>
+              <!-- More rows of items -->
+              <rect x="10" y="56" width="28" height="8" rx="1" fill="rgba(26,95,170,0.1)" stroke="#D8D4CB" stroke-width="0.5"/>
+              <rect x="44" y="56" width="28" height="8" rx="1" fill="rgba(204,68,68,0.15)" stroke="rgba(204,68,68,0.3)" stroke-width="0.5"/>
+              <rect x="76" y="56" width="28" height="8" rx="1" fill="rgba(26,95,170,0.1)" stroke="#D8D4CB" stroke-width="0.5"/>
+              <rect x="76" y="66" width="28" height="6" rx="1" fill="rgba(26,95,170,0.08)" stroke="#D8D4CB" stroke-width="0.5"/>
+              <rect x="8" y="8" width="224" height="144" rx="3" fill="rgba(255,255,255,0.0)"/>
+              <text x="120" y="150" font-family="DM Mono,monospace" font-size="5.5" fill="#CC4444" text-anchor="middle">Too much information · Client feedback</text>
+              <text x="23" y="40" font-family="DM Sans,sans-serif" font-size="5" fill="#CC4444" text-anchor="middle">2 Overdue</text>
+              <text x="90" y="40" font-family="DM Sans,sans-serif" font-size="5" fill="#CC4444" text-anchor="middle">2 Overdue</text>
+              <text x="57" y="62" font-family="DM Sans,sans-serif" font-size="5" fill="#CC4444" text-anchor="middle">2 Overdue</text>
+            </svg>
+          </div>
+          <p class="concept-finding">Calendar view was seen as overwhelming — too many items visible simultaneously without hierarchy</p>
+          <p class="concept-finding">Familiar mental modal but week view did not help clients focus on what matters right now</p>
+          <p class="concept-finding">Useful insight retained: due date emphasis and week-level planning were genuinely valued — this was extracted into the final design</p>
+        </div>
+
+      
+      </div>
+    </div>
+  <div class="img-frame reveal">
+      <img src="assets/calendar-timeline.JPG"
+           alt="Client Portal wireframes and design exploration"
+           onerror="this.style.display='none'">
+      <div class="img-frame-caption">Timeline and Calendar concepts side by side</div>
+    </div>
+    <!-- What we learned from testing -->
+    <div class="pull-quote reveal" style="margin-top:2.5rem">
+      <p>"Top three most beneficial for both clients and audit teams: overdue, coming due, and general summary of request status — that is what they are mainly communicating on anyway."</p>
+      <cite>— Kristen (US), Usability Testing Participant</cite>
+    </div>
+
+    <p class="body-p reveal" style="max-width:var(--body-max);margin-top:1.5rem">The solution that emerged was not either concept — it was a synthesis. The Timeline's summary statistics and progress arc became the spine of the redesigned landing page. The Calendar's week-level focus was preserved as a secondary view mode, specifically for client data provider users who think in terms of deadlines rather than milestones. The key design move was building a <strong>contextual index</strong>: clicking any summary stat filters the request list — giving users the macro picture with one-tap access to the micro detail.</p>
+
+    <!-- Actual case study images -->
+  
+     <div class="img-frame reveal">
+      <img src="assets/wireframes.JPG"
+           alt="Client Portal wireframes and design exploration"
+           onerror="this.style.display='none'">
+      <div class="img-frame-caption">Wireframes ready for testing</div>
+    </div>
+    <div class="img-frame reveal">
+      <img src="assets/usability-testing.JPG"
+           alt="Client Portal wireframes and design exploration"
+           onerror="this.style.display='none'">
+      <div class="img-frame-caption">Usability Testing : Validated wireframes with cross-geography participants; moderated sessions and synthesised findings</div>
+    </div>
+   <!-- 
+    <div class="img-frame reveal">
+      <img src="https://cdn.prod.website-files.com/67f679f602e6247ed7e0b4be/67f68fa7689ff4dcce6d4e6e_f5d937a88729c369704714e21fa541be_CX-case-study%20%283%29.jpg"
+           alt="Feature design — analytics and request tracking"
+           onerror="this.style.display='none'">
+      <div class="img-frame-caption">Client-facing analytics and advanced request tracking</div>
+    </div>
+    <div class="img-frame reveal">
+      <img src="https://cdn.prod.website-files.com/67f679f602e6247ed7e0b4be/67f693d947c3a3b3da517ba9_201af9392ef9a0fd5ad4dac4d8147add_Frame%201073713804.jpg"
+           alt="Visual design explorations"
+           onerror="this.style.display='none'">
+      <div class="img-frame-caption">Visual design exploration — design system applied to enterprise audit context</div>
+    </div>.  -->
+
+    <!-- Section Gallery Thumbnails -->
+    <div class="section-gallery reveal">
+      <span class="gallery-label">Evidence</span>
+      <div class="thumb-grid">
+        <img src="assets/low-fi-1.JPG" class="thumb-item" alt="Mid-fidelity blueprint concepts for evaluation testing">
+        <img src="assets/low-fi-2.jpg" class="thumb-item" alt="Redesigned Dashboard UI focusing on dynamic urgency metrics">
+        <img src="assets/ut-2.jpg" class="thumb-item" alt="Usability Testing">
+        <img src="assets/ut-result.jpg" class="thumb-item" alt="Synthesised findings">
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     CH 6 — BEFORE & AFTER VALUE COMPARISON
+══════════════════════════════════════════════ -->
+<section class="chapter" id="comparison">
+  <div class="wrap">
+    <div class="reveal"><div class="ch-num">06</div></div>
+    <h2 class="ch-title reveal">Before &amp; After Value Comparison</h2>
+    <div class="ch-rule"></div>
+    <p class="body-p reveal" style="max-width:var(--body-max)">Evaluating the transformation side-by-side demonstrates how transitioning from a disjointed document index to a structured tracking strategy directly solved coordination friction across both client and auditor personas.</p>
+
+    <div class="ba-grid reveal">
+      <!-- Legacy Experience Box -->
+      <div class="ba-card">
+        <div class="concept-head concept-head-rejected">
+          <span class="concept-name">Legacy Directory Architecture (Before)</span>
+          <span class="ba-badge before">Disjointed Index</span>
+        </div>
+        <div class="concept-body">
+          <p class="body-p" style="font-size:0.88rem; margin-bottom:1.5rem;"><strong>The Friction Window:</strong> An opaque file management library. Client users faced ambiguous directory strings, nested hierarchies, and a total lack of status confirmation markers. Coordination naturally collapsed into manual email loops.</p>
+         <!-- <div class="sketch-wrap" style="padding:1rem; opacity:0.85;">
+             <svg viewBox="0 0 240 120" width="100%">
+               <rect x="5" y="5" width="60" height="110" fill="#EDE9DF" stroke="#D8D4CB"/>
+               <text x="12" y="18" font-family="DM Mono,monospace" font-size="6" fill="#8A9AAC">DIRECTORY TREE</text>
+               <text x="12" y="34" font-family="sans-serif" font-size="6.5" fill="#3D5168">📁 System_Archive_v1</text>
+               <text x="12" y="48" font-family="sans-serif" font-size="6.5" fill="#3D5168">📁 Input_Queue_Final</text>
+               <text x="12" y="62" font-family="sans-serif" font-size="6.5" fill="#3D5168">📁 Unassigned_Docs</text>
+               <rect x="72" y="5" width="163" height="110" fill="#FFF" stroke="#D8D4CB"/>
+               <line x1="72" y1="24" x2="235" y2="24" stroke="#EDE9DF"/>
+               <text x="80" y="16" font-family="sans-serif" font-size="6.5" font-weight="500" fill="#CC4444">⚠ 48 pending notifications unresolved</text>
+               <rect x="80" y="32" width="147" height="16" fill="#F8F5EE" rx="2"/>
+               <text x="86" y="42" font-family="sans-serif" font-size="6" fill="#8A9AAC">statement_reconciliation_draft_v3.pdf</text>
+               <rect x="80" y="54" width="147" height="16" fill="#F8F5EE" rx="2"/>
+               <text x="86" y="64" font-family="sans-serif" font-size="6" fill="#8A9AAC">ledger_export_2023_amended.xlsx</text>
+             </svg>
+          </div> -->
+          <div class="before-image">
+            <img src="assets/before.JPG"
+           alt="Client Portal wireframes and design exploration"
+           onerror="this.style.display='none'"></div>
+        </div>
+      </div>
+
+      <!-- Redesigned Experience Box -->
+      <div class="ba-card">
+        <div class="concept-head concept-head-accepted">
+          <span class="concept-name">Redesigned Active Platform (After)</span>
+          <span class="ba-badge after">Unified Dashboard</span>
+        </div>
+        <div class="concept-body">
+          <p class="body-p" style="font-size:0.88rem; margin-bottom:1.5rem;"><strong>The Clarity Window:</strong> A high-fidelity task dashboard grouping action items transparently by immediate priority (Overdue, Coming Due, Active Stream). Real-time progress confirmation loops sync across profiles instantly.</p>
+         <!-- <div class="sketch-wrap" style="padding:1rem;">
+             <svg viewBox="0 0 240 120" width="100%">
+               <rect x="5" y="5" width="230" height="32" fill="rgba(26,95,170,0.04)" stroke="var(--accent)" stroke-width="0.8" rx="3"/>
+               <circle cx="18" cy="21" r="7" fill="#CC4444"/>
+               <text x="18" y="23" font-family="sans-serif" font-size="7" font-weight="bold" fill="#FFF" text-anchor="middle">!</text>
+               <text x="32" y="17" font-family="sans-serif" font-size="7" font-weight="bold" fill="var(--ink)">Urgent Action: 12 Requests Overdue</text>
+               <text x="32" y="27" font-family="sans-serif" font-size="6" fill="var(--ink-mid)">Audit progress milestone target limits close in 48 hours.</text>
+               <rect x="5" y="44" width="230" height="71" fill="#FFF" stroke="#D8D4CB" rx="3"/>
+               <line x1="5" y1="62" x2="235" y2="62" stroke="#EDE9DF"/>
+               <text x="12" y="55" font-family="sans-serif" font-size="6.5" font-weight="bold" fill="var(--accent)">📋 Dynamic Request Stream</text>
+               <rect x="12" y="70" width="216" height="14" fill="rgba(204,68,68,0.04)" rx="2"/>
+               <text x="18" y="79" font-family="sans-serif" font-size="6" fill="#CC4444">● Q3 Corporate Financial Statements — Overdue 3d</text>
+               <rect x="12" y="90" width="216" height="14" fill="rgba(210,160,40,0.04)" rx="2"/>
+               <text x="18" y="99" font-family="sans-serif" font-size="6" fill="#C47A00">● Executed Board Resolution Copy — Due in 2d</text>
+             </svg>
+          </div> -->
+
+            <div class="after-image">
+             <img src="assets/vd-1.JPG"
+           alt="Client Portal wireframes and design exploration"
+           onerror="this.style.display='none'"> </div>
+        </div>
+      
+        </div>
+      </div>
+       <div class="img-frame reveal">
+      <img src="assets/vd-2.jpg"
+           alt="Landing page redesign concepts"
+           onerror="this.style.display='none'">
+      <div class="img-frame-caption">Landing page redesign for Strategic Manager — bringing key insights across engagements</div>
+    </div> 
+     <div class="img-frame reveal">
+      <img src="assets/vd-1.jpg"
+           alt="Landing page redesign concepts"
+           onerror="this.style.display='none'">
+      <div class="img-frame-caption">Landing page redesign for Operation Manager — bringing clarity to overdue, coming due, and outstanding items</div>
+    </div> 
+    
+    
+
+    <!-- Section Gallery Thumbnails -->
+    <div class="section-gallery reveal">
+      <span class="gallery-label">Redesigned production release </span>
+      <div class="thumb-grid">
+        <img src="assets/vd-4.jpg" class="thumb-item" alt="Request detail">
+        <img src="assets/vd-3.jpg" class="thumb-item" alt="Advanced filter and customization">
+        <img src="assets/vd-5.jpg" class="thumb-item" alt="Request creation & Team members page">
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     CH 7 — OUTCOMES
+══════════════════════════════════════════════ -->
+<section class="outcomes-dark" id="outcomes">
+  <div class="wrap">
+    <div class="reveal"><div class="ch-num" style="color:rgba(255,255,255,0.06)">07</div></div>
+    <h2 class="ch-title reveal" style="color:white;margin-bottom:0.5rem">How it affected users and the business</h2>
+    <p style="font-family:var(--serif);font-style:italic;font-size:1rem;color:rgba(255,255,255,0.4);margin-bottom:3rem;font-weight:300" class="reveal">Measured post-testing via structured BUX evaluation, NPS survey, and benefit realization framework</p>
+
+    <div class="outcomes-grid">
+      <div class="outcome-card reveal">
+        <div class="outcome-num"><span>45</span>%</div>
+        <div class="outcome-label">Blended UX score uplift<br>post-redesign (BUX)</div>
+        <div class="outcome-note">From baseline to 8.3/10 — a substantial improvement across the System Usability Scale and the proprietary EY BUX methodology.</div>
+      </div>
+      <div class="outcome-card reveal" style="transition-delay:.08s">
+        <div class="outcome-num"><span>50</span>%</div>
+        <div class="outcome-label">Usability metrics<br>improvement</div>
+        <div class="outcome-note">Across navigation findability, task completion rate, and error recovery — measured in comparative usability testing sessions.</div>
+      </div>
+      <div class="outcome-card reveal" style="transition-delay:.16s">
+        <div class="outcome-num"><span>64</span>%</div>
+        <div class="outcome-label">Net Promoter Score<br>Target was 20</div>
+        <div class="outcome-note">NPS of 64% is classified as exceptional for enterprise audit products. The original target was 50.</div>
+      </div>
+    </div>
+
+    <div class="outcomes-survey" style="margin-top:1.5rem">
+      <div class="survey-cell reveal">
+        <div class="survey-pct">87%</div>
+        <div class="survey-desc">Agreed clients will directly<br>benefit from the features</div>
+      </div>
+      <div class="survey-cell reveal" style="transition-delay:.07s">
+        <div class="survey-pct">82%</div>
+        <div class="survey-desc">Said it would save<br>100+ minutes per engagement</div>
+      </div>
+      <div class="survey-cell reveal" style="transition-delay:.14s">
+        <div class="survey-pct">80%</div>
+        <div class="survey-desc">Agreed multiple assignees<br>improved client experience</div>
+      </div>
+      <div class="survey-cell reveal" style="transition-delay:.21s">
+        <div class="survey-pct">21%</div>
+        <div class="survey-desc">Year-over-year growth in<br>CX platform activity</div>
+      </div>
+    </div>
+
+    <div class="pull-quote reveal" style="background:rgba(255,255,255,0.04);border-left-color:#4A9FDC;margin-top:2.5rem">
+      <p style="color:rgba(255,255,255,0.8)">9,224 instances of client feedback were recorded across 2,765 client accounts — a 5% increase in account penetration year-over-year. The redesigned platform did not just score better in testing. It was being used.</p>
+    </div>
+    <div class="outcome-note">Users recognized the portal as a more intuitive and efficient way to manage audits, improving communication, transparency, and project coordination. This translated into stronger client relationships, reduced audit-team effort, increased business differentiation, and a foundation for future growth across additional service lines.</div>
+
+    <!-- Section Gallery Thumbnails -->
+    <div class="section-gallery reveal" style="border-top-color: rgba(255,255,255,0.1)">
+      <span class="gallery-label" style="color: rgba(255,255,255,0.4)">Evidence </span>
+      <div class="thumb-grid">
+        <img src="assets/bo.jpg" class="thumb-item" alt="Analytics and metric reporting dashboard validations">
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     CH 8 — LEARNINGS
+══════════════════════════════════════════════ -->
+<section class="chapter" id="learnings">
+  <div class="wrap">
+    <div class="reveal"><div class="ch-num">08</div></div>
+    <h2 class="ch-title reveal">What I learned</h2>
+    <div class="ch-rule"></div>
+
+    <p class="body-p reveal" style="max-width:var(--body-max)">This project reshaped how I approach enterprise redesigns — particularly the relationship between the stated problem and the real one, and between testing a concept and testing an assumption.</p>
+
+    <div class="learnings-grid">
+      <div class="learning-card reveal">
+        <div class="learning-num">01</div>
+        <div class="learning-title">Infrequent users need a fundamentally different mental model</div>
+        <div class="learning-body">Designing for regular users and infrequent users requires different principles. Infrequent users need experiences that feel intuitive on every visit, without relying on memory or prior system knowledge.</div>
+      </div>
+      <div class="learning-card reveal" style="transition-delay:.1s">
+        <div class="learning-num">02</div>
+        <div class="learning-title">Email is not the enemy — it is the benchmark</div>
+        <div class="learning-body">Users preferred email for its simplicity and directness. The portal succeeded when we designed for the same experience, not just feature parity.</div>
+      </div>
+      <div class="learning-card reveal">
+        <div class="learning-num">03</div>
+        <div class="learning-title">Systems thinking over feature thinking</div>
+        <div class="learning-body">Mapping the end-to-end audit journey revealed opportunities that feature-level design missed.</div>
+      </div>
+      <div class="learning-card reveal" style="transition-delay:.1s">
+        <div class="learning-num">04</div>
+        <div class="learning-title">Stakeholder consensus built before design prevents rework</div>
+        <div class="learning-body">Gaining buy-in across diverse stakeholders was time-intensive, but early consensus prevented costly redesigns and ensured on-time delivery.</div>
+      </div>
+      <div class="learning-card reveal">
+        <div class="learning-num">05</div>
+        <div class="learning-title">Cross-geography research is not optional for global enterprise products</div>
+        <div class="learning-body">Research across APAC, US, and EMEIA revealed distinct user mental models, making global validation essential to avoid designing for a single region's needs</div>
+      </div>
+      <div class="learning-card reveal" style="transition-delay:.1s">
+        <div class="learning-num">06</div>
+        <div class="learning-title">The brief is a starting point, not a scope</div>
+        <div class="learning-body">What looked like a navigation problem was actually a visibility and trust problem between auditors and clients. Solving the right problem made the difference.</div>
+      </div>
+    </div>
+
+    <!-- Section Gallery Thumbnails 
+    <div class="section-gallery reveal">
+      <span class="gallery-label">Artifact Evidence</span>
+      <div class="thumb-grid">
+        <img src="https://cdn.prod.website-files.com/67f679f602e6247ed7e0b4be/67f693d947c3a3b3da517ba9_201af9392ef9a0fd5ad4dac4d8147add_Frame%201073713804.jpg" class="thumb-item" alt="Comprehensive design guidelines and core UX takeaway framework">
+      </div>
+    </div> -->
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- Next case study -->
+<div class="next-cs">
+  <div class="wrap next-inner">
+    <div>
+      <div class="next-label">Next case study</div>
+      <div class="next-title">Audit Issue Tracker Redesign</div>
+    </div>
+    <a href="https://as-xd.webflow.io/work/issue-tracker" target="_blank" class="next-link">View case study →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap footer-inner">
+    <a href="index.html#work" class="footer-back">← Back to all work</a>
+    <span class="footer-copy">Amit Kumar Shaw · UX Strategist · 2026</span>
+     <div class="footer-links">
+      <a href="https://www.linkedin.com/in/amit-shaw-design-thinker/" target="_blank">LinkedIn</a>
+      <a href="https://www.behance.net/amit-shaw" target="_blank">Behance</a>
+      <a href="https://dribbble.com/amitshaw" target="_blank">Dribbble</a>
+      <a href="mailto:amit.uxdoffice@gmail.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════════
+     MODAL OVERLAY SYSTEM
+══════════════════════════════════════════════ -->
+<div class="gallery-modal" id="gallery-modal">
+  <div class="gallery-modal-close" id="gallery-modal-close">Close ✕</div>
+  <img src="" class="gallery-modal-content" id="modal-target-img" alt="Enlarged View">
+  <div class="gallery-modal-caption" id="modal-target-caption"></div>
+</div>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const total = document.body.scrollHeight - window.innerHeight;
+  const pct = (window.scrollY / total) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+// Scroll reveal configuration
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+}, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Fixed Inline Navigation Scrollspy & Active State System
+const sections = document.querySelectorAll('section[id], div[id="comparison"]');
+const subLinks = document.querySelectorAll('.sub-link');
+
+function updateActiveSubnav() {
+  let activeId = '';
+  const scrollPosition = window.scrollY + 140;
+
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    const sectionHeight = section.offsetHeight;
+    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+      activeId = section.getAttribute('id');
+    }
+  });
+
+  subLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === `#${activeId}`) {
+      link.classList.add('active');
+      // Auto scroll sub-navigation bar smoothly on small device headers
+      const container = document.querySelector('.sub-nav-inner');
+      const linkOffset = link.offsetLeft - container.offsetWidth / 2 + link.offsetWidth / 2;
+      container.scrollTo({ left: linkOffset, behavior: 'smooth' });
+    }
+  });
+}
+window.addEventListener('scroll', updateActiveSubnav);
+window.addEventListener('load', updateActiveSubnav);
+
+// Gallery Overlay Modal Interaction System
+const modal = document.getElementById('gallery-modal');
+const modalImg = document.getElementById('modal-target-img');
+const modalCaption = document.getElementById('modal-target-caption');
+const modalClose = document.getElementById('gallery-modal-close');
+
+document.querySelectorAll('.thumb-item').forEach(thumbnail => {
+  thumbnail.addEventListener('click', () => {
+    modalImg.src = thumbnail.src;
+    modalCaption.textContent = thumbnail.alt;
+    modal.style.display = 'flex';
+    // Force simple repaint for smooth transition visibility properties
+    setTimeout(() => { modal.classList.add('show'); }, 10);
+    document.body.style.overflow = 'hidden';
+  });
+});
+
+function closeModal() {
+  modal.classList.remove('show');
+  setTimeout(() => { modal.style.display = 'none'; }, 300);
+  document.body.style.overflow = '';
+}
+
+modalClose.addEventListener('click', closeModal);
+modal.addEventListener('click', (event) => {
+  if (event.target === modal) { closeModal(); }
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && modal.classList.contains('show')) { closeModal(); }
+});
+
+
+// new features 
+(async () => {
+  const modal = document.getElementById('gallery-modal');
+  const modalImg = document.getElementById('modal-target-img');
+  const modalCaption = document.getElementById('modal-target-caption');
+  
+  // 1. Add Navigation Controls to the DOM
+  const prevBtn = document.createElement('div');
+  prevBtn.id = 'gallery-modal-prev';
+  prevBtn.className = 'gallery-nav-btn';
+  prevBtn.innerHTML = '&#10094;';
+  
+  const nextBtn = document.createElement('div');
+  nextBtn.id = 'gallery-modal-next';
+  nextBtn.className = 'gallery-nav-btn';
+  nextBtn.innerHTML = '&#10095;';
+  
+  modal.appendChild(prevBtn);
+  modal.appendChild(nextBtn);
+
+  // 2. Add Styles for the new controls
+  const style = document.createElement('style');
+  style.textContent = `
+    .gallery-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      padding: 20px;
+      cursor: pointer;
+      user-select: none;
+      background-color: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+      z-index: 1001;
+    }
+    .gallery-nav-btn:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-50%) scale(1.1);
+    }
+    .gallery-nav-btn:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+    #gallery-modal-prev { left: 30px; }
+    #gallery-modal-next { right: 30px; }
+    
+    @media (max-width: 768px) {
+      .gallery-nav-btn {
+        padding: 10px;
+        width: 30px;
+        height: 30px;
+      }
+      #gallery-modal-prev { left: 10px; }
+      #gallery-modal-next { right: 10px; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // 3. Logic to handle navigation
+  let currentItems = [];
+  let currentIndex = -1;
+
+  function updateModalContent(index) {
+    if (index < 0 || index >= currentItems.length) return;
+    currentIndex = index;
+    const item = currentItems[currentIndex];
+    modalImg.src = item.src;
+    modalCaption.textContent = item.alt || '';
+  }
+
+  function navigate(direction) {
+    if (currentItems.length === 0) return;
+    let nextIndex = currentIndex + direction;
+    if (nextIndex < 0) nextIndex = currentItems.length - 1;
+    if (nextIndex >= currentItems.length) nextIndex = 0;
+    updateModalContent(nextIndex);
+  }
+
+  // Intercept the original opening logic or enhance it
+  document.querySelectorAll('.thumb-item').forEach(thumbnail => {
+    thumbnail.addEventListener('click', () => {
+      // Find all thumbnails in the SAME section
+      const section = thumbnail.closest('section');
+      currentItems = Array.from(section.querySelectorAll('.thumb-item'));
+      currentIndex = currentItems.indexOf(thumbnail);
+      
+      // The original script already opens the modal, but we've now updated the current list context
+    });
+  });
+
+  // Event Listeners for Buttons
+  prevBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    navigate(-1);
+  });
+  nextBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    navigate(1);
+  });
+
+  // 4. Keyboard Support
+  document.addEventListener('keydown', (event) => {
+    if (!modal.classList.contains('show')) return;
+    
+    if (event.key === 'ArrowLeft') {
+      navigate(-1);
+    } else if (event.key === 'ArrowRight') {
+      navigate(1);
+    }
+  });
+
+
+  
+
+
+  window.data = { success: true };
+})();
+
+
+//modal-image-count
+(async () => {
+  const modalCaption = document.getElementById('modal-target-caption');
+  
+  // Create counter element if it doesn't exist
+  let counter = document.getElementById('modal-counter');
+  if (!counter) {
+    counter = document.createElement('div');
+    counter.id = 'modal-counter';
+    // Style it to look like it belongs to the caption area
+    counter.style.cssText = `
+      position: absolute;
+    top: 28px;
+    color: rgba(255, 255, 255, 0.65);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-align: center;
+    letter-spacing: 0.02em;
+    `;
+    modalCaption.parentNode.insertBefore(counter, modalCaption.nextSibling);
+  }
+
+  // Find the state variables from the previous injection or re-find them
+  // Since we injected the script into the page scope, we need a way to update it.
+  // I will redefine the update function to also handle the counter.
+
+  // We need to hook into the navigation logic we already established.
+  // The best way is to monkey-patch the updateModalContent function if I can,
+  // or just re-apply the logic globally.
+
+  const originalUpdate = window.updateModalContent; // This might not be accessible if it was in an IIFE.
+  
+  // Re-inject the logic with the counter support
+  const scriptContent = `
+    (function() {
+      const modalImg = document.getElementById('modal-target-img');
+      const modalCaption = document.getElementById('modal-target-caption');
+      const counter = document.getElementById('modal-counter');
+      let currentItems = [];
+      let currentIndex = -1;
+
+      function updateCounter() {
+        if (currentItems.length > 0) {
+          counter.textContent = (currentIndex + 1) + ' of ' + currentItems.length;
+        } else {
+          counter.textContent = '';
+        }
+      }
+
+      function updateModalContent(index) {
+        if (index < 0 || index >= currentItems.length) return;
+        currentIndex = index;
+        const item = currentItems[currentIndex];
+        modalImg.src = item.src;
+        modalCaption.textContent = item.alt || '';
+        updateCounter();
+      }
+
+      function navigate(direction) {
+        if (currentItems.length === 0) return;
+        let nextIndex = currentIndex + direction;
+        if (nextIndex < 0) nextIndex = currentItems.length - 1;
+        if (nextIndex >= currentItems.length) nextIndex = 0;
+        updateModalContent(nextIndex);
+      }
+
+      // Re-attach listeners to ensure they use the local currentItems/currentIndex
+      document.querySelectorAll('.thumb-item').forEach(thumbnail => {
+        thumbnail.addEventListener('click', () => {
+          const section = thumbnail.closest('section');
+          currentItems = Array.from(section.querySelectorAll('.thumb-item'));
+          currentIndex = currentItems.indexOf(thumbnail);
+          updateCounter();
+        });
+      });
+
+      document.getElementById('gallery-modal-prev').onclick = (e) => { e.stopPropagation(); navigate(-1); };
+      document.getElementById('gallery-modal-next').onclick = (e) => { e.stopPropagation(); navigate(1); };
+      
+      // Update the keydown listener as well
+      const oldHandler = document.onkeydown;
+      document.addEventListener('keydown', (event) => {
+        const modal = document.getElementById('gallery-modal');
+        if (!modal.classList.contains('show')) return;
+        if (event.key === 'ArrowLeft') navigate(-1);
+        if (event.key === 'ArrowRight') navigate(1);
+      });
+    })();
+  `;
+
+  const script = document.createElement('script');
+  script.textContent = scriptContent;
+  document.body.appendChild(script);
+
+  window.data = { success: true };
+})();
+
+//hide button for single image
+(function() {
+  const prevBtn = document.getElementById('gallery-modal-prev');
+  const nextBtn = document.getElementById('gallery-modal-next');
+  const counter = document.getElementById('modal-counter');
+
+  // We need to update the logic that opens the modal and navigates.
+  // I will inject a function that checks the item count and toggles button visibility.
+  
+  const updateControlsVisibility = (count) => {
+    const displayValue = count > 1 ? 'flex' : 'none';
+    if (prevBtn) prevBtn.style.display = displayValue;
+    if (nextBtn) nextBtn.style.display = displayValue;
+    if (counter) counter.style.display = displayValue;
+  };
+
+  // Re-hook the click events on thumbnails to trigger this check
+  document.querySelectorAll('.thumb-item').forEach(thumbnail => {
+    thumbnail.addEventListener('click', () => {
+      const section = thumbnail.closest('section');
+      const items = section ? section.querySelectorAll('.thumb-item') : [];
+      updateControlsVisibility(items.length);
+    });
+  });
+
+  // Also check if the modal is already open (for immediate state)
+  const modal = document.getElementById('gallery-modal');
+  if (modal && modal.classList.contains('show')) {
+    const activeImg = document.getElementById('modal-target-img');
+    // Try to find which section this image belongs to by matching src
+    const allThumbs = Array.from(document.querySelectorAll('.thumb-item'));
+    const match = allThumbs.find(t => t.src === activeImg.src);
+    if (match) {
+      const section = match.closest('section');
+      const count = section ? section.querySelectorAll('.thumb-item').length : 0;
+      updateControlsVisibility(count);
+    }
+  }
+
+  window.data = { success: true };
+})();
+
+//mobile swipe guesture
+(function() {
+  const modal = document.getElementById('gallery-modal');
+  if (!modal) return;
+
+  let touchStartX = 0;
+  let touchEndX = 0;
+  const swipeThreshold = 50; // Minimum distance in pixels for a swipe
+
+  function handleGesture() {
+    const diff = touchEndX - touchStartX;
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff < 0) {
+        // Swiped left -> Next
+        const nextBtn = document.getElementById('gallery-modal-next');
+        if (nextBtn && nextBtn.style.display !== 'none') {
+          nextBtn.click();
+        }
+      } else {
+        // Swiped right -> Prev
+        const prevBtn = document.getElementById('gallery-modal-prev');
+        if (prevBtn && prevBtn.style.display !== 'none') {
+          prevBtn.click();
+        }
+      }
+    }
+  }
+
+  modal.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  modal.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleGesture();
+  }, { passive: true });
+
+  // Prevent default scroll behavior when swiping on the modal image
+  const modalImg = document.getElementById('modal-target-img');
+  if (modalImg) {
+    modalImg.addEventListener('touchmove', (e) => {
+      if (e.cancelable) e.preventDefault();
+    }, { passive: false });
+  }
+
+  window.data = { success: true };
+})();
+
+</script>
+</body>
+</html>
